@@ -3,7 +3,6 @@
 import { useRouter } from 'next/navigation'
 import { FormData } from '@/types/form'
 import { Activity } from '@/types/activity'
-import Header from '@/components/Header'
 import { FiTrash2 } from 'react-icons/fi'
 import { useLocalStorage } from '@/hooks/useLocalStorage'
 
@@ -46,7 +45,6 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Header />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Mes programmes</h1>
         

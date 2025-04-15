@@ -1,0 +1,17 @@
+{
+  "name": "Odys.ai",
+  "short_name": "Odys",
+  "description": "Votre assistant de voyage personnel qui crée des programmes sur mesure",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4F46E5",
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+} 

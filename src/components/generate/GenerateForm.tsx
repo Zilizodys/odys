@@ -146,32 +146,32 @@ export default function GenerateForm() {
   return (
     <div className="max-w-2xl mx-auto relative min-h-[500px]">
       {/* Progress bar */}
-      <div className="mb-8">
-        <div className="flex justify-between mb-2">
-          {[1, 2, 3, 4, 5].map((step) => (
+      <div className="mb-8 flex justify-center">
+        <div className="w-full max-w-md px-4">
+          <div className="flex justify-between mb-2">
+            {[1, 2, 3, 4, 5].map((step) => (
+              <div
+                key={step}
+                className={`w-8 h-8 rounded-full flex items-center justify-center text-sm ${
+                  step === currentStep
+                    ? 'bg-indigo-600 text-white'
+                    : step < currentStep
+                    ? 'bg-indigo-100'
+                    : 'bg-gray-100'
+                }`}
+              >
+                {step}
+              </div>
+            ))}
+          </div>
+          <div className="h-1 bg-gray-100 rounded-full overflow-hidden">
             <div
-              key={step}
-              className={`w-8 h-8 rounded-full flex items-center justify-center text-sm ${
-                step === currentStep
-                  ? 'bg-indigo-600 text-white'
-                  : step < currentStep
-                  ? 'bg-indigo-100'
-                  : 'bg-gray-100'
-              }`}
-            >
-              {step}
-            </div>
-          ))}
-        </div>
-        <div className="h-1 bg-gray-100 rounded-full overflow-hidden">
-          <div
-            className="h-full bg-indigo-600 transition-all duration-300"
-            style={{ width: `${(currentStep - 1) * 25}%` }}
-          />
+              className="h-full bg-indigo-600 transition-all duration-300"
+              style={{ width: `${(currentStep - 1) * 25}%` }}
+            />
+          </div>
         </div>
       </div>
-
-      <h1 className="text-2xl font-bold mb-8">Créez votre voyage</h1>
 
       {/* Form steps */}
       <div className="relative overflow-hidden">
@@ -180,6 +180,9 @@ export default function GenerateForm() {
             <StepWrapper key="step1" title="Où veux-tu partir ?" direction={direction}>
               <div className="space-y-6">
                 <div className="space-y-4">
+                  <p className="text-sm text-gray-500 text-left mb-1">
+                    Entrez la ville ou le pays de votre choix
+                  </p>
                   <input
                     type="text"
                     placeholder="Ex: Paris, Tokyo, New York..."
@@ -187,9 +190,6 @@ export default function GenerateForm() {
                     onChange={(e) => updateFormData('destination', e.target.value)}
                     className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                   />
-                  <p className="text-sm text-gray-500">
-                    Entrez la ville ou le pays de votre choix
-                  </p>
                 </div>
 
                 <div className="space-y-3">
@@ -237,44 +237,45 @@ export default function GenerateForm() {
                   <label className="block text-base font-medium text-gray-900 mb-2">
                     Dates du voyage
                   </label>
-                  <DatePicker
-                    ref={datePickerRef}
-                    selected={formData.startDate ? new Date(formData.startDate) : null}
-                    onChange={(dates) => {
-                      const [start, end] = dates as [Date | null, Date | null]
-                      if (start) {
-                        const startStr = start.toISOString().split('T')[0]
-                        updateFormData('startDate', startStr)
-                      }
-                      if (end) {
-                        const endStr = end.toISOString().split('T')[0]
-                        updateFormData('endDate', endStr)
-                      }
-                    }}
-                    startDate={formData.startDate ? new Date(formData.startDate) : null}
-                    endDate={formData.endDate ? new Date(formData.endDate) : null}
-                    minDate={new Date()}
-                    locale="fr"
-                    selectsRange
-                    monthsShown={1}
-                    dateFormat="dd/MM/yyyy"
-                    customInput={<CustomInput value={getFormattedDateRange()} />}
-                    onCalendarOpen={() => setIsCalendarOpen(true)}
-                    onCalendarClose={handleCalendarClose}
-                    calendarContainer={({ children }) => (
-                      <div className="react-datepicker__calendar-container">
-                        {children}
-                        <button
-                          className="datepicker-done-button"
-                          onClick={() => datePickerRef.current?.setOpen(false)}
-                        >
-                          Terminé
-                        </button>
-                      </div>
-                    )}
-                  />
+                  <div className="bg-white rounded-2xl shadow-lg p-4 mt-2 mb-2">
+                    <DatePicker
+                      ref={datePickerRef}
+                      selected={formData.startDate ? new Date(formData.startDate) : null}
+                      onChange={(dates) => {
+                        const [start, end] = dates as [Date | null, Date | null]
+                        if (start) {
+                          const startStr = start.toISOString().split('T')[0]
+                          updateFormData('startDate', startStr)
+                        }
+                        if (end) {
+                          const endStr = end.toISOString().split('T')[0]
+                          updateFormData('endDate', endStr)
+                        }
+                      }}
+                      startDate={formData.startDate ? new Date(formData.startDate) : null}
+                      endDate={formData.endDate ? new Date(formData.endDate) : null}
+                      minDate={new Date()}
+                      locale="fr"
+                      selectsRange
+                      monthsShown={1}
+                      dateFormat="dd/MM/yyyy"
+                      customInput={<CustomInput value={getFormattedDateRange()} />}
+                      onCalendarOpen={() => setIsCalendarOpen(true)}
+                      onCalendarClose={handleCalendarClose}
+                      calendarContainer={({ children }) => (
+                        <div className="react-datepicker__calendar-container odys-datepicker-container">
+                          {children}
+                          <button
+                            className="datepicker-done-button"
+                            onClick={() => datePickerRef.current?.setOpen(false)}
+                          >
+                            Terminé
+                          </button>
+                        </div>
+                      )}
+                    />
+                  </div>
                 </div>
-
                 {calculateDuration(formData) > 0 && (
                   <p className="text-base text-gray-600 text-center font-medium">
                     Durée du voyage : {calculateDuration(formData)} jour{calculateDuration(formData) > 1 ? 's' : ''}
@@ -359,10 +360,10 @@ export default function GenerateForm() {
       </div>
 
       {/* Navigation buttons */}
-      <div className="mt-8 flex justify-between">
+      <div className="mt-8 flex gap-2">
         <button
           onClick={handlePrevious}
-          className={`px-6 py-2 rounded-md ${
+          className={`w-1/2 px-6 py-2 rounded-md ${
             currentStep === 1
               ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
               : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
@@ -374,7 +375,7 @@ export default function GenerateForm() {
         <button
           onClick={handleNext}
           disabled={isNextDisabled()}
-          className={`px-6 py-2 rounded-md ${
+          className={`w-1/2 px-6 py-2 rounded-md ${
             isNextDisabled()
               ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
               : 'bg-indigo-600 text-white hover:bg-indigo-700'
@@ -385,4 +386,4 @@ export default function GenerateForm() {
       </div>
     </div>
   )
-} 
+}

@@ -4,7 +4,6 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import { useState, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence, PanInfo } from 'framer-motion'
 import ActivityCard from '@/components/suggestions/ActivityCard'
-import Header from '../../components/Header'
 
 interface Activity {
   id: string
@@ -424,8 +423,6 @@ export default function SuggestionsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header showBackButton />
-      
       <main className="max-w-2xl mx-auto px-4 py-4">
         {/* Stepper des catégories */}
         <div className="mb-6">

@@ -2,12 +2,16 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
+import Header from '@/components/ui/Header';
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Odys.ai - Assistant de voyage intelligent",
   description: "Votre assistant de voyage personnel qui crée des programmes sur mesure",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=1",
+  themeColor: "#ffffff",
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({
@@ -17,11 +21,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr" className={inter.className}>
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-      </head>
-      <body>
+      <body className="bg-white" suppressHydrationWarning>
         <div className="min-h-screen flex flex-col">
+          <Header />
           <main className="flex-1">
             {children}
           </main>
