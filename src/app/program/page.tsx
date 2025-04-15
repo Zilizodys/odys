@@ -56,7 +56,8 @@ export default function ProgramPage() {
     router.push('/dashboard')
   }
 
-  const formatDate = (dateStr: string) => {
+  const formatDate = (dateStr: string | null) => {
+    if (!dateStr) return '';
     return new Date(dateStr).toLocaleDateString('fr-FR', {
       day: 'numeric',
       month: 'numeric',
@@ -64,7 +65,8 @@ export default function ProgramPage() {
     })
   }
 
-  const getBudgetLabel = (budget: number) => {
+  const getBudgetLabel = (budget: number | null) => {
+    if (!budget) return '0€';
     switch (budget) {
       case 500: return 'Économique'
       case 1000: return 'Modéré'
@@ -73,7 +75,8 @@ export default function ProgramPage() {
     }
   }
 
-  const getCompanionLabel = (companion: string) => {
+  const getCompanionLabel = (companion: string | null) => {
+    if (!companion) return '';
     switch (companion) {
       case 'solo': return 'Solo'
       case 'couple': return 'En couple'
