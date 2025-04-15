@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { Suggestion, SuggestionCategory } from '@/types/suggestion'
+import { MOCK_SUGGESTIONS } from '@/types/suggestion'
+import Image from 'next/image'
 
 const CATEGORIES: SuggestionCategory[] = [
   'Vie nocturne',
@@ -21,30 +23,42 @@ interface SuggestionsListProps {
 export default function SuggestionsList({ onSave, onSkip }: SuggestionsListProps) {
   const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0)
   const [direction, setDirection] = useState(0)
+  const [currentSuggestionIndex, setCurrentSuggestionIndex] = useState(0)
+  const [imageError, setImageError] = useState(false)
 
   const currentCategory = CATEGORIES[currentCategoryIndex]
+  const currentSuggestions = MOCK_SUGGESTIONS.filter(s => s.category === currentCategory)
+  const currentSuggestion = currentSuggestions[currentSuggestionIndex]
+
+  const handleImageError = () => {
+    setImageError(true)
+  }
 
   const handleNext = () => {
     if (currentCategoryIndex < CATEGORIES.length - 1) {
       setDirection(1)
       setCurrentCategoryIndex(prev => prev + 1)
+      setCurrentSuggestionIndex(0)
     }
   }
 
   const handleSwipe = (swipeDirection: number) => {
     if (swipeDirection > 0) {
       // Swipe à droite = sauvegarder
-      onSave({
-        id: Date.now().toString(),
-        title: "Exemple d'activité",
-        description: "Description de l'activité",
-        category: currentCategory,
-        duration: "2 heures",
-        price: 25
-      })
+      onSave(currentSuggestion)
+      if (currentSuggestionIndex < currentSuggestions.length - 1) {
+        setCurrentSuggestionIndex(prev => prev + 1)
+      } else {
+        handleNext()
+      }
     } else {
       // Swipe à gauche = passer
       onSkip()
+      if (currentSuggestionIndex < currentSuggestions.length - 1) {
+        setCurrentSuggestionIndex(prev => prev + 1)
+      } else {
+        handleNext()
+      }
     }
   }
 
@@ -66,15 +80,37 @@ export default function SuggestionsList({ onSave, onSkip }: SuggestionsListProps
                 Swipez à droite pour sauvegarder, à gauche pour passer
               </p>
               
-              {/* Exemple de carte de suggestion */}
-              <div className="bg-white rounded-lg shadow-lg p-6 mb-4">
-                <h3 className="text-xl font-semibold mb-2">Exemple d'activité</h3>
-                <p className="text-gray-600 mb-4">Description de l'activité</p>
-                <div className="flex justify-between text-sm text-gray-500">
-                  <span>2 heures</span>
-                  <span>25€</span>
+              {currentSuggestion && (
+                <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+                  <div className="relative h-48 w-full bg-gray-100">
+                    {!imageError && currentSuggestion.image ? (
+                      <Image
+                        src={currentSuggestion.image}
+                        alt={currentSuggestion.title}
+                        fill
+                        className="object-cover"
+                        onError={handleImageError}
+                        priority
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="text-gray-400">Image non disponible</span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold mb-2">{currentSuggestion.title}</h3>
+                    <p className="text-gray-600 mb-4">{currentSuggestion.description}</p>
+                    {currentSuggestion.location && (
+                      <p className="text-sm text-gray-500 mb-4">{currentSuggestion.location}</p>
+                    )}
+                    <div className="flex justify-between text-sm text-gray-500">
+                      <span>{currentSuggestion.duration}</span>
+                      <span>{currentSuggestion.price}€</span>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </motion.div>
         </AnimatePresence>

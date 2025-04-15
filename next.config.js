@@ -4,16 +4,8 @@ const nextConfig = {
   swcMinify: true,
   poweredByHeader: false,
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'lh3.googleusercontent.com',
-      }
-    ],
+    domains: ['images.unsplash.com', 'lh3.googleusercontent.com'],
+    unoptimized: process.env.NODE_ENV === 'development',
   },
 }
 

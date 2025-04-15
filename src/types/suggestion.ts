@@ -39,10 +39,10 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     category: 'Gastronomie',
     duration: '2-3h',
     price: 150,
-    image: '',
-    location: '',
-    price_estimate: 0,
-    link: ''
+    image: '/images/restaurants/chateaubriand.jpg',
+    location: '129 Avenue Parmentier, 75011 Paris',
+    price_estimate: 150,
+    link: 'https://lechateaubriand.com'
   },
   {
     id: 'p-rest-2',
