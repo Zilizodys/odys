@@ -2,9 +2,10 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  experimental: {
-    optimizeCss: true,
-  },
+  poweredByHeader: false,
+  images: {
+    domains: ['images.unsplash.com'],
+  }
 }
 
 module.exports = nextConfig 
