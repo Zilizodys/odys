@@ -2,7 +2,7 @@ import { motion, PanInfo, useAnimation } from 'framer-motion'
 import { useState } from 'react'
 import Image from 'next/image'
 
-interface ActivityCardProps {
+export interface Activity {
   id: string
   title: string
   description: string
@@ -10,6 +10,10 @@ interface ActivityCardProps {
   address: string
   imageUrl: string
   category: string
+  duration: string
+}
+
+interface ActivityCardProps extends Activity {
   onDelete: (id: string) => void
 }
 
