@@ -8,7 +8,9 @@ export async function GET(request: Request) {
   try {
     const requestUrl = new URL(request.url)
     const code = requestUrl.searchParams.get('code')
-    const origin = requestUrl.origin
+
+    // Déterminer l'URL de base en fonction de l'environnement
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || requestUrl.origin
 
     if (code) {
       const supabase = createClient()
@@ -16,7 +18,7 @@ export async function GET(request: Request) {
       
       if (error) {
         console.error('Erreur lors de l\'échange du code:', error.message)
-        return NextResponse.redirect(`${origin}/auth/error?error=${encodeURIComponent(error.message)}`)
+        return NextResponse.redirect(`${baseUrl}/auth/error?error=${encodeURIComponent(error.message)}`)
       }
 
       if (data?.user) {
@@ -40,11 +42,16 @@ export async function GET(request: Request) {
           console.error('Erreur base de données:', dbError)
         }
       }
+
+      // Redirection vers la page d'accueil avec le paramètre auth-callback
+      return NextResponse.redirect(`${baseUrl}/?auth-callback=true`)
     }
 
-    return NextResponse.redirect(`${origin}/?auth-callback=true`)
+    // Si pas de code, redirection vers la page d'erreur
+    return NextResponse.redirect(`${baseUrl}/auth/error`)
   } catch (error) {
     console.error('Erreur inattendue:', error)
-    return NextResponse.redirect(`${new URL(request.url).origin}/auth/error`)
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || new URL(request.url).origin
+    return NextResponse.redirect(`${baseUrl}/auth/error`)
   }
 } 
