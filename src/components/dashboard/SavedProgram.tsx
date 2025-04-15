@@ -15,6 +15,11 @@ interface SavedProgramProps {
 export default function SavedProgram({ id, formData, activities, onDelete }: SavedProgramProps) {
   const [isExpanded, setIsExpanded] = useState(false)
 
+  const formatDate = (dateStr: string | null) => {
+    if (!dateStr) return '';
+    return new Date(dateStr).toLocaleDateString('fr-FR')
+  }
+
   return (
     <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
       <div className="p-4">
@@ -24,8 +29,8 @@ export default function SavedProgram({ id, formData, activities, onDelete }: Sav
               {formData.destination}
             </h2>
             <div className="text-sm text-gray-500">
-              <p>Du {new Date(formData.startDate).toLocaleDateString('fr-FR')} au {new Date(formData.endDate).toLocaleDateString('fr-FR')}</p>
-              <p>Voyage {formData.companion.toLowerCase()} • Budget : {formData.budget}€</p>
+              <p>Du {formatDate(formData.startDate)} au {formatDate(formData.endDate)}</p>
+              <p>Voyage {formData.companion?.toLowerCase() || ''} • Budget : {formData.budget || 0}€</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
