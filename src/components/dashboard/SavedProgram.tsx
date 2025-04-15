@@ -18,7 +18,13 @@ export default function SavedProgram({ id, formData, activities, onDelete }: Sav
 
   const formatDate = (dateStr: string | null) => {
     if (!dateStr) return '';
-    return new Date(dateStr).toLocaleDateString('fr-FR')
+    try {
+      const date = new Date(dateStr);
+      if (isNaN(date.getTime())) return '';
+      return date.toLocaleDateString('fr-FR');
+    } catch {
+      return '';
+    }
   }
 
   return (
