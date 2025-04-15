@@ -45,19 +45,21 @@ export default function SuggestionCard({ suggestion, onSwipe, isTop }: Suggestio
     >
       <div className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden shadow-xl">
         <img
-          src={suggestion.image}
+          src={suggestion.image || `https://placehold.co/600x400/e4e4e7/1f2937?text=${encodeURIComponent(suggestion.title)}`}
           alt={suggestion.title}
           className="w-full h-full object-cover"
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            target.src = `https://placehold.co/600x400/e4e4e7/1f2937?text=${encodeURIComponent(suggestion.title)}`;
+          }}
         />
         <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent text-white">
           <h3 className="text-2xl font-bold mb-2">{suggestion.title}</h3>
           <p className="text-sm mb-2">{suggestion.description}</p>
           <div className="flex items-center justify-between">
-            <span className="text-sm">{suggestion.location}</span>
+            <span className="text-sm">{suggestion.location || suggestion.category}</span>
             <span className="text-sm">
-              {suggestion.price_estimate > 0 
-                ? '€'.repeat(Math.min(Math.ceil(suggestion.price_estimate / 50), 3))
-                : 'Gratuit'}
+              {suggestion.price_estimate ? '€'.repeat(Math.min(Math.ceil(suggestion.price_estimate / 50), 3)) : suggestion.price > 0 ? `${suggestion.price}€` : 'Gratuit'}
             </span>
           </div>
           {suggestion.link && (

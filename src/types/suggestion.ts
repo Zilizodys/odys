@@ -13,6 +13,10 @@ export interface Suggestion {
   category: SuggestionCategory
   duration: string
   price: number
+  image: string
+  location?: string
+  price_estimate?: number
+  link?: string
 }
 
 export const CATEGORY_LABELS: Record<SuggestionCategory, string> = {
@@ -34,7 +38,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Restaurant gastronomique moderne avec menu dégustation innovant',
     category: 'Gastronomie',
     duration: '2-3h',
-    price: 150
+    price: 150,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'p-rest-2',
@@ -42,7 +50,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Bistrot traditionnel parisien célèbre pour son poulet rôti',
     category: 'Gastronomie',
     duration: '1-2h',
-    price: 80
+    price: 80,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'p-rest-3',
@@ -50,7 +62,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Restaurant 3 étoiles Michelin du chef Alain Passard',
     category: 'Gastronomie',
     duration: '2-3h',
-    price: 200
+    price: 200,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'p-rest-4',
@@ -58,7 +74,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Cuisine française traditionnelle dans un cadre authentique',
     category: 'Gastronomie',
     duration: '1-2h',
-    price: 60
+    price: 60,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'p-rest-5',
@@ -66,7 +86,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Restaurant intimiste avec cuisine du marché créative',
     category: 'Gastronomie',
     duration: '1-2h',
-    price: 70
+    price: 70,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
 
   // Bars Paris
@@ -76,7 +100,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Bar caché avec décor colonial et cocktails exotiques',
     category: 'Vie nocturne',
     duration: '2-3h',
-    price: 15
+    price: 15,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'p-bar-2',
@@ -84,7 +112,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Bar à cocktails créatifs dans le Marais',
     category: 'Vie nocturne',
     duration: '1-2h',
-    price: 16
+    price: 16,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'p-bar-3',
@@ -92,7 +124,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Cocktails à base de spiritueux français uniquement',
     category: 'Vie nocturne',
     duration: '1-2h',
-    price: 14
+    price: 14,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'p-bar-4',
@@ -100,7 +136,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Bar branché avec ambiance marocaine',
     category: 'Vie nocturne',
     duration: '2-3h',
-    price: 13
+    price: 13,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'p-bar-5',
@@ -108,7 +148,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Bar à huîtres et cocktails dans le Marais',
     category: 'Vie nocturne',
     duration: '2-3h',
-    price: 12
+    price: 12,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
 
   // Culture Paris
@@ -118,7 +162,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Le plus grand musée d\'art au monde',
     category: 'Culture',
     duration: '3-4h',
-    price: 17
+    price: 17,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'p-cult-2',
@@ -126,7 +174,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Collection impressionniste dans une ancienne gare',
     category: 'Culture',
     duration: '2-3h',
-    price: 16
+    price: 16,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'p-cult-3',
@@ -134,7 +186,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Art moderne et contemporain',
     category: 'Culture',
     duration: '2-3h',
-    price: 14
+    price: 14,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'p-cult-4',
@@ -142,7 +198,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Chef-d\'œuvre architectural du XIXe siècle',
     category: 'Culture',
     duration: '1-2h',
-    price: 12
+    price: 12,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'p-cult-5',
@@ -150,7 +210,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Histoire de Paris à travers les siècles',
     category: 'Culture',
     duration: '2h',
-    price: 0
+    price: 0,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
 
   // Nature Paris
@@ -160,7 +224,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Jardin à la française entre le Louvre et la Concorde',
     category: 'Nature',
     duration: '1-2h',
-    price: 0
+    price: 0,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'p-nat-2',
@@ -168,7 +236,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Plus grand espace vert de Paris avec lac et zoo',
     category: 'Nature',
     duration: '3-4h',
-    price: 0
+    price: 0,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'p-nat-3',
@@ -176,7 +248,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Jardin botanique historique et muséum',
     category: 'Nature',
     duration: '2-3h',
-    price: 0
+    price: 0,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'p-nat-4',
@@ -184,7 +260,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Parc pittoresque avec falaises et lac',
     category: 'Nature',
     duration: '2h',
-    price: 0
+    price: 0,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'p-nat-5',
@@ -192,7 +272,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Promenade plantée sur une ancienne voie ferrée',
     category: 'Nature',
     duration: '1-2h',
-    price: 0
+    price: 0,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
 
   // Shopping Paris
@@ -202,7 +286,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Grand magasin historique avec coupole Art nouveau',
     category: 'Shopping',
     duration: '2-3h',
-    price: 0
+    price: 0,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'p-shop-2',
@@ -210,7 +298,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Quartier branché avec boutiques de créateurs',
     category: 'Shopping',
     duration: '3-4h',
-    price: 0
+    price: 0,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'p-shop-3',
@@ -218,7 +310,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'La plus belle avenue du monde et ses boutiques de luxe',
     category: 'Shopping',
     duration: '2-3h',
-    price: 0
+    price: 0,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'p-shop-4',
@@ -226,7 +322,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Premier grand magasin de Paris, shopping haut de gamme',
     category: 'Shopping',
     duration: '2h',
-    price: 0
+    price: 0,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'p-shop-5',
@@ -234,7 +334,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Centre commercial moderne au cœur de Paris',
     category: 'Shopping',
     duration: '2-3h',
-    price: 0
+    price: 0,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
 
   // ROME
@@ -245,7 +349,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Restaurant-épicerie historique, spécialités romaines',
     category: 'Gastronomie',
     duration: '1-2h',
-    price: 50
+    price: 50,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'r-rest-2',
@@ -253,7 +361,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Cuisine romaine traditionnelle près du Panthéon',
     category: 'Gastronomie',
     duration: '1-2h',
-    price: 40
+    price: 40,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'r-rest-3',
@@ -261,7 +373,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Restaurant 3 étoiles Michelin avec vue sur Rome',
     category: 'Gastronomie',
     duration: '2-3h',
-    price: 200
+    price: 200,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'r-rest-4',
@@ -269,7 +385,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Restaurant de fruits de mer historique',
     category: 'Gastronomie',
     duration: '2h',
-    price: 80
+    price: 80,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'r-rest-5',
@@ -277,7 +397,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Cave à vin et restaurant gastronomique',
     category: 'Gastronomie',
     duration: '2h',
-    price: 60
+    price: 60,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
 
   // Bars Rome
@@ -287,7 +411,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Bar caché style prohibition, cocktails créatifs',
     category: 'Vie nocturne',
     duration: '2-3h',
-    price: 14
+    price: 14,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'r-bar-2',
@@ -295,7 +423,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Bar branché du quartier historique',
     category: 'Vie nocturne',
     duration: '2h',
-    price: 10
+    price: 10,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'r-bar-3',
@@ -303,7 +435,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Bar Art déco historique, cocktails classiques',
     category: 'Vie nocturne',
     duration: '1-2h',
-    price: 16
+    price: 16,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'r-bar-4',
@@ -311,7 +447,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Bar élégant avec terrasse à l\'Hôtel de Russie',
     category: 'Vie nocturne',
     duration: '2h',
-    price: 20
+    price: 20,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'r-bar-5',
@@ -319,7 +459,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Speakeasy avec ambiance vintage et cocktails originaux',
     category: 'Vie nocturne',
     duration: '2-3h',
-    price: 12
+    price: 12,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
 
   // Culture Rome
@@ -329,7 +473,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Amphithéâtre antique emblématique de Rome',
     category: 'Culture',
     duration: '2-3h',
-    price: 16
+    price: 16,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'r-cult-2',
@@ -337,7 +485,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Collection d\'art exceptionnelle et Chapelle Sixtine',
     category: 'Culture',
     duration: '3-4h',
-    price: 17
+    price: 17,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'r-cult-3',
@@ -345,7 +497,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Temple romain antique parfaitement préservé',
     category: 'Culture',
     duration: '1h',
-    price: 0
+    price: 0,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'r-cult-4',
@@ -353,7 +509,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Chefs-d\'œuvre de l\'art dans une villa du XVIIe siècle',
     category: 'Culture',
     duration: '2h',
-    price: 13
+    price: 13,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'r-cult-5',
@@ -361,7 +521,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Centre politique de la Rome antique',
     category: 'Culture',
     duration: '2-3h',
-    price: 16
+    price: 16,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
 
   // Nature Rome
@@ -371,7 +535,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Plus grand parc public de Rome',
     category: 'Nature',
     duration: '2-3h',
-    price: 0
+    price: 0,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'r-nat-2',
@@ -379,7 +547,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Vue panoramique sur Rome et orangeraie',
     category: 'Nature',
     duration: '1h',
-    price: 0
+    price: 0,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'r-nat-3',
@@ -387,7 +559,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Parc archéologique avec aqueducs romains',
     category: 'Nature',
     duration: '2h',
-    price: 0
+    price: 0,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'r-nat-4',
@@ -395,7 +571,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Collection de plantes exotiques et méditerranéennes',
     category: 'Nature',
     duration: '1-2h',
-    price: 4
+    price: 4,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'r-nat-5',
@@ -403,7 +583,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Grand parc avec lac et sentiers de randonnée',
     category: 'Nature',
     duration: '2-3h',
-    price: 0
+    price: 0,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
 
   // Shopping Rome
@@ -413,7 +597,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Artère commerciale principale de Rome',
     category: 'Shopping',
     duration: '2-3h',
-    price: 0
+    price: 0,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'r-shop-2',
@@ -421,7 +609,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Rue des boutiques de luxe',
     category: 'Shopping',
     duration: '1-2h',
-    price: 0
+    price: 0,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'r-shop-3',
@@ -429,7 +621,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Shopping élégant dans le quartier Prati',
     category: 'Shopping',
     duration: '2h',
-    price: 0
+    price: 0,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'r-shop-4',
@@ -437,7 +633,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Marché traditionnel en plein air',
     category: 'Shopping',
     duration: '1h',
-    price: 0
+    price: 0,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   },
   {
     id: 'r-shop-5',
@@ -445,7 +645,11 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     description: 'Boutiques vintage et artisanat local',
     category: 'Shopping',
     duration: '2h',
-    price: 0
+    price: 0,
+    image: '',
+    location: '',
+    price_estimate: 0,
+    link: ''
   }
 
   // Continuer avec Barcelone et Londres...
