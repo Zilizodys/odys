@@ -5,8 +5,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Odys.ai - Compagnon de voyage intelligent",
-  description: "Votre compagnon de voyage intelligent qui vous aide à planifier vos voyages",
+  title: "Odys",
+  description: "Votre compagnon de voyage intelligent",
 };
 
 export default function RootLayout({
@@ -16,7 +16,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr" suppressHydrationWarning>
-      <head />
       <body className={inter.className} suppressHydrationWarning>
         {children}
       </body>
