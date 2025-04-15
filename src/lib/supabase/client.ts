@@ -1,7 +1,18 @@
 import { createBrowserClient } from '@supabase/ssr'
 
 export const createClient = () => {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000')
+  const getBaseUrl = () => {
+    if (typeof window !== 'undefined') {
+      // En mode développement, utilise l'URL actuelle
+      if (window.location.hostname === 'localhost') {
+        return process.env.NEXT_PUBLIC_SITE_URL
+      }
+    }
+    // En production, utilise l'URL de production
+    return process.env.NEXT_PUBLIC_PRODUCTION_URL
+  }
+
+  const baseUrl = getBaseUrl()
 
   return createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

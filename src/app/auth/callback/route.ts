@@ -10,7 +10,15 @@ export async function GET(request: Request) {
     const code = requestUrl.searchParams.get('code')
 
     // Déterminer l'URL de base en fonction de l'environnement
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || requestUrl.origin
+    const getBaseUrl = () => {
+      const hostname = requestUrl.hostname
+      if (hostname === 'localhost') {
+        return process.env.NEXT_PUBLIC_SITE_URL
+      }
+      return process.env.NEXT_PUBLIC_PRODUCTION_URL
+    }
+
+    const baseUrl = getBaseUrl()
 
     if (code) {
       const supabase = createClient()
@@ -51,7 +59,6 @@ export async function GET(request: Request) {
     return NextResponse.redirect(`${baseUrl}/auth/error`)
   } catch (error) {
     console.error('Erreur inattendue:', error)
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || new URL(request.url).origin
-    return NextResponse.redirect(`${baseUrl}/auth/error`)
+    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SITE_URL}/auth/error`)
   }
 } 
