@@ -1,3 +1,4 @@
+// SavedProgram component - Displays a saved travel program with activities
 'use client'
 
 import { useState } from 'react'
