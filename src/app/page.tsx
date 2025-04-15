@@ -2,11 +2,11 @@
 
 import LoginForm from '@/components/auth/LoginForm'
 import { createClient } from '@/lib/supabase/client'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 
-export default function Home() {
+function MainContent() {
   const [session, setSession] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
@@ -48,16 +48,14 @@ export default function Home() {
 
   if (loading) {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center p-24 bg-gray-50">
-        <div className="w-full max-w-md p-8 space-y-4 bg-white rounded-xl shadow-lg">
-          <div className="text-center text-gray-600">Chargement...</div>
-        </div>
-      </main>
+      <div className="w-full max-w-md p-8 space-y-4 bg-white rounded-xl shadow-lg">
+        <div className="text-center text-gray-600">Chargement...</div>
+      </div>
     )
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24 bg-gray-50">
+    <>
       {session ? (
         <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-lg">
           <div className="flex items-center justify-center">
@@ -115,6 +113,20 @@ export default function Home() {
           <LoginForm />
         </div>
       )}
+    </>
+  )
+}
+
+export default function Home() {
+  return (
+    <main className="flex min-h-screen flex-col items-center justify-center p-24 bg-gray-50">
+      <Suspense fallback={
+        <div className="w-full max-w-md p-8 space-y-4 bg-white rounded-xl shadow-lg">
+          <div className="text-center text-gray-600">Chargement...</div>
+        </div>
+      }>
+        <MainContent />
+      </Suspense>
     </main>
   )
 }

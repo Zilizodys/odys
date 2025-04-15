@@ -5,6 +5,7 @@ export async function GET(request: Request) {
   try {
     const requestUrl = new URL(request.url)
     const code = requestUrl.searchParams.get('code')
+    const origin = requestUrl.origin
 
     if (code) {
       const supabase = createClient()
@@ -12,7 +13,7 @@ export async function GET(request: Request) {
       
       if (error) {
         console.error('Erreur lors de l\'échange du code:', error.message)
-        return NextResponse.redirect(`${requestUrl.origin}/auth/error?error=${encodeURIComponent(error.message)}`)
+        return NextResponse.redirect(`${origin}/auth/error?error=${encodeURIComponent(error.message)}`)
       }
 
       if (data?.user) {
@@ -23,7 +24,8 @@ export async function GET(request: Request) {
               id: data.user.id,
               email: data.user.email,
               full_name: data.user.user_metadata?.full_name || null,
-              avatar_url: data.user.user_metadata?.avatar_url || null
+              avatar_url: data.user.user_metadata?.avatar_url || null,
+              updated_at: new Date().toISOString()
             }, {
               onConflict: 'id'
             })
@@ -37,7 +39,7 @@ export async function GET(request: Request) {
       }
     }
 
-    return NextResponse.redirect(`${new URL(request.url).origin}/?auth-callback=true`)
+    return NextResponse.redirect(`${origin}/?auth-callback=true`)
   } catch (error) {
     console.error('Erreur inattendue:', error)
     return NextResponse.redirect(`${new URL(request.url).origin}/auth/error`)
