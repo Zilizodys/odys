@@ -1,5 +1,7 @@
 # Odys
 
+MVP de l'application Odys.ai – compagnon de voyage intelligent
+
 Application web moderne construite avec Next.js, Supabase et TypeScript.
 
 ## Technologies utilisées
@@ -19,7 +21,7 @@ Application web moderne construite avec Next.js, Supabase et TypeScript.
 
 1. Cloner le repository
 ```bash
-git clone [URL_DU_REPO]
+git clone https://github.com/Zilizodys/odys.git
 ```
 
 2. Installer les dépendances
@@ -47,4 +49,4 @@ npm run dev
 
 ## Déploiement
 
-Le projet est configuré pour être déployé sur Vercel. 
+Le projet est configuré pour être déployé sur Vercel.
