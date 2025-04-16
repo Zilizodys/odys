@@ -16,7 +16,7 @@ export default function Home() {
               alt="Mascotte Odys"
               width={300}
               height={300}
-              className="rounded-lg w-auto h-auto"
+              style={{ width: 'auto', height: 'auto' }}
               priority
             />
           </div>

@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Header from '../../components/Header'
 import { Activity } from '@/types/activity'
 import { FormData } from '@/types/form'
 
@@ -89,7 +88,6 @@ export default function ProgramPage() {
   if (!formData) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Header showBackButton />
         <main className="max-w-2xl mx-auto px-4 py-8">
           <p className="text-center text-gray-600">
             Aucune donnée de programme disponible
@@ -101,8 +99,6 @@ export default function ProgramPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header showBackButton />
-      
       <main className="max-w-2xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-8">Votre Programme</h1>
 

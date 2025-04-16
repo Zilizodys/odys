@@ -1,3 +1,5 @@
+import { Activity } from './activity'
+
 export type TravelCompanion = 'solo' | 'couple' | 'friends' | 'family'
 export type MoodType = 'romantic' | 'cultural' | 'adventure' | 'party' | 'relaxation'
 export type BudgetLevel = 'low' | 'medium' | 'high'
@@ -9,6 +11,8 @@ export interface FormData {
   companion: TravelCompanion | null
   budget: number | null
   moods: MoodType[]
+  name: string
+  activities: Activity[]
 }
 
 export const INITIAL_FORM_DATA: FormData = {
@@ -17,7 +21,9 @@ export const INITIAL_FORM_DATA: FormData = {
   endDate: null,
   companion: null,
   budget: null,
-  moods: []
+  moods: [],
+  name: '',
+  activities: []
 }
 
 export const SUGGESTED_DESTINATIONS = [
@@ -37,7 +43,7 @@ export const COMPANION_OPTIONS = [
 export const BUDGET_OPTIONS = [
   { value: 500, label: 'Économique', icon: '💰' },
   { value: 1000, label: 'Modéré', icon: '💰💰' },
-  { value: 2000, label: 'Luxe', icon: '💰💰��' }
+  { value: 2000, label: 'Luxe', icon: '💰💰💰' }
 ]
 
 export const MOOD_OPTIONS = [

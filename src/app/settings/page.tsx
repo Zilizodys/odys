@@ -1,33 +1,38 @@
 'use client'
 
-import { createClient } from '@/lib/supabase/client'
 import { useEffect, useState } from 'react'
+import { createClient } from '@/lib/supabase/client'
+import { User } from '@supabase/supabase-js'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 
 export default function SettingsPage() {
-  const [user, setUser] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
+  const [user, setUser] = useState<User | null>(null)
   const router = useRouter()
-  const supabase = createClient()
 
   useEffect(() => {
+    const supabase = createClient()
+
     const getUser = async () => {
       try {
-        const { data: { user } } = await supabase.auth.getUser()
+        const { data: { user }, error } = await supabase.auth.getUser()
+        if (error) throw error
         setUser(user)
       } catch (error) {
         console.error('Erreur lors de la récupération de l\'utilisateur:', error)
+        router.push('/login')
       } finally {
-        setLoading(false)
+        setIsLoading(false)
       }
     }
 
     getUser()
-  }, [supabase])
+  }, [router])
 
   const handleSignOut = async () => {
     try {
+      const supabase = createClient()
       await supabase.auth.signOut()
       router.push('/login')
     } catch (error) {
@@ -35,69 +40,56 @@ export default function SettingsPage() {
     }
   }
 
-  if (loading) {
+  if (isLoading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center">
-          Chargement...
-        </div>
+      <div className="min-h-screen bg-gray-50">
+        <main className="max-w-2xl mx-auto px-4 py-8">
+          <h1 className="text-3xl font-bold mb-8">Paramètres</h1>
+          <p className="text-center text-gray-600">Chargement...</p>
+        </main>
       </div>
     )
   }
 
   if (!user) {
-    router.push('/login')
     return null
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="max-w-3xl mx-auto">
-        <div className="bg-white shadow rounded-lg overflow-hidden">
-          <div className="p-6">
-            <div className="flex items-center space-x-6">
-              {user.user_metadata?.avatar_url && (
-                <div className="relative h-20 w-20">
-                  <Image
-                    src={user.user_metadata.avatar_url}
-                    alt="Photo de profil"
-                    fill
-                    className="rounded-full object-cover"
-                  />
-                </div>
-              )}
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900">
-                  {user.user_metadata?.full_name || 'Utilisateur'}
-                </h2>
-                <p className="text-sm text-gray-500">{user.email}</p>
+    <div className="min-h-screen bg-gray-50">
+      <main className="max-w-2xl mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold mb-8">Paramètres</h1>
+        
+        <div className="bg-white shadow-sm rounded-xl p-6">
+          <h2 className="text-xl font-semibold mb-4">Profil</h2>
+          <div className="flex items-center space-x-6">
+            {user.user_metadata?.avatar_url && (
+              <div className="relative h-20 w-20">
+                <Image
+                  src={user.user_metadata.avatar_url}
+                  alt="Photo de profil"
+                  fill
+                  className="rounded-full object-cover"
+                />
               </div>
+            )}
+            <div>
+              <h3 className="text-2xl font-bold text-gray-900">
+                {user.user_metadata?.full_name || 'Utilisateur'}
+              </h3>
+              <p className="text-sm text-gray-500">{user.email}</p>
             </div>
           </div>
-
-          <div className="border-t border-gray-200 px-6 py-4">
-            <h3 className="text-lg font-medium text-gray-900">Informations du compte</h3>
-            <dl className="mt-4 space-y-4">
-              <div className="flex justify-between">
-                <dt className="text-sm font-medium text-gray-500">Email</dt>
-                <dd className="text-sm text-gray-900">{user.email}</dd>
-              </div>
-              <div className="flex justify-between">
-                <dt className="text-sm font-medium text-gray-500">Dernière connexion</dt>
-                <dd className="text-sm text-gray-900">
-                  {new Date(user.last_sign_in_at).toLocaleString('fr-FR')}
-                </dd>
-              </div>
-              <div className="flex justify-between">
-                <dt className="text-sm font-medium text-gray-500">Compte créé le</dt>
-                <dd className="text-sm text-gray-900">
-                  {new Date(user.created_at).toLocaleString('fr-FR')}
-                </dd>
-              </div>
-            </dl>
+          <div className="mt-4 space-y-4">
+            <p>
+              <span className="font-medium">Email :</span> {user.email}
+            </p>
+            <p>
+              <span className="font-medium">Dernière connexion :</span>{' '}
+              {new Date(user.last_sign_in_at || '').toLocaleDateString('fr-FR')}
+            </p>
           </div>
-
-          <div className="border-t border-gray-200 px-6 py-4">
+          <div className="mt-4 space-y-4">
             <button
               onClick={handleSignOut}
               className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
@@ -106,7 +98,7 @@ export default function SettingsPage() {
             </button>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   )
 } 

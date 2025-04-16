@@ -200,7 +200,13 @@ export default function GenerateForm() {
                     {SUGGESTED_DESTINATIONS.map((destination) => (
                       <button
                         key={destination.city}
-                        onClick={() => handleDestinationSelect(destination.city)}
+                        onClick={() => {
+                          if (formData.destination === destination.city) {
+                            updateFormData('destination', '')
+                          } else {
+                            handleDestinationSelect(destination.city)
+                          }
+                        }}
                         className={`p-3 rounded-lg border flex items-center space-x-3 transition-colors ${
                           formData.destination === destination.city
                             ? 'border-indigo-600 bg-indigo-50'
@@ -292,7 +298,13 @@ export default function GenerateForm() {
                   {COMPANION_OPTIONS.map((option) => (
                     <button
                       key={option.value}
-                      onClick={() => updateFormData('companion', option.value)}
+                      onClick={() => {
+                        if (formData.companion === option.value) {
+                          updateFormData('companion', null)
+                        } else {
+                          updateFormData('companion', option.value)
+                        }
+                      }}
                       className={`p-4 rounded-lg border-2 flex flex-col items-center ${
                         formData.companion === option.value
                           ? 'border-indigo-600 bg-indigo-50'
@@ -318,7 +330,13 @@ export default function GenerateForm() {
                   {BUDGET_OPTIONS.map((option) => (
                     <button
                       key={option.value}
-                      onClick={() => updateFormData('budget', option.value)}
+                      onClick={() => {
+                        if (formData.budget === option.value) {
+                          updateFormData('budget', null)
+                        } else {
+                          updateFormData('budget', option.value)
+                        }
+                      }}
                       className={`p-4 rounded-lg border ${
                         formData.budget === option.value
                           ? 'border-indigo-500 bg-indigo-50'
@@ -341,7 +359,14 @@ export default function GenerateForm() {
                   {MOOD_OPTIONS.map((option) => (
                     <button
                       key={option.value}
-                      onClick={() => updateFormData('moods', [...formData.moods, option.value as MoodType])}
+                      onClick={() => {
+                        const moodValue = option.value as MoodType;
+                        updateFormData('moods', 
+                          formData.moods.includes(moodValue)
+                            ? formData.moods.filter(mood => mood !== moodValue)
+                            : [...formData.moods, moodValue]
+                        )
+                      }}
                       className={`p-4 rounded-lg border-2 flex flex-col items-center ${
                         formData.moods.includes(option.value as MoodType)
                           ? 'border-indigo-600 bg-indigo-50'

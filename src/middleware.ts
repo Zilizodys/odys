@@ -1,37 +1,44 @@
+import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public (public files)
-     */
-    '/((?!_next/static|_next/image|favicon.ico|public).*)',
-  ],
-}
+// Routes protégées qui nécessitent une authentification
+const protectedRoutes = [
+  '/dashboard',
+  '/settings',
+  '/program/save',
+  '/profile',
+]
 
-export function middleware(request: NextRequest) {
-  try {
-    const res = NextResponse.next()
-    
-    // Ajout des en-têtes de sécurité
-    res.headers.set('X-Frame-Options', 'DENY')
-    res.headers.set('X-Content-Type-Options', 'nosniff')
-    res.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
-    res.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()')
-    
-    // Ajout des en-têtes CORS si nécessaire
-    res.headers.set('Access-Control-Allow-Origin', '*')
-    res.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-    res.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-    
-    return res
-  } catch (error) {
-    console.error('Middleware error:', error)
+export async function middleware(request: NextRequest) {
+  // Vérifier si l'URL actuelle est une route protégée
+  const currentPath = request.nextUrl.pathname
+  const isProtectedRoute = protectedRoutes.some(route => 
+    currentPath.startsWith(route)
+  )
+
+  // Si ce n'est pas une route protégée, on laisse passer
+  if (!isProtectedRoute) {
     return NextResponse.next()
   }
+
+  try {
+    const res = NextResponse.next()
+    const supabase = createMiddlewareClient({ req: request, res })
+    
+    // Rafraîchir la session si nécessaire
+    await supabase.auth.getSession()
+
+    return res
+  } catch (error) {
+    console.error('Erreur middleware:', error)
+    return NextResponse.redirect(new URL('/login', request.url))
+  }
+}
+
+// Configuration du matcher avec une syntaxe valide
+export const config = {
+  matcher: [
+    '/((?!_next/static|_next/image|favicon.ico).*)',
+  ]
 } 

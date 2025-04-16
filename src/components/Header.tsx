@@ -1,6 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 
 interface HeaderProps {
   showBackButton?: boolean
@@ -25,6 +26,13 @@ export default function Header({ showBackButton = false }: HeaderProps) {
         <div className="flex-1 flex justify-center">
           <h1 className="text-2xl font-bold text-indigo-600">Odys</h1>
         </div>
+        <Image
+          src="/images/activities/Mascot.png"
+          alt="Mascotte Odys"
+          width={50}
+          height={50}
+          className="w-auto h-auto"
+        />
       </div>
     </header>
   )

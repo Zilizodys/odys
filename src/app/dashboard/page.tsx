@@ -1,111 +1,128 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { FormData } from '@/types/form'
+import { createClient } from '@/lib/supabase/client'
 import { Activity } from '@/types/activity'
-import { FiTrash2 } from 'react-icons/fi'
-import { useLocalStorage } from '@/hooks/useLocalStorage'
+import ProgramCard from '@/components/ProgramCard'
 
-interface SavedProgram {
+interface Program {
   id: string
-  formData: FormData
+  user_id: string
+  destination: string
+  start_date: string
+  end_date: string
+  budget: number
+  companion: string
   activities: Activity[]
-  createdAt: string
+  created_at: string
 }
 
 export default function DashboardPage() {
-  const [savedPrograms, setSavedPrograms] = useLocalStorage<SavedProgram[]>('savedPrograms', [])
   const router = useRouter()
+  const [programs, setPrograms] = useState<Program[]>([])
+  const [isLoading, setIsLoading] = useState(true)
 
-  const formatDate = (dateString: string | null | undefined) => {
-    if (!dateString) return 'Date non définie'
+  useEffect(() => {
+    const loadPrograms = async () => {
+      const supabase = createClient()
+      
+      // Vérifier si l'utilisateur est connecté
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) {
+        router.push('/login?redirect=/dashboard')
+        return
+      }
+
+      // Charger les programmes
+      const { data, error } = await supabase
+        .from('programs')
+        .select('*')
+        .order('created_at', { ascending: false })
+
+      if (error) {
+        console.error('Erreur lors du chargement des programmes:', error)
+        return
+      }
+
+      setPrograms(data || [])
+      setIsLoading(false)
+    }
+
+    loadPrograms()
+  }, [router])
+
+  const handleDeleteProgram = async (programId: string) => {
     try {
-      return new Date(dateString).toLocaleDateString('fr-FR', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric'
-      })
+      const supabase = createClient()
+      const { error } = await supabase
+        .from('programs')
+        .delete()
+        .eq('id', programId)
+
+      if (error) throw error
+
+      setPrograms(programs.filter(p => p.id !== programId))
     } catch (error) {
-      console.error('Erreur de formatage de date:', error)
-      return 'Date invalide'
+      console.error('Erreur lors de la suppression:', error)
+      alert('Une erreur est survenue lors de la suppression.')
     }
   }
 
-  const handleDelete = (id: string) => {
-    setSavedPrograms(prev => prev.filter(program => program.id !== id))
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Chargement de vos programmes...</p>
+        </div>
+      </div>
+    )
   }
 
-  const validPrograms = savedPrograms.filter(program => 
-    program && 
-    program.id && 
-    program.formData && 
-    program.formData.destination &&
-    Array.isArray(program.activities)
-  )
-
   return (
-    <div className="min-h-screen bg-white">
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Mes programmes</h1>
-        
-        <div suppressHydrationWarning>
-          {validPrograms.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-gray-500 mb-6">Vous n&apos;avez pas encore de programme enregistré</p>
-              <button
-                onClick={() => router.push('/generate')}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
-              >
-                Créer un programme
-              </button>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {validPrograms.map((program) => (
-                <div
+    <div className="min-h-screen bg-gray-50 pb-32">
+      <main className="max-w-4xl mx-auto px-4 py-8">
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-3">
+            <h1 className="text-3xl font-bold text-gray-900">Mes programmes</h1>
+            <span className="px-3 py-1 bg-indigo-100 text-indigo-700 text-sm font-medium rounded-full">
+              {programs.length} programme{programs.length > 1 ? 's' : ''}
+            </span>
+          </div>
+        </div>
+
+        {programs.length === 0 ? (
+          <div className="text-center py-12 bg-white rounded-xl shadow-sm">
+            <p className="text-gray-600 mb-4">Vous n'avez pas encore de programme enregistré.</p>
+            <button
+              onClick={() => router.push('/generate')}
+              className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+            >
+              Créer mon premier programme
+            </button>
+          </div>
+        ) : (
+          <>
+            <div className="space-y-6 mb-8">
+              {programs.map((program) => (
+                <ProgramCard
                   key={program.id}
-                  className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden"
-                >
-                  <div className="p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <h2 className="text-xl font-semibold text-gray-900">
-                        {program.formData.destination}
-                      </h2>
-                      <button
-                        onClick={() => handleDelete(program.id)}
-                        className="text-gray-400 hover:text-red-500"
-                      >
-                        <FiTrash2 className="w-5 h-5" />
-                      </button>
-                    </div>
-                    
-                    <div className="space-y-2 text-sm text-gray-500">
-                      <p suppressHydrationWarning>
-                        Du {formatDate(program.formData.startDate)} au {formatDate(program.formData.endDate)}
-                      </p>
-                      <p>{program.formData.companion}</p>
-                      <p>Budget: {program.formData.budget}€</p>
-                    </div>
-
-                    <div className="mt-4">
-                      <p className="text-sm font-medium text-gray-900">Activités:</p>
-                      <p className="text-sm text-gray-500">{program.activities.length} activités planifiées</p>
-                    </div>
-
-                    <div className="mt-6">
-                      <button
-                        onClick={() => router.push(`/program/${program.id}`)}
-                        className="w-full flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
-                      >
-                        Voir le détail
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                  program={program}
+                  onDelete={handleDeleteProgram}
+                />
               ))}
             </div>
-          )}
-        </div>
+            <div className="flex justify-center mt-12">
+              <button
+                onClick={() => router.push('/generate')}
+                className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2"
+              >
+                Créer un nouveau programme
+              </button>
+            </div>
+          </>
+        )}
       </main>
     </div>
   )

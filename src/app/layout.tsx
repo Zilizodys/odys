@@ -1,18 +1,29 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
+import './globals.css'
+import { Inter } from 'next/font/google'
 import Link from "next/link";
 import Header from '@/components/ui/Header';
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['latin'] })
 
-export const metadata: Metadata = {
-  title: "Odys.ai - Assistant de voyage intelligent",
-  description: "Votre assistant de voyage personnel qui crée des programmes sur mesure",
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1",
-  themeColor: "#ffffff",
-  manifest: "/manifest.json",
-};
+export const metadata = {
+  title: 'Odys - Créez votre voyage personnalisé',
+  description: 'Créez votre programme de voyage personnalisé en quelques clics grâce à notre assistant intelligent.',
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/icon.png', type: 'image/png' },
+    ],
+  },
+}
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#4F46E5' },
+    { media: '(prefers-color-scheme: dark)', color: '#4F46E5' }
+  ]
+}
 
 export default function RootLayout({
   children,
@@ -21,6 +32,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr" className={inter.className}>
+      <head>
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/icon.png" type="image/png" />
+      </head>
       <body className="bg-white" suppressHydrationWarning>
         <div className="min-h-screen flex flex-col">
           <Header />
@@ -69,5 +84,5 @@ export default function RootLayout({
         </div>
       </body>
     </html>
-  );
+  )
 }

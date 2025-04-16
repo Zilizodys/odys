@@ -4,6 +4,8 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import { useState, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence, PanInfo } from 'framer-motion'
 import ActivityCard from '@/components/suggestions/ActivityCard'
+import { createClient } from '@/lib/supabase/client'
+import { activities as localActivities } from '@/data/activities'
 
 interface Activity {
   id: string
@@ -11,282 +13,113 @@ interface Activity {
   description: string
   price: number
   address: string
-  imageUrl: string
+  imageurl: string
   category: string
+  city: string
 }
 
-// Mapping des moods vers les clés des activités
-const MOOD_TO_ACTIVITY_KEY: Record<string, keyof typeof MOCK_ACTIVITIES> = {
-  'romantic': 'romantic',
-  'cultural': 'cultural',
-  'adventure': 'adventure',
-  'party': 'party',
-  'relaxation': 'relaxation'
+// Mapping des moods vers les catégories
+const MOOD_TO_CATEGORY: Record<string, string> = {
+  'romantic': 'Gastronomie',
+  'cultural': 'culture',
+  'adventure': 'sport',
+  'party': 'vie nocturne',
+  'relaxation': 'nature'
 }
-
-// Mock data - À remplacer par des vraies données de l'API
-const MOCK_ACTIVITIES: Record<string, Activity[]> = {
-  romantic: [
-    {
-      id: 'r1',
-      title: 'Dîner aux chandelles sur la Seine',
-      description: 'Profitez d\'un dîner romantique sur un bateau-mouche avec vue sur les monuments parisiens illuminés',
-      price: 89,
-      address: 'Port de la Conférence, Paris',
-      imageUrl: 'https://placehold.co/600x400/e4e4e7/1f2937?text=Dîner+sur+la+Seine',
-      category: 'Romantique'
-    },
-    {
-      id: 'r2',
-      title: 'Coucher de soleil à Montmartre',
-      description: 'Admirez Paris depuis les marches du Sacré-Cœur avec une coupe de champagne',
-      price: 45,
-      address: 'Place du Tertre, Paris',
-      imageUrl: '/images/activities/montmartre-sunset.jpg',
-      category: 'Romantique'
-    },
-    {
-      id: 'r3',
-      title: 'Jardin des Tuileries en calèche',
-      description: 'Balade romantique en calèche dans le plus beau jardin de Paris',
-      price: 75,
-      address: 'Jardin des Tuileries, Paris',
-      imageUrl: '/images/activities/tuileries-carriage.jpg',
-      category: 'Romantique'
-    },
-    {
-      id: 'r4',
-      title: 'Dégustation de macarons Ladurée',
-      description: 'Découvrez les saveurs emblématiques de la plus célèbre maison de macarons',
-      price: 35,
-      address: 'Champs-Élysées, Paris',
-      imageUrl: '/images/activities/macarons.jpg',
-      category: 'Romantique'
-    },
-    {
-      id: 'r5',
-      title: 'Soirée opéra Garnier',
-      description: 'Une soirée magique dans le plus bel opéra du monde',
-      price: 150,
-      address: 'Place de l\'Opéra, Paris',
-      imageUrl: '/images/activities/opera.jpg',
-      category: 'Romantique'
-    }
-  ],
-  cultural: [
-    {
-      id: 'c1',
-      title: 'Visite privée du Louvre',
-      description: 'Découvrez les chefs-d\'œuvre du plus grand musée du monde avec un guide expert',
-      price: 65,
-      address: 'Rue de Rivoli, Paris',
-      imageUrl: 'https://placehold.co/600x400/e4e4e7/1f2937?text=Le+Louvre',
-      category: 'Culture'
-    },
-    {
-      id: 'c2',
-      title: 'Musée d\'Orsay: Impressionnisme',
-      description: 'Plongez dans l\'univers des impressionnistes dans une ancienne gare',
-      price: 45,
-      address: 'Rue de la Légion d\'Honneur, Paris',
-      imageUrl: '/images/activities/orsay.jpg',
-      category: 'Culture'
-    },
-    {
-      id: 'c3',
-      title: 'Centre Pompidou: Art Moderne',
-      description: 'Explorez l\'art contemporain dans un bâtiment emblématique',
-      price: 40,
-      address: 'Place Georges-Pompidou, Paris',
-      imageUrl: '/images/activities/pompidou.jpg',
-      category: 'Culture'
-    },
-    {
-      id: 'c4',
-      title: 'Château de Versailles',
-      description: 'Visitez le château le plus prestigieux de France et ses jardins',
-      price: 95,
-      address: 'Place d\'Armes, Versailles',
-      imageUrl: '/images/activities/versailles.jpg',
-      category: 'Culture'
-    },
-    {
-      id: 'c5',
-      title: 'Atelier de peinture Montmartre',
-      description: 'Créez votre propre œuvre d\'art avec un artiste local',
-      price: 55,
-      address: 'Place du Tertre, Paris',
-      imageUrl: '/images/activities/painting.jpg',
-      category: 'Culture'
-    }
-  ],
-  adventure: [
-    {
-      id: 'a1',
-      title: 'Escalade à Fontainebleau',
-      description: 'Journée d\'escalade dans le site naturel mondialement connu de Fontainebleau',
-      price: 45,
-      address: 'Forêt de Fontainebleau',
-      imageUrl: '/images/activities/climbing.jpg',
-      category: 'Aventure'
-    },
-    {
-      id: 'a2',
-      title: 'Vol en montgolfière',
-      description: 'Survolez les châteaux de la Loire au lever du soleil',
-      price: 220,
-      address: 'Château de Chambord',
-      imageUrl: '/images/activities/balloon.jpg',
-      category: 'Aventure'
-    },
-    {
-      id: 'a3',
-      title: 'Parcours accrobranche',
-      description: 'Défiez-vous dans les arbres avec des tyroliennes spectaculaires',
-      price: 35,
-      address: 'Parc de Saint-Cloud',
-      imageUrl: '/images/activities/accrobranche.jpg',
-      category: 'Aventure'
-    },
-    {
-      id: 'a4',
-      title: 'Karting indoor',
-      description: 'Courses palpitantes sur une piste professionnelle',
-      price: 55,
-      address: 'RKC Paris',
-      imageUrl: '/images/activities/karting.jpg',
-      category: 'Aventure'
-    },
-    {
-      id: 'a5',
-      title: 'Simulateur de chute libre',
-      description: 'Vivez les sensations du saut en parachute en intérieur',
-      price: 85,
-      address: 'iFLY Paris',
-      imageUrl: '/images/activities/skydive.jpg',
-      category: 'Aventure'
-    }
-  ],
-  party: [
-    {
-      id: 'p1',
-      title: 'Soirée Jazz au Duc des Lombards',
-      description: 'Une soirée inoubliable dans l\'un des meilleurs clubs de jazz parisiens',
-      price: 35,
-      address: '42 Rue des Lombards, Paris',
-      imageUrl: '/images/activities/jazz.jpg',
-      category: 'Fête'
-    },
-    {
-      id: 'p2',
-      title: 'Cocktails au Ritz',
-      description: 'Dégustez des cocktails d\'exception dans un cadre luxueux',
-      price: 95,
-      address: 'Place Vendôme, Paris',
-      imageUrl: '/images/activities/ritz.jpg',
-      category: 'Fête'
-    },
-    {
-      id: 'p3',
-      title: 'Croisière DJ Set',
-      description: 'Dansez sur la Seine avec les meilleurs DJs parisiens',
-      price: 45,
-      address: 'Port de la Rapée, Paris',
-      imageUrl: '/images/activities/boat-party.jpg',
-      category: 'Fête'
-    },
-    {
-      id: 'p4',
-      title: 'Cabaret Crazy Horse',
-      description: 'Spectacle légendaire mêlant danse et créativité',
-      price: 120,
-      address: 'Avenue George V, Paris',
-      imageUrl: '/images/activities/cabaret.jpg',
-      category: 'Fête'
-    },
-    {
-      id: 'p5',
-      title: 'Rooftop du Perchoir Marais',
-      description: 'Vue panoramique sur Paris avec cocktails et DJ',
-      price: 25,
-      address: 'Rue de la Verrerie, Paris',
-      imageUrl: '/images/activities/rooftop.jpg',
-      category: 'Fête'
-    }
-  ],
-  relaxation: [
-    {
-      id: 'rel1',
-      title: 'Spa de luxe aux Bains de Paris',
-      description: 'Moment de détente absolue dans un cadre historique exceptionnel',
-      price: 120,
-      address: '7 Rue du Bourg l\'Abbé, Paris',
-      imageUrl: '/images/activities/spa.jpg',
-      category: 'Détente'
-    },
-    {
-      id: 'rel2',
-      title: 'Massage au Ritz Spa',
-      description: 'Massage signature dans le plus beau spa de Paris',
-      price: 180,
-      address: 'Place Vendôme, Paris',
-      imageUrl: '/images/activities/massage.jpg',
-      category: 'Détente'
-    },
-    {
-      id: 'rel3',
-      title: 'Yoga au Jardin des Plantes',
-      description: 'Séance de yoga en plein air dans un cadre verdoyant',
-      price: 25,
-      address: 'Rue Geoffroy-Saint-Hilaire, Paris',
-      imageUrl: '/images/activities/yoga.jpg',
-      category: 'Détente'
-    },
-    {
-      id: 'rel4',
-      title: 'Hammam traditionnel',
-      description: 'Rituel de bien-être oriental avec gommage et massage',
-      price: 85,
-      address: 'Mosquée de Paris',
-      imageUrl: '/images/activities/hammam.jpg',
-      category: 'Détente'
-    },
-    {
-      id: 'rel5',
-      title: 'Méditation au Parc Montsouris',
-      description: 'Session guidée de méditation en pleine conscience',
-      price: 20,
-      address: 'Parc Montsouris, Paris',
-      imageUrl: '/images/activities/meditation.jpg',
-      category: 'Détente'
-    }
-  ]
-} as const;
 
 export default function SuggestionsPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const selectedMoods = searchParams.get('moods')?.split(',') || []
-  const [currentMoodIndex, setCurrentMoodIndex] = useState(0)
+  const moodsParam = searchParams.get('moods')
+  const moods = moodsParam?.split(',') || []
+  
   const [currentActivityIndex, setCurrentActivityIndex] = useState(0)
+  const [activities, setActivities] = useState<Activity[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [currentMoodIndex, setCurrentMoodIndex] = useState(0)
   const [savedActivities, setSavedActivities] = useState<Activity[]>([])
   const [direction, setDirection] = useState<'left' | 'right' | null>(null)
   const [isAnimating, setIsAnimating] = useState(false)
 
-  // Filtrer les activités par mood sélectionné
-  const currentMood = selectedMoods[currentMoodIndex]?.toLowerCase()
-  const currentMoodActivities = currentMood ? MOCK_ACTIVITIES[currentMood as keyof typeof MOCK_ACTIVITIES] || [] : []
-  const currentActivity = currentMoodActivities[currentActivityIndex]
-  const isLastActivity = currentActivityIndex === currentMoodActivities.length - 1
-  const isLastMood = currentMoodIndex === selectedMoods.length - 1
+  const currentMood = moods[currentMoodIndex]
+  const currentCategory = currentMood ? MOOD_TO_CATEGORY[currentMood] : null
+
+  useEffect(() => {
+    const loadActivities = async () => {
+      if (!currentCategory) return
+      
+      setIsLoading(true)
+      try {
+        const supabase = createClient()
+        
+        // Récupérer les données du formulaire pour la ville
+        const formDataStr = localStorage.getItem('formData')
+        const formData = formDataStr ? JSON.parse(formDataStr) : null
+        const city = formData?.destination || ''
+
+        console.log('Chargement des activités pour la ville:', city)
+        console.log('Catégorie actuelle:', currentCategory)
+
+        if (!city) {
+          console.error('Ville manquante')
+          return
+        }
+
+        // Récupérer les activités de Supabase
+        const { data, error } = await supabase
+          .from('activities')
+          .select('*')
+          .ilike('city', city)
+          .ilike('category', currentCategory)
+          .limit(5)
+
+        if (error) {
+          console.error('Erreur Supabase:', error)
+          throw error
+        }
+
+        let activitiesToUse = data || []
+        
+        // Si on a moins de 5 activités, utiliser les données locales
+        if (activitiesToUse.length < 5) {
+          const filteredLocalActivities = localActivities.filter(
+            activity => 
+              activity.city.toLowerCase() === city.toLowerCase() && 
+              activity.category.toLowerCase() === currentCategory.toLowerCase()
+          )
+          activitiesToUse = filteredLocalActivities
+        }
+
+        if (activitiesToUse.length > 0) {
+          console.log('Activités à utiliser:', activitiesToUse)
+          console.log('Nombre total d\'activités:', activitiesToUse.length)
+          setActivities(activitiesToUse)
+        } else {
+          console.log('Aucune activité trouvée pour la ville:', city)
+          setActivities([])
+        }
+      } catch (error) {
+        console.error('Erreur lors du chargement des activités:', error)
+        setActivities([])
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    loadActivities()
+  }, [currentCategory])
+
+  const currentActivity = activities[currentActivityIndex]
+  const isLastActivity = currentActivityIndex === activities.length - 1
+  const isLastMood = currentMoodIndex === moods.length - 1
 
   const getMoodLabel = (mood: string) => {
     switch (mood) {
-      case 'romantic': return 'Romantique'
-      case 'cultural': return 'Culturel'
-      case 'adventure': return 'Aventure'
-      case 'party': return 'Fête'
-      case 'relaxation': return 'Détente'
+      case 'romantic': return 'Gastronomie'
+      case 'cultural': return 'Culture'
+      case 'adventure': return 'Sport'
+      case 'party': return 'Vie nocturne'
+      case 'relaxation': return 'Nature'
       default: return mood
     }
   }
@@ -308,42 +141,12 @@ export default function SuggestionsPage() {
         return false
       }
 
-      if (!formData.destination || !formData.startDate || !formData.endDate || !formData.budget) {
-        console.error('Données du formulaire incomplètes')
-        return false
-      }
-      
-      // Créer un nouveau programme avec la structure correcte
-      const newProgram = {
-        id: Date.now().toString(),
-        formData: formData, // Encapsuler les données du formulaire dans formData
-        activities: activities,
-        createdAt: new Date().toISOString()
-      }
-
-      // Récupérer les programmes existants
-      let existingPrograms = []
+      // Sauvegarder les activités sélectionnées
       try {
-        existingPrograms = JSON.parse(localStorage.getItem('savedPrograms') || '[]')
-      } catch (e) {
-        console.error('Erreur lors de la récupération des programmes existants:', e)
-        // Continue avec un tableau vide
-      }
-      
-      // Ajouter le nouveau programme
-      const updatedPrograms = [...existingPrograms, newProgram]
-      
-      // Sauvegarder dans le localStorage
-      try {
-        localStorage.setItem('savedPrograms', JSON.stringify(updatedPrograms))
-        
-        // Nettoyer les données temporaires
-        localStorage.removeItem('savedActivities')
-        localStorage.removeItem('formData')
-
+        localStorage.setItem('savedActivities', JSON.stringify(activities))
         return true
       } catch (e) {
-        console.error('Erreur lors de la sauvegarde dans le localStorage:', e)
+        console.error('Erreur lors de la sauvegarde des activités:', e)
         return false
       }
     } catch (error) {
@@ -361,11 +164,6 @@ export default function SuggestionsPage() {
     if (swipeDirection === 'right' && currentActivity) {
       newSavedActivities = [...savedActivities, currentActivity]
       setSavedActivities(newSavedActivities)
-      try {
-        localStorage.setItem('savedActivities', JSON.stringify(newSavedActivities))
-      } catch (e) {
-        console.error('Erreur lors de la sauvegarde des activités:', e)
-      }
     }
 
     await new Promise(resolve => setTimeout(resolve, 200))
@@ -375,9 +173,9 @@ export default function SuggestionsPage() {
         try {
           const success = await saveProgram(newSavedActivities)
           if (success) {
-            // Attendre un peu avant la redirection pour laisser le temps à l'animation de se terminer
-            await new Promise(resolve => setTimeout(resolve, 300))
-            window.location.href = '/dashboard'
+            // Forcer la navigation vers /summary
+            window.location.href = '/summary'
+            return
           } else {
             setIsAnimating(false)
             alert('Une erreur est survenue lors de la sauvegarde du programme. Veuillez réessayer.')
@@ -407,13 +205,17 @@ export default function SuggestionsPage() {
     }
   }, [handleSwipe])
 
+  // Ajouter un useEffect pour gérer la redirection
   useEffect(() => {
-    if (selectedMoods.length === 0) {
+    // Si on n'a pas de moods ou de formData, rediriger vers la page generate
+    const formDataStr = localStorage.getItem('formData')
+    if (!moods.length || !formDataStr) {
       router.push('/generate')
+      return
     }
-  }, [selectedMoods.length, router])
+  }, [moods, router])
 
-  if (selectedMoods.length === 0) {
+  if (moods.length === 0) {
     return null
   }
 
@@ -427,7 +229,7 @@ export default function SuggestionsPage() {
         {/* Stepper des catégories */}
         <div className="mb-6">
           <div className="flex justify-between mb-2">
-            {selectedMoods.map((mood, index) => (
+            {moods.map((mood, index) => (
               <div
                 key={mood}
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-sm ${
@@ -485,9 +287,11 @@ export default function SuggestionsPage() {
               <div className="bg-white rounded-2xl shadow-xl overflow-hidden h-full">
                 <div className="relative h-[70%]">
                   <img
-                    src={currentActivity.imageUrl}
+                    src={currentActivity.imageurl}
                     alt={currentActivity.title}
                     className="w-full h-full object-cover"
+                    width={600}
+                    height={400}
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.src = `https://placehold.co/600x400/e4e4e7/1f2937?text=${encodeURIComponent(currentActivity.title)}`;
@@ -533,7 +337,7 @@ export default function SuggestionsPage() {
         <div className="mt-4 text-center text-gray-600">
           <p>Swipez à droite pour sauvegarder, à gauche pour passer</p>
           <p className="mt-1">
-            {currentActivityIndex + 1} sur {currentMoodActivities.length} activités
+            {currentActivityIndex + 1} sur {activities.length} activités
           </p>
         </div>
       </main>

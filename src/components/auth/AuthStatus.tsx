@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import GoogleSignInButton from './GoogleSignInButton'
+import { AuthChangeEvent, Session } from '@supabase/supabase-js'
 
 export default function AuthStatus() {
   const supabase = createClient()
@@ -18,7 +19,7 @@ export default function AuthStatus() {
 
     getUser()
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: AuthChangeEvent, session: Session | null) => {
       setUser(session?.user ?? null)
     })
 

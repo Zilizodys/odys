@@ -1,31 +1,47 @@
 import { createBrowserClient } from '@supabase/ssr'
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from './config'
+
+let supabase: ReturnType<typeof createBrowserClient> | null = null
 
 export const createClient = () => {
-  const getBaseUrl = () => {
-    if (typeof window !== 'undefined') {
-      return window.location.origin
-    }
-    return process.env.NEXT_PUBLIC_PRODUCTION_URL
+  if (supabase) return supabase
+
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+    throw new Error('Les variables d\'environnement Supabase ne sont pas définies')
   }
 
-  const baseUrl = getBaseUrl()
-
-  return createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  supabase = createBrowserClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY,
     {
       cookies: {
-        get: (name: string) => {
+        get(name) {
           if (typeof document === 'undefined') return ''
-          return document.cookie.split(';').find(c => c.trim().startsWith(name + '='))?.split('=')[1] || ''
+          const cookie = document.cookie
+            .split('; ')
+            .find((row) => row.startsWith(`${name}=`))
+          if (!cookie) return ''
+          const value = cookie.split('=')[1]
+          return decodeURIComponent(value)
         },
-        set: (name: string, value: string, options: { expires?: Date }) => {
+        set(name, value, options) {
           if (typeof document === 'undefined') return
-          document.cookie = `${name}=${value}${options.expires ? `; expires=${options.expires.toUTCString()}` : ''}`
+          let cookie = `${name}=${encodeURIComponent(value)}`
+          if (options?.expires) {
+            cookie += `; expires=${options.expires.toUTCString()}`
+          }
+          if (options?.path) {
+            cookie += `; path=${options.path}`
+          }
+          if (options?.sameSite) {
+            cookie += `; samesite=${options.sameSite}`
+          }
+          cookie += '; secure'
+          document.cookie = cookie
         },
-        remove: (name: string) => {
+        remove(name, options) {
           if (typeof document === 'undefined') return
-          document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT`
+          document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=${options?.path || '/'}`
         }
       },
       auth: {
@@ -33,12 +49,9 @@ export const createClient = () => {
         detectSessionInUrl: true,
         autoRefreshToken: true,
         persistSession: true
-      },
-      global: {
-        headers: {
-          'x-redirect-url': `${baseUrl}/auth/callback`
-        }
       }
     }
   )
+
+  return supabase
 } 
