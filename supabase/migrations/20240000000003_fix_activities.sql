@@ -26,7 +26,23 @@ CREATE POLICY "Allow read access for all users"
     TO PUBLIC
     USING (true);
 
+-- Crée une politique RLS pour permettre l'insertion par le rôle service_role
+DROP POLICY IF EXISTS "Allow insert for service role" ON activities;
+CREATE POLICY "Allow insert for service role"
+    ON activities
+    FOR INSERT
+    TO service_role
+    WITH CHECK (true);
+
 -- Crée un trigger pour mettre à jour updated_at
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$ language 'plpgsql';
+
 CREATE TRIGGER update_activities_updated_at
     BEFORE UPDATE ON activities
     FOR EACH ROW
