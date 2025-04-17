@@ -94,47 +94,26 @@ export default function ProgramEditPage({ params }: { params: { id: string } }) 
     try {
       const response = await fetch(`/api/programs/${params.id}`)
       const rawData = await response.json()
-      if (!response.ok) throw new Error(rawData.message)
-
-      // Vérification du type et construction de l'objet Program
-      const programData = rawData as Record<string, unknown>
       
-      if (!programData || typeof programData !== 'object') {
-        throw new Error('Invalid program data format')
+      if (!response.ok) {
+        throw new Error(rawData.message || 'Failed to fetch program')
       }
 
-      // Validation et conversion des données
-      const program: Program = {
-        id: String(programData.id),
-        user_id: String(programData.user_id),
-        destination: String(programData.destination),
-        start_date: String(programData.start_date),
-        end_date: String(programData.end_date),
-        budget: Number(programData.budget),
-        companion: String(programData.companion),
-        activities: Array.isArray(programData.activities) ? programData.activities : [],
-        title: String(programData.title),
-        created_at: String(programData.created_at),
-        updated_at: String(programData.updated_at)
+      const validatedProgram: Program = {
+        id: rawData.id || '',
+        user_id: rawData.user_id || '',
+        destination: rawData.destination || '',
+        start_date: rawData.start_date || '',
+        end_date: rawData.end_date || '',
+        budget: typeof rawData.budget === 'number' ? rawData.budget : 0,
+        companion: rawData.companion || '',
+        activities: Array.isArray(rawData.activities) ? rawData.activities : [],
+        title: rawData.title || '',
+        created_at: rawData.created_at || new Date().toISOString(),
+        updated_at: rawData.updated_at || new Date().toISOString()
       }
 
-      // Vérification des valeurs requises
-      if (
-        !program.id ||
-        !program.user_id ||
-        !program.destination ||
-        !program.start_date ||
-        !program.end_date ||
-        isNaN(program.budget) ||
-        !program.companion ||
-        !program.title ||
-        !program.created_at ||
-        !program.updated_at
-      ) {
-        throw new Error('Missing required program data')
-      }
-
-      setProgram(program)
+      setProgram(validatedProgram)
       setIsLoading(false)
     } catch (error) {
       console.error('Error fetching program:', error)
