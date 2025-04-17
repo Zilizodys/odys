@@ -75,7 +75,7 @@ export default function SummaryPage() {
   const getActivitiesByCategory = () => {
     if (!program) return {}
     return program.activities.reduce((acc: Record<string, Activity[]>, activity) => {
-      const category = activity.category.toLowerCase()
+      const category = activity.category ? activity.category.toLowerCase() : 'other'
       if (!acc[category]) {
         acc[category] = []
       }
