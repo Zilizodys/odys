@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Activity } from '@/types/activity'
@@ -90,59 +90,48 @@ export default function ProgramEditPage({ params }: { params: { id: string } }) 
   const [isLoading, setIsLoading] = useState(true)
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null)
 
-  const handleFetchProgram = async () => {
-    try {
-      const response = await fetch(`/api/programs/${params.id}`)
-      if (!response.ok) {
-        throw new Error('Failed to fetch program')
-      }
-
-      const responseData = await response.json()
-      
-      // Validation des données
-      if (
-        !responseData ||
-        typeof responseData !== 'object' ||
-        !responseData.id ||
-        !responseData.user_id ||
-        !responseData.destination ||
-        !responseData.start_date ||
-        !responseData.end_date ||
-        typeof responseData.budget !== 'number' ||
-        !responseData.companion ||
-        !Array.isArray(responseData.activities) ||
-        !responseData.title ||
-        !responseData.created_at ||
-        !responseData.updated_at
-      ) {
-        throw new Error('Invalid program data format')
-      }
-
-      // Construction de l'objet Program
-      const newProgram: Program = {
-        id: String(responseData.id),
-        user_id: String(responseData.user_id),
-        destination: String(responseData.destination),
-        start_date: String(responseData.start_date),
-        end_date: String(responseData.end_date),
-        budget: Number(responseData.budget),
-        companion: String(responseData.companion),
-        activities: responseData.activities,
-        title: String(responseData.title),
-        created_at: String(responseData.created_at),
-        updated_at: String(responseData.updated_at)
-      }
-
-      setProgram(newProgram)
-      setIsLoading(false)
-    } catch (error) {
-      console.error('Error fetching program:', error)
-      setIsLoading(false)
-    }
-  }
-
   useEffect(() => {
-    handleFetchProgram()
+    async function fetchProgram() {
+      try {
+        const response = await fetch(`/api/programs/${params.id}`)
+        const rawData = await response.json()
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch program')
+        }
+
+        // Type guard function
+        function isProgramData(data: any): data is Program {
+          return (
+            data &&
+            typeof data === 'object' &&
+            typeof data.id === 'string' &&
+            typeof data.user_id === 'string' &&
+            typeof data.destination === 'string' &&
+            typeof data.start_date === 'string' &&
+            typeof data.end_date === 'string' &&
+            typeof data.budget === 'number' &&
+            typeof data.companion === 'string' &&
+            Array.isArray(data.activities) &&
+            typeof data.title === 'string' &&
+            typeof data.created_at === 'string' &&
+            typeof data.updated_at === 'string'
+          )
+        }
+
+        if (!isProgramData(rawData)) {
+          throw new Error('Invalid program data format')
+        }
+
+        setProgram(rawData)
+      } catch (error) {
+        console.error('Error fetching program:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchProgram()
   }, [params.id])
 
   const handleDeleteActivity = async (activityId: string) => {
@@ -178,10 +167,12 @@ export default function ProgramEditPage({ params }: { params: { id: string } }) 
     return <div>Programme non trouvé</div>
   }
 
-  const groupedActivities = program ? groupActivitiesByCategory(program.activities.map(activity => ({
-    ...activity,
-    category: activity.category || 'other'
-  }))) : {}
+  const groupedActivities = groupActivitiesByCategory(
+    program.activities.map(activity => ({
+      ...activity,
+      category: activity.category || 'other'
+    }))
+  )
 
   return (
     <div className="container mx-auto px-4 py-8">
