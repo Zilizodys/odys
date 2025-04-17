@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Activity } from '@/types/activity'
 import { FiMapPin, FiClock, FiDollarSign, FiUsers, FiTrash2, FiArrowLeft, FiPlus, FiArrowRight } from 'react-icons/fi'
@@ -9,19 +10,23 @@ import { COMPANION_OPTIONS } from '@/types/form'
 import Image from 'next/image'
 import ActivityModal from '@/components/ActivityModal'
 import Link from 'next/link'
+import { Category, DEFAULT_CATEGORY, normalizeCategory } from '@/constants/categories'
 
 interface Program {
-  id: string
-  user_id: string
-  destination: string
-  start_date: string
-  end_date: string
-  budget: number
-  companion: string
-  activities: Activity[]
-  title: string
-  created_at: string
-  updated_at: string
+  id: string;
+  title: string;
+  description: string;
+  activities: Activity[];
+  imageUrl: string;
+  createdAt: Date;
+  updatedAt: Date;
+  destination: string;
+  start_date: string;
+  end_date: string;
+  budget: number;
+  companion: string;
+  coverImage?: string;
+  moods?: string[];
 }
 
 interface RawActivity {
@@ -38,36 +43,37 @@ interface GroupedActivities {
   [key: string]: Activity[]
 }
 
-function validateAndTransformProgram(rawData: any): Program {
-  if (!rawData || typeof rawData !== 'object') {
-    throw new Error('Invalid program data: data is not an object')
+function validateAndTransformProgram(data: any): Program {
+  if (!data?.id || !data?.destination || !data?.start_date || !data?.end_date || !data?.budget || !data?.companion) {
+    throw new Error('Invalid program data: missing required fields')
   }
 
-  const program: Program = {
-    id: String(rawData.id || ''),
-    user_id: String(rawData.user_id || ''),
-    destination: String(rawData.destination || ''),
-    start_date: String(rawData.start_date || ''),
-    end_date: String(rawData.end_date || ''),
-    budget: Number(rawData.budget || 0),
-    companion: String(rawData.companion || ''),
-    activities: Array.isArray(rawData.activities) 
-      ? rawData.activities.map((activity: RawActivity) => ({
-          id: String(activity.id || ''),
-          title: String(activity.title || ''),
-          description: String(activity.description || ''),
-          address: String(activity.address || ''),
-          price: Number(activity.price || 0),
-          category: activity.category ? String(activity.category) : 'other',
-          image_url: activity.image_url ? String(activity.image_url) : undefined
-        }))
-      : [],
-    title: String(rawData.title || ''),
-    created_at: String(rawData.created_at || ''),
-    updated_at: String(rawData.updated_at || '')
+  return {
+    id: data.id,
+    title: data.title || `Séjour à ${data.destination}`,
+    description: data.description || '',
+    imageUrl: data.imageUrl || '',
+    createdAt: new Date(data.created_at || Date.now()),
+    updatedAt: new Date(data.updated_at || Date.now()),
+    destination: data.destination,
+    start_date: data.start_date,
+    end_date: data.end_date,
+    budget: data.budget,
+    companion: data.companion,
+    activities: (data.activities || []).map((activity: any) => ({
+      id: activity.id,
+      title: activity.title,
+      description: activity.description,
+      address: activity.address,
+      price: activity.price,
+      imageUrl: activity.imageUrl,
+      imageAlt: activity.imageAlt,
+      duration: activity.duration,
+      category: activity.category
+    })),
+    coverImage: data.coverImage,
+    moods: data.moods
   }
-
-  return program
 }
 
 function groupActivitiesByCategory(activities: Activity[]): GroupedActivities {
@@ -123,7 +129,10 @@ const getDestinationImage = (destination: string) => {
     'Madeira': 'https://images.unsplash.com/photo-1593105544559-f0adc7d8a0b1'
   }
   
-  return cityImages[destination] || 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df'
+  return {
+    url: cityImages[destination] || 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df',
+    alt: `Vue de ${destination || 'la ville'}`
+  }
 }
 
 export default function ProgramEditPage({ params }: { params: { id: string } }) {
@@ -136,54 +145,28 @@ export default function ProgramEditPage({ params }: { params: { id: string } }) 
     async function fetchProgram() {
       try {
         const response = await fetch(`/api/programs/${params.id}`)
-        const rawData = await response.json()
-
+        
         if (!response.ok) {
+          if (response.status === 404) {
+            notFound()
+            return
+          }
           throw new Error('Failed to fetch program')
         }
 
-        if (!rawData || typeof rawData !== 'object') {
-          throw new Error('Invalid program data: data is not an object')
-        }
-
-        const programData: Program = {
-          id: String(rawData.id || ''),
-          user_id: String(rawData.user_id || ''),
-          destination: String(rawData.destination || ''),
-          start_date: String(rawData.start_date || ''),
-          end_date: String(rawData.end_date || ''),
-          budget: Number(rawData.budget || 0),
-          companion: String(rawData.companion || ''),
-          activities: Array.isArray(rawData.activities) 
-            ? rawData.activities.map((activity: any) => ({
-                id: String(activity.id || ''),
-                title: String(activity.title || ''),
-                description: String(activity.description || ''),
-                address: String(activity.address || ''),
-                price: Number(activity.price || 0),
-                category: activity.category ? String(activity.category) : 'other',
-                image_url: activity.image_url ? String(activity.image_url) : undefined
-              }))
-            : [],
-          title: String(rawData.title || ''),
-          created_at: String(rawData.created_at || ''),
-          updated_at: String(rawData.updated_at || '')
-        }
-
-        if (!isProgram(programData)) {
-          throw new Error('Invalid program data: missing required fields')
-        }
-
+        const rawData = await response.json()
+        const programData = validateAndTransformProgram(rawData)
         setProgram(programData)
       } catch (error) {
         console.error('Error fetching program:', error)
+        notFound()
       } finally {
         setIsLoading(false)
       }
     }
 
     fetchProgram()
-  }, [params.id])
+  }, [params.id, router])
 
   const handleDeleteActivity = async (activityId: string) => {
     if (!program) return
@@ -234,15 +217,62 @@ export default function ProgramEditPage({ params }: { params: { id: string } }) 
         </Link>
       </div>
 
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-bold">{program.title}</h1>
-        <Link
-          href={`/program/${program.id}/add-activity`}
-          className="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
-        >
-          <FiPlus className="mr-2" />
-          Ajouter une activité
-        </Link>
+      <div className="relative h-64 mb-8 rounded-xl overflow-hidden">
+        <Image 
+          src={getDestinationImage(program.destination).url}
+          alt={getDestinationImage(program.destination).alt}
+          priority={true}
+          fill
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+          <h1 className="text-3xl font-bold mb-2">{program.title}</h1>
+          <div className="flex items-center gap-2">
+            <FiMapPin className="text-white" />
+            <span>{program.destination}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-xl p-6 shadow-sm mb-8">
+        <div className="flex items-center justify-between mb-6">
+          <Link
+            href={`/program/${program.id}/add-activity`}
+            className="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+          >
+            <FiPlus className="mr-2" />
+            Ajouter une activité
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="flex items-center gap-2">
+            <FiClock className="text-indigo-500" />
+            <div>
+              <p className="text-sm text-gray-500">Dates</p>
+              <p className="font-medium">
+                Du {new Date(program.start_date).toLocaleDateString('fr-FR')} au {new Date(program.end_date).toLocaleDateString('fr-FR')}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <FiDollarSign className="text-indigo-500" />
+            <div>
+              <p className="text-sm text-gray-500">Budget</p>
+              <p className="font-medium">{program.budget}€</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <FiUsers className="text-indigo-500" />
+            <div>
+              <p className="text-sm text-gray-500">Voyageurs</p>
+              <p className="font-medium">
+                {COMPANION_OPTIONS.find(option => option.value === program.companion)?.label || program.companion}
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
 
       {Object.entries(groupedActivities).map(([category, activities]) => (
@@ -262,7 +292,11 @@ export default function ProgramEditPage({ params }: { params: { id: string } }) 
 
       {selectedActivity && (
         <ActivityModal
-          activity={selectedActivity}
+          activity={{
+            ...selectedActivity,
+            imageUrl: selectedActivity.imageUrl || getDestinationImage(program.destination).url,
+            imageAlt: `Photo de l'activité ${selectedActivity.title}`
+          }}
           activities={program.activities}
           onClose={() => setSelectedActivity(null)}
         />
