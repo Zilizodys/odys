@@ -24,6 +24,21 @@ interface Program {
   updated_at: string
 }
 
+type ProgramResponse = {
+  id: string
+  user_id: string
+  destination: string
+  start_date: string
+  end_date: string
+  budget: number
+  companion: string
+  activities: Activity[]
+  title: string
+  created_at: string
+  updated_at: string
+  message?: string
+}
+
 interface GroupedActivities {
   [key: string]: Activity[]
 }
@@ -93,24 +108,24 @@ export default function ProgramEditPage({ params }: { params: { id: string } }) 
   const handleFetchProgram = async () => {
     try {
       const response = await fetch(`/api/programs/${params.id}`)
-      const rawData = await response.json()
+      const data: ProgramResponse = await response.json()
       
       if (!response.ok) {
-        throw new Error(rawData.message || 'Failed to fetch program')
+        throw new Error(data.message || 'Failed to fetch program')
       }
 
       const validatedProgram: Program = {
-        id: rawData.id || '',
-        user_id: rawData.user_id || '',
-        destination: rawData.destination || '',
-        start_date: rawData.start_date || '',
-        end_date: rawData.end_date || '',
-        budget: typeof rawData.budget === 'number' ? rawData.budget : 0,
-        companion: rawData.companion || '',
-        activities: Array.isArray(rawData.activities) ? rawData.activities : [],
-        title: rawData.title || '',
-        created_at: rawData.created_at || new Date().toISOString(),
-        updated_at: rawData.updated_at || new Date().toISOString()
+        id: data.id,
+        user_id: data.user_id,
+        destination: data.destination,
+        start_date: data.start_date,
+        end_date: data.end_date,
+        budget: data.budget,
+        companion: data.companion,
+        activities: data.activities || [],
+        title: data.title,
+        created_at: data.created_at,
+        updated_at: data.updated_at
       }
 
       setProgram(validatedProgram)
