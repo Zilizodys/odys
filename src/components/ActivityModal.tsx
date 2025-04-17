@@ -3,7 +3,7 @@
 import { Activity, getActivityImageUrl } from '@/types/activity'
 import { FiMapPin, FiDollarSign, FiX, FiNavigation, FiCalendar } from 'react-icons/fi'
 import { useEffect, useState } from 'react'
-import ImageWithFallback from './ImageWithFallback'
+import ImageWithFallback from '@/components/ImageWithFallback'
 
 interface ActivityModalProps {
   activity: Activity
@@ -18,8 +18,8 @@ const ActivityContent = ({ activity }: { activity: Activity }) => (
     {/* Image */}
     <div className="relative h-64">
       <ImageWithFallback
-        src={getActivityImageUrl(activity.imageUrl)}
-        alt={`Photo de ${activity.title}`}
+        src={getActivityImageUrl(activity.imageUrl || '')}
+        alt={activity.imageAlt || `Photo de l'activité ${activity.title}`}
         fill
         className="object-cover"
         priority
@@ -195,8 +195,8 @@ function ActivityCard({ activity }: { activity: Activity }) {
     <div className="bg-white rounded-xl overflow-hidden shadow-lg">
       <div className="relative h-64">
         <ImageWithFallback
-          src={getActivityImageUrl(activity.imageUrl)}
-          alt={`Photo de ${activity.title}`}
+          src={getActivityImageUrl(activity.imageUrl || '')}
+          alt={activity.imageAlt || `Photo de l'activité ${activity.title}`}
           fill
           className="object-cover"
           priority

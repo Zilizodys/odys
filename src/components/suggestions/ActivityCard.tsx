@@ -1,6 +1,6 @@
 import { motion, PanInfo, useAnimation } from 'framer-motion'
 import { useState } from 'react'
-import Image from 'next/image'
+import ImageWithFallback from '../ImageWithFallback'
 
 export interface Activity {
   id: string
@@ -54,11 +54,12 @@ export default function ActivityCard({
       className="relative bg-white rounded-xl shadow-md overflow-hidden mb-4"
     >
       <div className="relative h-48 w-full">
-        <Image
+        <ImageWithFallback
           src={imageUrl}
-          alt={title}
+          alt={`Photo de ${title}`}
           fill
           className="object-cover"
+          priority
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
       </div>

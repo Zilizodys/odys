@@ -4,7 +4,8 @@ export interface Activity {
   description: string
   address: string
   price: number
-  imageUrl: string
+  imageUrl?: string
+  imageAlt?: string
   duration?: string
   category?: string
 }

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Activity } from '@/types/activity'
 import { FormData } from '@/types/form'
+import ImageWithFallback from '@/components/ImageWithFallback'
 
 export default function ProgramPage() {
   const router = useRouter()
@@ -132,14 +133,11 @@ export default function ProgramPage() {
               >
                 <div className="flex">
                   <div className="w-1/3 h-40">
-                    <img
-                      src={activity.imageUrl}
-                      alt={activity.title}
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.src = `https://placehold.co/600x400/e4e4e7/1f2937?text=${encodeURIComponent(activity.title)}`;
-                      }}
+                    <ImageWithFallback
+                      src={activity.imageUrl || `https://placehold.co/600x400/e4e4e7/1f2937?text=${encodeURIComponent(activity.title)}`}
+                      alt={`Photo de l'activité ${activity.title}`}
+                      fill
+                      className="object-cover"
                     />
                   </div>
                   <div className="w-2/3 p-4">

@@ -5,22 +5,24 @@ import Image from 'next/image';
 
 interface ImageWithFallbackProps {
   src: string;
-  alt: string;
+  alt?: string;
   width?: number;
   height?: number;
   className?: string;
   priority?: boolean;
   fill?: boolean;
+  sizes?: string;
 }
 
 export default function ImageWithFallback({
   src,
-  alt,
+  alt = 'Image',
   width,
   height,
   className = '',
   priority = false,
-  fill = false
+  fill = false,
+  sizes
 }: ImageWithFallbackProps) {
   const [error, setError] = useState(false);
 
@@ -51,7 +53,7 @@ export default function ImageWithFallback({
       priority={priority}
       fill={fill}
       onError={() => setError(true)}
-      sizes={fill ? "100vw" : undefined}
+      sizes={fill ? "100vw" : sizes}
     />
   );
 } 
