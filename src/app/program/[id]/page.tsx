@@ -4,19 +4,24 @@ import { useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Activity } from '@/types/activity'
-import { FiMapPin, FiClock, FiDollarSign, FiUsers, FiTrash2, FiArrowLeft } from 'react-icons/fi'
+import { FiMapPin, FiClock, FiDollarSign, FiUsers, FiTrash2, FiArrowLeft, FiPlus } from 'react-icons/fi'
 import { COMPANION_OPTIONS } from '@/types/form'
 import Image from 'next/image'
 import ActivityModal from '@/components/ActivityModal'
+import Link from 'next/link'
 
 interface Program {
   id: string
+  user_id: string
   destination: string
   start_date: string
   end_date: string
   budget: number
   companion: string
   activities: Activity[]
+  title: string
+  created_at: string
+  updated_at: string
 }
 
 interface GroupedActivities {
@@ -326,6 +331,12 @@ export default function ProgramEditPage({ params }: { params: { id: string } }) 
           onClose={() => setSelectedActivity(null)}
         />
       )}
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">{program.title}</h1>
+        </div>
+      </div>
     </div>
   )
 } 

@@ -31,6 +31,13 @@ export default function SuggestionsPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const moodsParam = searchParams.get('moods')
+  const programId = searchParams.get('programId')
+  const destination = searchParams.get('destination')
+  const startDate = searchParams.get('startDate')
+  const endDate = searchParams.get('endDate')
+  const budget = searchParams.get('budget')
+  const companion = searchParams.get('companion')
+  
   const moods = moodsParam?.split(',') || []
   
   const [currentActivityIndex, setCurrentActivityIndex] = useState(0)
@@ -40,6 +47,21 @@ export default function SuggestionsPage() {
   const [savedActivities, setSavedActivities] = useState<Activity[]>([])
   const [direction, setDirection] = useState<'left' | 'right' | null>(null)
   const [isAnimating, setIsAnimating] = useState(false)
+
+  // Si on a les paramètres du programme, on les utilise directement
+  useEffect(() => {
+    if (programId && destination && startDate && endDate && budget && companion) {
+      const formData = {
+        destination,
+        startDate,
+        endDate,
+        budget: parseInt(budget),
+        companion,
+        moods: moods.length > 0 ? moods : ['romantic', 'cultural', 'adventure', 'party', 'relaxation']
+      }
+      localStorage.setItem('formData', JSON.stringify(formData))
+    }
+  }, [programId, destination, startDate, endDate, budget, companion, moods])
 
   const currentMood = moods[currentMoodIndex]
   const currentCategory = currentMood ? MOOD_TO_CATEGORY[currentMood] : null
@@ -141,7 +163,25 @@ export default function SuggestionsPage() {
         return false
       }
 
-      // Sauvegarder les activités sélectionnées
+      // Si on a un programId, on met à jour le programme existant
+      if (programId) {
+        const supabase = createClient()
+        const { error } = await supabase
+          .from('programs')
+          .update({ activities: [...savedActivities, ...activities] })
+          .eq('id', programId)
+
+        if (error) {
+          console.error('Erreur lors de la mise à jour du programme:', error)
+          return false
+        }
+
+        // Rediriger vers la page du programme
+        router.push(`/program/${programId}`)
+        return true
+      }
+
+      // Sinon, on sauvegarde les activités sélectionnées
       try {
         localStorage.setItem('savedActivities', JSON.stringify(activities))
         return true
@@ -205,15 +245,14 @@ export default function SuggestionsPage() {
     }
   }, [handleSwipe])
 
-  // Ajouter un useEffect pour gérer la redirection
+  // Supprimer la redirection vers /generate si on a un programId
   useEffect(() => {
-    // Si on n'a pas de moods ou de formData, rediriger vers la page generate
     const formDataStr = localStorage.getItem('formData')
-    if (!moods.length || !formDataStr) {
+    if (!moods.length && !programId) {
       router.push('/generate')
       return
     }
-  }, [moods, router])
+  }, [moods, router, programId])
 
   if (moods.length === 0) {
     return null

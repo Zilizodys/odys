@@ -11,14 +11,15 @@ export default function Home() {
           </h1>
           
           <div className="mt-8 flex justify-center">
-            <Image
-              src="/images/activities/Mascot.png"
-              alt="Mascotte Odys"
-              width={300}
-              height={300}
-              style={{ width: 'auto', height: 'auto' }}
-              priority
-            />
+            <div className="relative w-[300px] h-[300px]">
+              <Image
+                src="/images/activities/Mascot.png"
+                alt="Mascotte Odys"
+                fill
+                style={{ objectFit: "contain" }}
+                priority
+              />
+            </div>
           </div>
 
           <p className="mt-3 max-w-md mx-auto text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">

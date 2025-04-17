@@ -2,43 +2,39 @@ import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-// Routes protégées qui nécessitent une authentification
-const protectedRoutes = [
-  '/dashboard',
-  '/settings',
-  '/program/save',
-  '/profile',
-]
-
 export async function middleware(request: NextRequest) {
-  // Vérifier si l'URL actuelle est une route protégée
-  const currentPath = request.nextUrl.pathname
-  const isProtectedRoute = protectedRoutes.some(route => 
-    currentPath.startsWith(route)
-  )
+  const res = NextResponse.next()
+  const supabase = createMiddlewareClient({ req: request, res })
+  const { pathname } = request.nextUrl
 
-  // Si ce n'est pas une route protégée, on laisse passer
-  if (!isProtectedRoute) {
-    return NextResponse.next()
+  // Vérifier la session
+  const { data: { session } } = await supabase.auth.getSession()
+
+  // Liste des routes protégées
+  const protectedRoutes = ['/dashboard', '/program', '/suggestions']
+  const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route))
+
+  // Si l'utilisateur n'est pas connecté et essaie d'accéder à une route protégée
+  if (!session && isProtectedRoute) {
+    const redirectUrl = new URL('/login', request.url)
+    redirectUrl.searchParams.set('redirect', pathname)
+    return NextResponse.redirect(redirectUrl)
   }
 
-  try {
-    const res = NextResponse.next()
-    const supabase = createMiddlewareClient({ req: request, res })
-    
-    // Rafraîchir la session si nécessaire
-    await supabase.auth.getSession()
-
-    return res
-  } catch (error) {
-    console.error('Erreur middleware:', error)
-    return NextResponse.redirect(new URL('/login', request.url))
+  // Si l'utilisateur est connecté et sur la page de login
+  if (session && pathname === '/login') {
+    return NextResponse.redirect(new URL('/dashboard', request.url))
   }
+
+  return res
 }
 
-// Configuration du matcher avec une syntaxe valide
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico).*)',
+    '/dashboard/:path*',
+    '/program/:path*',
+    '/suggestions/:path*',
+    '/login',
+    '/auth/callback'
   ]
 } 

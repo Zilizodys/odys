@@ -26,13 +26,14 @@ export default function Header({ showBackButton = false }: HeaderProps) {
         <div className="flex-1 flex justify-center">
           <h1 className="text-2xl font-bold text-indigo-600">Odys</h1>
         </div>
-        <Image
-          src="/images/activities/Mascot.png"
-          alt="Mascotte Odys"
-          width={50}
-          height={50}
-          className="w-auto h-auto"
-        />
+        <div className="relative w-[50px] h-[50px]">
+          <Image
+            src="/images/activities/Mascot.png"
+            alt="Mascotte Odys"
+            fill
+            style={{ objectFit: "contain" }}
+          />
+        </div>
       </div>
     </header>
   )

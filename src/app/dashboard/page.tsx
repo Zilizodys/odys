@@ -1,8 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
+import Image from 'next/image'
 import { Activity } from '@/types/activity'
 import ProgramCard from '@/components/ProgramCard'
 
@@ -19,42 +20,53 @@ interface Program {
 }
 
 export default function DashboardPage() {
-  const router = useRouter()
+  const [loading, setLoading] = useState(true)
   const [programs, setPrograms] = useState<Program[]>([])
-  const [isLoading, setIsLoading] = useState(true)
+  const router = useRouter()
+  const supabase = createClientComponentClient()
 
   useEffect(() => {
-    const loadPrograms = async () => {
-      const supabase = createClient()
-      
-      // Vérifier si l'utilisateur est connecté
-      const { data: { session } } = await supabase.auth.getSession()
-      if (!session) {
-        router.push('/login?redirect=/dashboard')
-        return
+    const checkUser = async () => {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession()
+        
+        if (error || !session) {
+          router.replace('/login')
+          return
+        }
+
+        // Charger les programmes de l'utilisateur
+        const { data: userPrograms, error: programsError } = await supabase
+          .from('programs')
+          .select('*')
+          .eq('user_id', session.user.id)
+          .order('created_at', { ascending: false })
+
+        if (programsError) throw programsError
+
+        setPrograms(userPrograms || [])
+      } catch (error) {
+        console.error('Erreur:', error)
+      } finally {
+        setLoading(false)
       }
-
-      // Charger les programmes
-      const { data, error } = await supabase
-        .from('programs')
-        .select('*')
-        .order('created_at', { ascending: false })
-
-      if (error) {
-        console.error('Erreur lors du chargement des programmes:', error)
-        return
-      }
-
-      setPrograms(data || [])
-      setIsLoading(false)
     }
 
-    loadPrograms()
-  }, [router])
+    checkUser()
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_OUT') {
+        router.replace('/login')
+      }
+    })
+
+    return () => {
+      subscription.unsubscribe()
+    }
+  }, [router, supabase])
 
   const handleDeleteProgram = async (programId: string) => {
     try {
-      const supabase = createClient()
       const { error } = await supabase
         .from('programs')
         .delete()
@@ -69,7 +81,7 @@ export default function DashboardPage() {
     }
   }
 
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
@@ -83,17 +95,22 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-gray-50 pb-32">
       <main className="max-w-4xl mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-3">
-            <h1 className="text-3xl font-bold text-gray-900">Mes programmes</h1>
-            <span className="px-3 py-1 bg-indigo-100 text-indigo-700 text-sm font-medium rounded-full">
-              {programs.length} programme{programs.length > 1 ? 's' : ''}
-            </span>
-          </div>
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Mes programmes</h1>
+          <p className="text-gray-500">
+            {programs.length} programme{programs.length > 1 ? 's' : ''} sauvegardé{programs.length > 1 ? 's' : ''}
+          </p>
         </div>
-
+        
         {programs.length === 0 ? (
           <div className="text-center py-12 bg-white rounded-xl shadow-sm">
+            <Image
+              src="/images/activities/Mascot.png"
+              alt="Mascotte"
+              width={150}
+              height={150}
+              className="mx-auto mb-6"
+            />
             <p className="text-gray-600 mb-4">Vous n'avez pas encore de programme enregistré.</p>
             <button
               onClick={() => router.push('/generate')}
