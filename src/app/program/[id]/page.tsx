@@ -24,8 +24,50 @@ interface Program {
   updated_at: string
 }
 
+interface RawActivity {
+  id: string | number
+  title: string
+  description: string
+  address: string
+  price: string | number
+  category?: string
+  image_url?: string
+}
+
 interface GroupedActivities {
   [key: string]: Activity[]
+}
+
+function validateAndTransformProgram(rawData: any): Program {
+  if (!rawData || typeof rawData !== 'object') {
+    throw new Error('Invalid program data: data is not an object')
+  }
+
+  const program: Program = {
+    id: String(rawData.id || ''),
+    user_id: String(rawData.user_id || ''),
+    destination: String(rawData.destination || ''),
+    start_date: String(rawData.start_date || ''),
+    end_date: String(rawData.end_date || ''),
+    budget: Number(rawData.budget || 0),
+    companion: String(rawData.companion || ''),
+    activities: Array.isArray(rawData.activities) 
+      ? rawData.activities.map((activity: RawActivity) => ({
+          id: String(activity.id || ''),
+          title: String(activity.title || ''),
+          description: String(activity.description || ''),
+          address: String(activity.address || ''),
+          price: Number(activity.price || 0),
+          category: activity.category ? String(activity.category) : 'other',
+          image_url: activity.image_url ? String(activity.image_url) : undefined
+        }))
+      : [],
+    title: String(rawData.title || ''),
+    created_at: String(rawData.created_at || ''),
+    updated_at: String(rawData.updated_at || '')
+  }
+
+  return program
 }
 
 function groupActivitiesByCategory(activities: Activity[]): GroupedActivities {
@@ -100,30 +142,39 @@ export default function ProgramEditPage({ params }: { params: { id: string } }) 
           throw new Error('Failed to fetch program')
         }
 
-        // Type guard function
-        function isProgramData(data: any): data is Program {
-          return (
-            data &&
-            typeof data === 'object' &&
-            typeof data.id === 'string' &&
-            typeof data.user_id === 'string' &&
-            typeof data.destination === 'string' &&
-            typeof data.start_date === 'string' &&
-            typeof data.end_date === 'string' &&
-            typeof data.budget === 'number' &&
-            typeof data.companion === 'string' &&
-            Array.isArray(data.activities) &&
-            typeof data.title === 'string' &&
-            typeof data.created_at === 'string' &&
-            typeof data.updated_at === 'string'
-          )
+        if (!rawData || typeof rawData !== 'object') {
+          throw new Error('Invalid program data: data is not an object')
         }
 
-        if (!isProgramData(rawData)) {
-          throw new Error('Invalid program data format')
+        const programData: Program = {
+          id: String(rawData.id || ''),
+          user_id: String(rawData.user_id || ''),
+          destination: String(rawData.destination || ''),
+          start_date: String(rawData.start_date || ''),
+          end_date: String(rawData.end_date || ''),
+          budget: Number(rawData.budget || 0),
+          companion: String(rawData.companion || ''),
+          activities: Array.isArray(rawData.activities) 
+            ? rawData.activities.map((activity: any) => ({
+                id: String(activity.id || ''),
+                title: String(activity.title || ''),
+                description: String(activity.description || ''),
+                address: String(activity.address || ''),
+                price: Number(activity.price || 0),
+                category: activity.category ? String(activity.category) : 'other',
+                image_url: activity.image_url ? String(activity.image_url) : undefined
+              }))
+            : [],
+          title: String(rawData.title || ''),
+          created_at: String(rawData.created_at || ''),
+          updated_at: String(rawData.updated_at || '')
         }
 
-        setProgram(rawData)
+        if (!isProgram(programData)) {
+          throw new Error('Invalid program data: missing required fields')
+        }
+
+        setProgram(programData)
       } catch (error) {
         console.error('Error fetching program:', error)
       } finally {
@@ -217,5 +268,23 @@ export default function ProgramEditPage({ params }: { params: { id: string } }) 
         />
       )}
     </div>
+  )
+}
+
+function isProgram(data: any): data is Program {
+  return (
+    typeof data === 'object' &&
+    data !== null &&
+    typeof data.id === 'string' &&
+    typeof data.user_id === 'string' &&
+    typeof data.destination === 'string' &&
+    typeof data.start_date === 'string' &&
+    typeof data.end_date === 'string' &&
+    typeof data.budget === 'number' &&
+    typeof data.companion === 'string' &&
+    Array.isArray(data.activities) &&
+    typeof data.title === 'string' &&
+    typeof data.created_at === 'string' &&
+    typeof data.updated_at === 'string'
   )
 } 
