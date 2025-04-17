@@ -95,7 +95,27 @@ export default function ProgramEditPage({ params }: { params: { id: string } }) 
       const response = await fetch(`/api/programs/${params.id}`)
       const data = await response.json()
       if (!response.ok) throw new Error(data.message)
-      setProgram(data as Program)
+      
+      if (
+        typeof data === 'object' &&
+        data !== null &&
+        'id' in data &&
+        'user_id' in data &&
+        'destination' in data &&
+        'start_date' in data &&
+        'end_date' in data &&
+        'budget' in data &&
+        'companion' in data &&
+        'activities' in data &&
+        'title' in data &&
+        'created_at' in data &&
+        'updated_at' in data &&
+        Array.isArray(data.activities)
+      ) {
+        setProgram(data as Program)
+      } else {
+        throw new Error('Invalid program data format')
+      }
       setIsLoading(false)
     } catch (error) {
       console.error('Error fetching program:', error)
