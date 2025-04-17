@@ -24,21 +24,6 @@ interface Program {
   updated_at: string
 }
 
-type ProgramResponse = {
-  id: string
-  user_id: string
-  destination: string
-  start_date: string
-  end_date: string
-  budget: number
-  companion: string
-  activities: Activity[]
-  title: string
-  created_at: string
-  updated_at: string
-  message?: string
-}
-
 interface GroupedActivities {
   [key: string]: Activity[]
 }
@@ -108,27 +93,47 @@ export default function ProgramEditPage({ params }: { params: { id: string } }) 
   const handleFetchProgram = async () => {
     try {
       const response = await fetch(`/api/programs/${params.id}`)
-      const data: ProgramResponse = await response.json()
-      
       if (!response.ok) {
-        throw new Error(data.message || 'Failed to fetch program')
+        throw new Error('Failed to fetch program')
       }
 
-      const validatedProgram: Program = {
-        id: data.id,
-        user_id: data.user_id,
-        destination: data.destination,
-        start_date: data.start_date,
-        end_date: data.end_date,
-        budget: data.budget,
-        companion: data.companion,
-        activities: data.activities || [],
-        title: data.title,
-        created_at: data.created_at,
-        updated_at: data.updated_at
+      const responseData = await response.json()
+      
+      // Validation des données
+      if (
+        !responseData ||
+        typeof responseData !== 'object' ||
+        !responseData.id ||
+        !responseData.user_id ||
+        !responseData.destination ||
+        !responseData.start_date ||
+        !responseData.end_date ||
+        typeof responseData.budget !== 'number' ||
+        !responseData.companion ||
+        !Array.isArray(responseData.activities) ||
+        !responseData.title ||
+        !responseData.created_at ||
+        !responseData.updated_at
+      ) {
+        throw new Error('Invalid program data format')
       }
 
-      setProgram(validatedProgram)
+      // Construction de l'objet Program
+      const newProgram: Program = {
+        id: String(responseData.id),
+        user_id: String(responseData.user_id),
+        destination: String(responseData.destination),
+        start_date: String(responseData.start_date),
+        end_date: String(responseData.end_date),
+        budget: Number(responseData.budget),
+        companion: String(responseData.companion),
+        activities: responseData.activities,
+        title: String(responseData.title),
+        created_at: String(responseData.created_at),
+        updated_at: String(responseData.updated_at)
+      }
+
+      setProgram(newProgram)
       setIsLoading(false)
     } catch (error) {
       console.error('Error fetching program:', error)
