@@ -12,23 +12,29 @@ export async function GET(
     const supabase = createRouteHandlerClient({ cookies });
 
     // Récupérer le programme avec tous les champs
-    const { data: program, error } = await supabase
+    const { data: program, error: supabaseError } = await supabase
       .from('programs')
       .select('*')
       .eq('id', params.id)
       .single();
 
-    if (error) {
-      console.error('Erreur lors de la récupération du programme:', error);
+    if (supabaseError) {
+      console.error('Erreur Supabase:', supabaseError);
       return NextResponse.json(
-        { error: error.message },
-        { status: 500 }
+        { 
+          success: false,
+          error: supabaseError.message 
+        },
+        { status: supabaseError.code === 'PGRST116' ? 404 : 500 }
       );
     }
 
     if (!program) {
       return NextResponse.json(
-        { error: 'Programme non trouvé' },
+        { 
+          success: false,
+          error: 'Programme non trouvé' 
+        },
         { status: 404 }
       );
     }
@@ -36,7 +42,10 @@ export async function GET(
     // Vérifier les champs requis
     if (!program.destination || !program.start_date || !program.end_date || !program.budget || !program.companion) {
       return NextResponse.json(
-        { error: 'Données du programme incomplètes' },
+        { 
+          success: false,
+          error: 'Données du programme incomplètes' 
+        },
         { status: 400 }
       );
     }
@@ -72,11 +81,17 @@ export async function GET(
       updatedAt: new Date(program.updated_at)
     };
 
-    return NextResponse.json(validatedProgram);
+    return NextResponse.json({
+      success: true,
+      data: validatedProgram
+    });
   } catch (error) {
     console.error('Erreur serveur:', error);
     return NextResponse.json(
-      { error: 'Erreur serveur interne' },
+      { 
+        success: false,
+        error: 'Erreur serveur interne' 
+      },
       { status: 500 }
     );
   }

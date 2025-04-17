@@ -145,17 +145,22 @@ export default function ProgramEditPage({ params }: { params: { id: string } }) 
     async function fetchProgram() {
       try {
         const response = await fetch(`/api/programs/${params.id}`)
+        const result = await response.json()
         
         if (!response.ok) {
+          console.error('Error response:', result.error)
           if (response.status === 404) {
             notFound()
             return
           }
-          throw new Error('Failed to fetch program')
+          throw new Error(result.error || 'Failed to fetch program')
         }
 
-        const rawData = await response.json()
-        const programData = validateAndTransformProgram(rawData)
+        if (!result.success || !result.data) {
+          throw new Error('Invalid response format')
+        }
+
+        const programData = validateAndTransformProgram(result.data)
         setProgram(programData)
       } catch (error) {
         console.error('Error fetching program:', error)
