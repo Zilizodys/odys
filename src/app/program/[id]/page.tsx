@@ -99,20 +99,32 @@ export default function ProgramEditPage({ params }: { params: { id: string } }) 
       if (
         typeof data === 'object' &&
         data !== null &&
-        'id' in data &&
-        'user_id' in data &&
-        'destination' in data &&
-        'start_date' in data &&
-        'end_date' in data &&
-        'budget' in data &&
-        'companion' in data &&
-        'activities' in data &&
-        'title' in data &&
-        'created_at' in data &&
-        'updated_at' in data &&
-        Array.isArray(data.activities)
+        typeof data.id === 'string' &&
+        typeof data.user_id === 'string' &&
+        typeof data.destination === 'string' &&
+        typeof data.start_date === 'string' &&
+        typeof data.end_date === 'string' &&
+        typeof data.budget === 'number' &&
+        typeof data.companion === 'string' &&
+        Array.isArray(data.activities) &&
+        typeof data.title === 'string' &&
+        typeof data.created_at === 'string' &&
+        typeof data.updated_at === 'string'
       ) {
-        setProgram(data as Program)
+        const program: Program = {
+          id: data.id,
+          user_id: data.user_id,
+          destination: data.destination,
+          start_date: data.start_date,
+          end_date: data.end_date,
+          budget: data.budget,
+          companion: data.companion,
+          activities: data.activities,
+          title: data.title,
+          created_at: data.created_at,
+          updated_at: data.updated_at
+        }
+        setProgram(program)
       } else {
         throw new Error('Invalid program data format')
       }
