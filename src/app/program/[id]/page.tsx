@@ -93,41 +93,48 @@ export default function ProgramEditPage({ params }: { params: { id: string } }) 
   const handleFetchProgram = async () => {
     try {
       const response = await fetch(`/api/programs/${params.id}`)
-      const data = await response.json()
-      if (!response.ok) throw new Error(data.message)
+      const rawData = await response.json()
+      if (!response.ok) throw new Error(rawData.message)
+
+      // Vérification du type et construction de l'objet Program
+      const programData = rawData as Record<string, unknown>
       
-      if (
-        typeof data === 'object' &&
-        data !== null &&
-        typeof data.id === 'string' &&
-        typeof data.user_id === 'string' &&
-        typeof data.destination === 'string' &&
-        typeof data.start_date === 'string' &&
-        typeof data.end_date === 'string' &&
-        typeof data.budget === 'number' &&
-        typeof data.companion === 'string' &&
-        Array.isArray(data.activities) &&
-        typeof data.title === 'string' &&
-        typeof data.created_at === 'string' &&
-        typeof data.updated_at === 'string'
-      ) {
-        const program: Program = {
-          id: data.id,
-          user_id: data.user_id,
-          destination: data.destination,
-          start_date: data.start_date,
-          end_date: data.end_date,
-          budget: data.budget,
-          companion: data.companion,
-          activities: data.activities,
-          title: data.title,
-          created_at: data.created_at,
-          updated_at: data.updated_at
-        }
-        setProgram(program)
-      } else {
+      if (!programData || typeof programData !== 'object') {
         throw new Error('Invalid program data format')
       }
+
+      // Validation et conversion des données
+      const program: Program = {
+        id: String(programData.id),
+        user_id: String(programData.user_id),
+        destination: String(programData.destination),
+        start_date: String(programData.start_date),
+        end_date: String(programData.end_date),
+        budget: Number(programData.budget),
+        companion: String(programData.companion),
+        activities: Array.isArray(programData.activities) ? programData.activities : [],
+        title: String(programData.title),
+        created_at: String(programData.created_at),
+        updated_at: String(programData.updated_at)
+      }
+
+      // Vérification des valeurs requises
+      if (
+        !program.id ||
+        !program.user_id ||
+        !program.destination ||
+        !program.start_date ||
+        !program.end_date ||
+        isNaN(program.budget) ||
+        !program.companion ||
+        !program.title ||
+        !program.created_at ||
+        !program.updated_at
+      ) {
+        throw new Error('Missing required program data')
+      }
+
+      setProgram(program)
       setIsLoading(false)
     } catch (error) {
       console.error('Error fetching program:', error)
