@@ -6,18 +6,7 @@ import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { Activity } from '@/types/activity'
 import ProgramCard from '@/components/ProgramCard'
-
-interface Program {
-  id: string
-  user_id: string
-  destination: string
-  start_date: string
-  end_date: string
-  budget: number
-  companion: string
-  activities: Activity[]
-  created_at: string
-}
+import { Program } from '@/types/program'
 
 export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
@@ -81,6 +70,10 @@ export default function DashboardPage() {
     }
   }
 
+  const handleProgramClick = (program: Program) => {
+    router.push(`/program/${program.id}`)
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -127,6 +120,7 @@ export default function DashboardPage() {
                   key={program.id}
                   program={program}
                   onDelete={handleDeleteProgram}
+                  onClick={handleProgramClick}
                 />
               ))}
             </div>

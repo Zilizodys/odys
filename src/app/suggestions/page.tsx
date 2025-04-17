@@ -5,9 +5,20 @@ import { useState, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence, PanInfo } from 'framer-motion'
 import ActivityCard from '@/components/suggestions/ActivityCard'
 import { createClient } from '@/lib/supabase/client'
-import { activities as localActivities } from '@/data/activities'
+import ImageWithFallback from '@/components/ImageWithFallback'
 
 interface Activity {
+  id: string
+  title: string
+  description: string
+  price: number
+  address: string
+  imageUrl: string
+  category: string
+  city: string
+}
+
+interface DatabaseActivity {
   id: string
   title: string
   description: string
@@ -20,7 +31,7 @@ interface Activity {
 
 // Mapping des moods vers les catégories
 const MOOD_TO_CATEGORY: Record<string, string> = {
-  'romantic': 'Gastronomie',
+  'romantic': 'gastronomie',
   'cultural': 'culture',
   'adventure': 'sport',
   'party': 'vie nocturne',
@@ -77,7 +88,7 @@ export default function SuggestionsPage() {
         // Récupérer les données du formulaire pour la ville
         const formDataStr = localStorage.getItem('formData')
         const formData = formDataStr ? JSON.parse(formDataStr) : null
-        const city = formData?.destination || ''
+        const city = formData?.destination?.toLowerCase() || ''
 
         console.log('Chargement des activités pour la ville:', city)
         console.log('Catégorie actuelle:', currentCategory)
@@ -88,34 +99,33 @@ export default function SuggestionsPage() {
         }
 
         // Récupérer les activités de Supabase
-        const { data, error } = await supabase
+        const { data: activitiesData, error } = await supabase
           .from('activities')
-          .select('*')
-          .ilike('city', city)
-          .ilike('category', currentCategory)
+          .select('id, title, description, price, address, imageurl, category, city')
+          .eq('city', city)
+          .eq('category', currentCategory)
           .limit(5)
+          .returns<DatabaseActivity[]>()
 
         if (error) {
           console.error('Erreur Supabase:', error)
           throw error
         }
 
-        let activitiesToUse = data || []
-        
-        // Si on a moins de 5 activités, utiliser les données locales
-        if (activitiesToUse.length < 5) {
-          const filteredLocalActivities = localActivities.filter(
-            activity => 
-              activity.city.toLowerCase() === city.toLowerCase() && 
-              activity.category.toLowerCase() === currentCategory.toLowerCase()
-          )
-          activitiesToUse = filteredLocalActivities
-        }
-
-        if (activitiesToUse.length > 0) {
-          console.log('Activités à utiliser:', activitiesToUse)
-          console.log('Nombre total d\'activités:', activitiesToUse.length)
-          setActivities(activitiesToUse)
+        if (activitiesData && activitiesData.length > 0) {
+          // Convertir imageurl en imageUrl pour correspondre à l'interface Activity
+          const formattedActivities: Activity[] = activitiesData.map(activity => ({
+            id: activity.id,
+            title: activity.title,
+            description: activity.description,
+            price: activity.price,
+            address: activity.address,
+            imageUrl: activity.imageurl,
+            category: activity.category,
+            city: activity.city
+          }))
+          console.log('Activités trouvées:', formattedActivities)
+          setActivities(formattedActivities)
         } else {
           console.log('Aucune activité trouvée pour la ville:', city)
           setActivities([])
@@ -325,16 +335,12 @@ export default function SuggestionsPage() {
             >
               <div className="bg-white rounded-2xl shadow-xl overflow-hidden h-full">
                 <div className="relative h-[70%]">
-                  <img
-                    src={currentActivity.imageurl}
+                  <ImageWithFallback
+                    src={currentActivity.imageUrl}
                     alt={currentActivity.title}
-                    className="w-full h-full object-cover"
                     width={600}
                     height={400}
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = `https://placehold.co/600x400/e4e4e7/1f2937?text=${encodeURIComponent(currentActivity.title)}`;
-                    }}
+                    className="w-full h-full object-cover"
                   />
                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
                     <h2 className="text-2xl font-bold text-white">{currentActivity.title}</h2>
