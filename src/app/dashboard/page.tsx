@@ -24,16 +24,36 @@ export default function DashboardPage() {
           return
         }
 
-        // Charger les programmes de l'utilisateur
+        // Charger les programmes de l'utilisateur avec leurs activités
         const { data: userPrograms, error: programsError } = await supabase
           .from('programs')
-          .select('*')
+          .select(`
+            *,
+            program_activities (
+              activities (
+                id,
+                title,
+                description,
+                price,
+                address,
+                imageurl,
+                category,
+                city
+              )
+            )
+          `)
           .eq('user_id', session.user.id)
           .order('created_at', { ascending: false })
 
         if (programsError) throw programsError
 
-        setPrograms(userPrograms || [])
+        // Transformer les données pour avoir les activités directement dans le programme
+        const transformedPrograms = userPrograms?.map(program => ({
+          ...program,
+          activities: program.program_activities?.map((pa: any) => pa.activities) || []
+        })) || []
+
+        setPrograms(transformedPrograms)
       } catch (error) {
         console.error('Erreur:', error)
       } finally {
@@ -66,12 +86,12 @@ export default function DashboardPage() {
       setPrograms(programs.filter(p => p.id !== programId))
     } catch (error) {
       console.error('Erreur lors de la suppression:', error)
-      alert('Une erreur est survenue lors de la suppression.')
+      alert('Une erreur est survenue lors de la suppression du programme.')
     }
   }
 
-  const handleProgramClick = (program: Program) => {
-    router.push(`/program/${program.id}`)
+  const handleProgramClick = (programId: string) => {
+    router.push(`/program/${programId}`)
   }
 
   if (loading) {
@@ -120,7 +140,7 @@ export default function DashboardPage() {
                   key={program.id}
                   program={program}
                   onDelete={handleDeleteProgram}
-                  onClick={handleProgramClick}
+                  onClick={(programId) => handleProgramClick(programId)}
                 />
               ))}
             </div>
