@@ -2,12 +2,14 @@ import './globals.css'
 import { Inter } from 'next/font/google'
 import Link from "next/link";
 import Header from '@/components/ui/Header';
+import type { Metadata } from 'next'
+import PageTransition from '@/components/transitions/PageTransition'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export const metadata = {
-  title: 'Odys - Créez votre voyage personnalisé',
-  description: 'Créez votre programme de voyage personnalisé en quelques clics grâce à notre assistant intelligent.',
+export const metadata: Metadata = {
+  title: 'Odys - Votre assistant de voyage',
+  description: 'Créez votre programme de voyage personnalisé en quelques clics',
   icons: {
     icon: [
       { url: '/favicon.ico' },
@@ -40,7 +42,9 @@ export default function RootLayout({
         <div className="min-h-screen flex flex-col">
           <Header />
           <main className="flex-1">
-            {children}
+            <PageTransition>
+              {children}
+            </PageTransition>
           </main>
           
           <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
