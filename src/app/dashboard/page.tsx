@@ -5,7 +5,7 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { Activity } from '@/types/activity'
-import ProgramCard from '@/components/ProgramCard'
+import ProgramCard, { ProgramCardProps } from '@/components/ProgramCard'
 import { Program } from '@/types/program'
 
 export default function DashboardPage() {
@@ -140,7 +140,7 @@ export default function DashboardPage() {
                   key={program.id}
                   program={program}
                   onDelete={handleDeleteProgram}
-                  onClick={(programId) => handleProgramClick(programId)}
+                  onClick={handleProgramClick}
                 />
               ))}
             </div>
