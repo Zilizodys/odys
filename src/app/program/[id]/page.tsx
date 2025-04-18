@@ -12,6 +12,7 @@ import ActivityModal from '@/components/ActivityModal'
 import Link from 'next/link'
 import { Category, DEFAULT_CATEGORY, normalizeCategory } from '@/constants/categories'
 import SwipeableActivityCard from '@/components/program/SwipeableActivityCard'
+import { Database } from '@/types/database'
 
 interface Program {
   id: string;
@@ -149,6 +150,12 @@ export default function ProgramEditPage({ params }: { params: { id: string } }) 
           throw new Error('Erreur de connexion à Supabase')
         }
 
+        type ProgramWithActivities = Database['public']['Tables']['programs']['Row'] & {
+          program_activities: Array<{
+            activities: Database['public']['Tables']['activities']['Row']
+          }>
+        }
+
         // Récupérer le programme avec ses activités
         const { data: rawProgramData, error: programError } = await supabase
           .from('programs')
@@ -168,7 +175,7 @@ export default function ProgramEditPage({ params }: { params: { id: string } }) 
             )
           `)
           .eq('id', params.id)
-          .single()
+          .single<ProgramWithActivities>()
 
         if (programError) {
           if (programError.code === 'PGRST116') {
@@ -186,7 +193,7 @@ export default function ProgramEditPage({ params }: { params: { id: string } }) 
         // Transformer les données pour avoir les activités directement dans le programme
         const transformedProgram = {
           ...rawProgramData,
-          activities: rawProgramData.program_activities?.map((pa: any) => pa.activities) || []
+          activities: rawProgramData.program_activities?.map(pa => pa.activities) || []
         }
 
         const validatedProgram = validateAndTransformProgram(transformedProgram)
