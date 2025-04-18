@@ -38,9 +38,16 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(redirectUrl)
   }
 
-  // Si l'utilisateur est connecté et sur la page de login
-  if (session && pathname === '/login') {
-    return NextResponse.redirect(new URL('/dashboard', request.url))
+  // Si l'utilisateur est connecté
+  if (session) {
+    // Rediriger de la page d'accueil vers le tableau de bord
+    if (pathname === '/') {
+      return NextResponse.redirect(new URL('/dashboard', request.url))
+    }
+    // Rediriger de la page de login vers le tableau de bord
+    if (pathname === '/login') {
+      return NextResponse.redirect(new URL('/dashboard', request.url))
+    }
   }
 
   return res
@@ -48,6 +55,7 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
+    '/',
     '/dashboard/:path*',
     '/program/:path*',
     '/suggestions/:path*',
