@@ -1,7 +1,7 @@
 'use client'
 
 import { createClient } from '@/lib/supabase/client'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import GoogleSignInButton from './GoogleSignInButton'
 import { AuthChangeEvent, Session } from '@supabase/supabase-js'
@@ -9,6 +9,7 @@ import { AuthChangeEvent, Session } from '@supabase/supabase-js'
 export default function AuthStatus() {
   const supabase = createClient()
   const router = useRouter()
+  const pathname = usePathname()
   const [user, setUser] = useState<any>(null)
 
   useEffect(() => {
@@ -34,7 +35,7 @@ export default function AuthStatus() {
   }
 
   if (!user) {
-    return <GoogleSignInButton />
+    return <GoogleSignInButton redirectTo={pathname} />
   }
 
   return (
