@@ -149,6 +149,10 @@ export default function ProgramEditPage({ params }: { params: { id: string } }) 
         
         if (!response.ok) {
           console.error('Error response:', result.error)
+          if (response.status === 401) {
+            router.push(`/login?redirect=/program/${params.id}`)
+            return
+          }
           if (response.status === 404) {
             notFound()
             return
@@ -164,6 +168,10 @@ export default function ProgramEditPage({ params }: { params: { id: string } }) 
         setProgram(programData)
       } catch (error) {
         console.error('Error fetching program:', error)
+        if (error instanceof Error && error.message === 'Authentication required') {
+          router.push(`/login?redirect=/program/${params.id}`)
+          return
+        }
         notFound()
       } finally {
         setIsLoading(false)

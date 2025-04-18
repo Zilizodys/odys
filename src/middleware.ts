@@ -13,9 +13,26 @@ export async function middleware(request: NextRequest) {
   // Liste des routes protégées
   const protectedRoutes = ['/dashboard', '/program', '/suggestions']
   const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route))
+  const isApiRoute = pathname.startsWith('/api/')
 
   // Si l'utilisateur n'est pas connecté et essaie d'accéder à une route protégée
   if (!session && isProtectedRoute) {
+    if (isApiRoute) {
+      // Pour les routes API, retourner une erreur JSON
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: 'Authentication required' 
+        },
+        { 
+          status: 401,
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+    }
+    // Pour les routes normales, rediriger vers la page de connexion
     const redirectUrl = new URL('/login', request.url)
     redirectUrl.searchParams.set('redirect', pathname)
     return NextResponse.redirect(redirectUrl)
@@ -35,6 +52,7 @@ export const config = {
     '/program/:path*',
     '/suggestions/:path*',
     '/login',
-    '/auth/callback'
+    '/auth/callback',
+    '/api/:path*'
   ]
 } 
