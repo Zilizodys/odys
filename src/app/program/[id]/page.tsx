@@ -346,8 +346,7 @@ export default function ProgramEditPage({ params }: { params: { id: string } }) 
         <ActivityModal
           activity={{
             ...selectedActivity,
-            imageurl: selectedActivity.imageurl || getDestinationImage(program.destination).url,
-            imageAlt: `Photo de l'activité ${selectedActivity.title}`
+            imageurl: selectedActivity.imageurl || getDestinationImage(program.destination).url
           }}
           activities={program.activities}
           onClose={() => setSelectedActivity(null)}
