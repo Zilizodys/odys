@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Activity } from '@/types/activity';
 import { FiMapPin, FiDollarSign, FiTrash2 } from 'react-icons/fi';
-import ImageWithFallback from './ImageWithFallback';
+import ImageWithFallback from '@/components/ImageWithFallback';
 
 interface SwipeableActivityProps {
   activity: Activity;
@@ -78,7 +78,7 @@ export default function SwipeableActivity({ activity, onDelete, onClick }: Swipe
         <div className="flex">
           <div className="w-1/3 relative h-32">
             <ImageWithFallback
-              src={activity.imageUrl}
+              src={activity.imageUrl || `https://placehold.co/600x400/e4e4e7/1f2937?text=${encodeURIComponent(activity.title)}`}
               alt={activity.title}
               fill
               className="object-cover"
