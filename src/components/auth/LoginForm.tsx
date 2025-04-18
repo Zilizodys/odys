@@ -1,8 +1,8 @@
 'use client'
 
 import { createClient } from '@/lib/supabase/client'
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import GoogleSignInButton from './GoogleSignInButton'
 
 export default function LoginForm() {
@@ -11,6 +11,8 @@ export default function LoginForm() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirectTo = searchParams.get('redirect') || '/dashboard'
   const supabase = createClient()
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -27,7 +29,7 @@ export default function LoginForm() {
       if (error) {
         setError(error.message)
       } else {
-        router.refresh()
+        router.push(redirectTo)
       }
     } catch (err) {
       setError('Une erreur est survenue lors de la connexion')
@@ -93,7 +95,7 @@ export default function LoginForm() {
         </div>
       </div>
 
-      <GoogleSignInButton />
+      <GoogleSignInButton redirectTo={redirectTo} />
     </div>
   )
 } 

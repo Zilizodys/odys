@@ -3,7 +3,11 @@
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 
-export default function GoogleSignInButton() {
+interface GoogleSignInButtonProps {
+  redirectTo: string;
+}
+
+export default function GoogleSignInButton({ redirectTo }: GoogleSignInButtonProps) {
   const router = useRouter()
   const supabase = createClient()
 
@@ -12,7 +16,7 @@ export default function GoogleSignInButton() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(redirectTo)}`,
         },
       })
 
