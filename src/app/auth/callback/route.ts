@@ -1,6 +1,7 @@
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
+import { syncUser } from '@/lib/supabase/sync'
 
 export const dynamic = 'force-dynamic'
 
@@ -13,7 +14,13 @@ export async function GET(request: Request) {
     const supabase = createRouteHandlerClient({ cookies })
     
     try {
-      await supabase.auth.exchangeCodeForSession(code)
+      const { data: { user } } = await supabase.auth.exchangeCodeForSession(code)
+      
+      if (user) {
+        // Synchroniser l'utilisateur avec notre table users
+        await syncUser(supabase, user)
+      }
+
       return NextResponse.redirect(new URL(next, requestUrl.origin))
     } catch (error) {
       console.error('Erreur lors de l\'échange du code:', error)
