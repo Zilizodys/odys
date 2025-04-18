@@ -1,20 +1,11 @@
 import { motion, PanInfo, useAnimation } from 'framer-motion'
 import { useState } from 'react'
-import ImageWithFallback from '../ImageWithFallback'
-
-export interface Activity {
-  id: string
-  title: string
-  description: string
-  price: number
-  address: string
-  imageUrl: string
-  category: string
-  duration: string
-}
+import ImageWithFallback from '@/components/ui/ImageWithFallback'
+import { Activity } from '@/types/activity'
 
 interface ActivityCardProps extends Activity {
   onDelete: (id: string) => void
+  direction?: number
 }
 
 export default function ActivityCard({
@@ -23,9 +14,10 @@ export default function ActivityCard({
   description,
   price,
   address,
-  imageUrl,
+  imageurl,
   category,
-  onDelete
+  onDelete,
+  direction = 0
 }: ActivityCardProps) {
   const controls = useAnimation()
   const [isDragging, setIsDragging] = useState(false)
@@ -43,6 +35,11 @@ export default function ActivityCard({
     setIsDragging(false)
   }
 
+  const getImageUrl = (url: string | undefined) => {
+    if (!url) return '/images/fallback/activityfallback.png'
+    return url.startsWith('/') ? url : `/images/activities/${url}`
+  }
+
   return (
     <motion.div
       animate={controls}
@@ -55,12 +52,11 @@ export default function ActivityCard({
     >
       <div className="relative h-48 w-full">
         <ImageWithFallback
-          src={imageUrl}
-          alt={`Photo de ${title}`}
+          src={getImageUrl(imageurl)}
+          alt={title}
           fill
-          className="object-cover"
-          priority
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="object-cover rounded-t-xl"
+          priority={direction < 3}
         />
       </div>
       <div className="p-4">

@@ -11,6 +11,7 @@ import Image from 'next/image'
 import ActivityModal from '@/components/ActivityModal'
 import Link from 'next/link'
 import { Category, DEFAULT_CATEGORY, normalizeCategory } from '@/constants/categories'
+import SwipeableActivityCard from '@/components/program/SwipeableActivityCard'
 
 interface Program {
   id: string;
@@ -67,9 +68,8 @@ function validateAndTransformProgram(data: any): Program {
       address: activity.address,
       price: activity.price,
       imageUrl: activity.imageUrl,
-      imageAlt: activity.imageAlt,
-      duration: activity.duration,
-      category: activity.category
+      category: activity.category,
+      city: activity.city
     })),
     coverImage: data.coverImage,
     moods: data.moods
@@ -144,28 +144,53 @@ export default function ProgramEditPage({ params }: { params: { id: string } }) 
   useEffect(() => {
     async function fetchProgram() {
       try {
-        const response = await fetch(`/api/programs/${params.id}`)
-        const result = await response.json()
-        
-        if (!response.ok) {
-          console.error('Error response:', result.error)
-          if (response.status === 401) {
-            router.push(`/login?redirect=/program/${params.id}`)
-            return
-          }
-          if (response.status === 404) {
+        const supabase = createClient()
+        if (!supabase) {
+          throw new Error('Erreur de connexion à Supabase')
+        }
+
+        // Récupérer le programme avec ses activités
+        const { data: rawProgramData, error: programError } = await supabase
+          .from('programs')
+          .select(`
+            *,
+            program_activities (
+              activities (
+                id,
+                title,
+                description,
+                price,
+                address,
+                imageurl,
+                category,
+                city
+              )
+            )
+          `)
+          .eq('id', params.id)
+          .single()
+
+        if (programError) {
+          if (programError.code === 'PGRST116') {
             notFound()
             return
           }
-          throw new Error(result.error || 'Failed to fetch program')
+          throw programError
         }
 
-        if (!result.success || !result.data) {
-          throw new Error('Invalid response format')
+        if (!rawProgramData) {
+          notFound()
+          return
         }
 
-        const programData = validateAndTransformProgram(result.data)
-        setProgram(programData)
+        // Transformer les données pour avoir les activités directement dans le programme
+        const transformedProgram = {
+          ...rawProgramData,
+          activities: rawProgramData.program_activities?.map((pa: any) => pa.activities) || []
+        }
+
+        const validatedProgram = validateAndTransformProgram(transformedProgram)
+        setProgram(validatedProgram)
       } catch (error) {
         console.error('Error fetching program:', error)
         if (error instanceof Error && error.message === 'Authentication required') {
@@ -185,17 +210,31 @@ export default function ProgramEditPage({ params }: { params: { id: string } }) 
     if (!program) return
 
     try {
-      const updatedActivities = program.activities.filter(activity => activity.id !== activityId)
       const supabase = createClient()
+      if (!supabase) {
+        throw new Error('Erreur de connexion à Supabase')
+      }
       
-      const { error } = await supabase
-        .from('programs')
-        .update({ activities: updatedActivities })
-        .eq('id', program.id)
+      // Supprimer le lien dans program_activities
+      const { error: deleteError } = await supabase
+        .from('program_activities')
+        .delete()
+        .eq('program_id', program.id)
+        .eq('activity_id', activityId)
 
-      if (error) throw error
+      if (deleteError) {
+        console.error('Erreur lors de la suppression de l\'activité:', deleteError)
+        throw deleteError
+      }
 
-      setProgram(prev => prev ? { ...prev, activities: updatedActivities } : null)
+      // Mettre à jour l'état local
+      setProgram(prev => {
+        if (!prev) return null
+        return {
+          ...prev,
+          activities: prev.activities.filter(a => a.id !== activityId)
+        }
+      })
     } catch (error) {
       console.error('Erreur lors de la suppression de l\'activité:', error)
       alert('Une erreur est survenue lors de la suppression de l\'activité.')
@@ -291,12 +330,12 @@ export default function ProgramEditPage({ params }: { params: { id: string } }) 
       {Object.entries(groupedActivities).map(([category, activities]) => (
         <div key={category} className="mb-8">
           <h2 className="text-xl font-semibold mb-4">{CATEGORY_LABELS[category] || category}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="space-y-4">
             {activities.map((activity) => (
-              <ActivityCard
+              <SwipeableActivityCard
                 key={activity.id}
                 activity={activity}
-                onClick={() => handleActivityClick(activity)}
+                onDelete={handleDeleteActivity}
               />
             ))}
           </div>
@@ -307,7 +346,7 @@ export default function ProgramEditPage({ params }: { params: { id: string } }) 
         <ActivityModal
           activity={{
             ...selectedActivity,
-            imageUrl: selectedActivity.imageUrl || getDestinationImage(program.destination).url,
+            imageurl: selectedActivity.imageurl || getDestinationImage(program.destination).url,
             imageAlt: `Photo de l'activité ${selectedActivity.title}`
           }}
           activities={program.activities}

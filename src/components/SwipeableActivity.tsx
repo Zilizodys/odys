@@ -2,8 +2,8 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Activity } from '@/types/activity';
-import { FiMapPin, FiDollarSign, FiTrash2 } from 'react-icons/fi';
-import ImageWithFallback from '@/components/ImageWithFallback';
+import { FiMapPin, FiDollarSign, FiTrash2, FiInfo } from 'react-icons/fi';
+import ImageWithFallback from '@/components/ui/ImageWithFallback';
 
 interface SwipeableActivityProps {
   activity: Activity;
@@ -59,16 +59,25 @@ export default function SwipeableActivity({ activity, onDelete, onClick }: Swipe
   }, [activity.id]);
 
   return (
-    <div className="relative overflow-hidden rounded-xl">
-      {/* Fond rouge avec icône de suppression */}
-      <div className="absolute inset-y-0 right-0 bg-red-500 w-[100px] flex items-center justify-center">
-        <FiTrash2 className="w-6 h-6 text-white" />
+    <div className="relative h-full w-full overflow-hidden rounded-xl bg-white shadow-xl">
+      <div className="relative h-full w-full">
+        <ImageWithFallback
+          className="h-full w-full object-cover"
+          src={activity.imageurl || `https://placehold.co/600x400/e4e4e7/1f2937?text=${encodeURIComponent(activity.title)}`}
+          alt={activity.title}
+          width={600}
+          height={400}
+        />
+        {/* Fond rouge avec icône de suppression */}
+        <div className="absolute inset-y-0 right-0 bg-red-500 w-[100px] flex items-center justify-center">
+          <FiTrash2 className="w-6 h-6 text-white" />
+        </div>
       </div>
 
       {/* Carte de l'activité */}
       <div
         ref={cardRef}
-        className={`bg-white rounded-xl overflow-hidden shadow-sm transition-transform ${isDragging ? '' : 'duration-200 ease-out'}`}
+        className={`absolute inset-0 bg-white rounded-xl overflow-hidden shadow-sm transition-transform ${isDragging ? '' : 'duration-200 ease-out'}`}
         style={{ transform: `translateX(${currentX}px)` }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
@@ -78,7 +87,7 @@ export default function SwipeableActivity({ activity, onDelete, onClick }: Swipe
         <div className="flex">
           <div className="w-1/3 relative h-32">
             <ImageWithFallback
-              src={activity.imageUrl || `https://placehold.co/600x400/e4e4e7/1f2937?text=${encodeURIComponent(activity.title)}`}
+              src={activity.imageurl || `https://placehold.co/600x400/e4e4e7/1f2937?text=${encodeURIComponent(activity.title)}`}
               alt={activity.title}
               fill
               className="object-cover"
