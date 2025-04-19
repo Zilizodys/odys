@@ -16,6 +16,20 @@ interface ActivityData extends Activity {}
 
 interface ActivityWithImage extends Activity {}
 
+interface FormData {
+  destination: string
+  startDate: string
+  endDate: string
+  budget: number
+  companion: string
+  moods: string[]
+}
+
+interface Program {
+  formData: FormData
+  activities: Activity[]
+}
+
 // Mapping des moods vers les catégories
 const MOOD_TO_CATEGORY: Record<string, string> = {
   'romantic': 'gastronomie',
@@ -63,6 +77,7 @@ export default function SuggestionsPage() {
   const [filteredActivities, setFilteredActivities] = useState<Activity[]>([])
   const [error, setError] = useState<string | null>(null)
   const [formData, setFormData] = useState<FormData | null>(null)
+  const [program, setProgram] = useState<Program | null>(null)
 
   // Si on a les paramètres du programme, on les utilise directement
   useEffect(() => {
@@ -95,8 +110,12 @@ export default function SuggestionsPage() {
 
   useEffect(() => {
     const savedFormData = localStorage.getItem('formData')
-    if (savedFormData) {
-      setFormData(JSON.parse(savedFormData))
+    const savedActivities = localStorage.getItem('savedActivities')
+    if (savedFormData && savedActivities) {
+      setProgram({
+        formData: JSON.parse(savedFormData),
+        activities: JSON.parse(savedActivities)
+      })
     }
   }, [])
 
@@ -300,12 +319,12 @@ export default function SuggestionsPage() {
       }
 
       // Récupérer les UUIDs des activités depuis la base de données
-      const { data: activitiesData, error: activitiesError } = await supabase
+      const { data: activitiesData, error } = await supabase
         .from('activities')
         .select('id, title')
         .in('title', activities.map(a => a.title))
 
-      if (activitiesError) throw activitiesError
+      if (error) throw error
 
       // Créer un mapping des titres vers les UUIDs
       const titleToUuid = new Map(activitiesData?.map(a => [a.title, a.id]) || [])
@@ -348,6 +367,70 @@ export default function SuggestionsPage() {
     } catch (error) {
       console.error('Erreur lors de la sauvegarde du programme:', error)
       setError('Une erreur est survenue lors de la sauvegarde du programme')
+    }
+  }
+
+  const handleSaveProgram = async () => {
+    if (!program) return
+
+    try {
+      const client = createClient()
+      if (!client) {
+        throw new Error('Impossible de créer le client Supabase')
+      }
+      const { data: { session } } = await client.auth.getSession()
+
+      if (!session) {
+        localStorage.setItem('tempProgram', JSON.stringify(program))
+        router.push('/login')
+        return
+      }
+
+      // Récupérer les UUIDs des activités
+      const { data: activitiesData, error: activitiesError } = await client
+        .from('activities')
+        .select('id, title')
+        .in('title', program.activities.map((activity: Activity) => activity.title))
+
+      if (activitiesError) {
+        throw activitiesError
+      }
+
+      // Créer un mapping des titres vers les UUIDs
+      const activityIdMap = new Map(
+        activitiesData.map(activity => [activity.title, activity.id])
+      )
+
+      // Préparer les données du programme
+      const programData = {
+        user_id: session.user.id,
+        destination: program.formData.destination,
+        start_date: program.formData.startDate,
+        end_date: program.formData.endDate,
+        budget: program.formData.budget,
+        companion: program.formData.companion,
+        activities: program.activities.map((activity: Activity) => ({
+          activity_id: activityIdMap.get(activity.title),
+          title: activity.title,
+          description: activity.description,
+          price: activity.price,
+          address: activity.address,
+          imageurl: activity.imageurl,
+          category: activity.category
+        }))
+      }
+
+      const { error: insertError } = await client
+        .from('programs')
+        .insert([programData])
+
+      if (insertError) {
+        throw insertError
+      }
+
+      router.push('/dashboard')
+    } catch (error) {
+      console.error('Erreur lors de la sauvegarde du programme:', error)
     }
   }
 
