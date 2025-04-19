@@ -78,7 +78,7 @@ export async function GET(
           description: pa.activities.description,
           price: pa.activities.price,
           address: pa.activities.address,
-          imageUrl: pa.activities.imageurl,
+          imageurl: pa.activities.imageurl,
           category: pa.activities.category,
           city: pa.activities.city
         }))
