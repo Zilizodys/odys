@@ -2,14 +2,18 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { Activity } from '@/types/activity'
+import { Program } from '@/types/program'
+import ImageWithFallback from '@/components/ui/ImageWithFallback'
 import { FormData } from '@/types/form'
-import ImageWithFallback from '@/components/ImageWithFallback'
+import { createClient } from '@/lib/supabase/client'
 
 export default function ProgramPage() {
   const router = useRouter()
   const [savedActivities, setSavedActivities] = useState<Activity[]>([])
   const [formData, setFormData] = useState<FormData | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     // Récupérer les activités sauvegardées
@@ -25,35 +29,61 @@ export default function ProgramPage() {
     }
   }, [])
 
-  const handleSaveProgram = () => {
-    if (!formData || savedActivities.length === 0) return
+  const handleSaveProgram = async () => {
+    if (!formData) return
+    setIsLoading(true)
 
-    // Créer un nouveau programme
-    const newProgram = {
-      id: Date.now().toString(),
-      destination: formData.destination,
-      startDate: formData.startDate,
-      endDate: formData.endDate,
-      budget: formData.budget,
-      activities: savedActivities,
-      createdAt: new Date().toISOString()
+    try {
+      const supabase = createClient()
+      if (!supabase) {
+        throw new Error('Erreur de connexion à Supabase')
+      }
+
+      // Créer un nouveau programme
+      const { data: newProgram, error: programError } = await supabase
+        .from('programs')
+        .insert({
+          destination: formData.destination,
+          start_date: formData.startDate,
+          end_date: formData.endDate,
+          budget: formData.budget,
+          companion: formData.companion,
+          title: `Séjour à ${formData.destination}`,
+          moods: formData.moods
+        })
+        .select()
+        .single()
+
+      if (programError) {
+        throw programError
+      }
+
+      // Créer les liens entre le programme et les activités
+      const programActivities = savedActivities.map(activity => ({
+        program_id: newProgram.id,
+        activity_id: activity.id
+      }))
+
+      const { error: linkError } = await supabase
+        .from('program_activities')
+        .insert(programActivities)
+
+      if (linkError) {
+        throw linkError
+      }
+
+      // Nettoyer les données temporaires
+      localStorage.removeItem('savedActivities')
+      localStorage.removeItem('formData')
+
+      // Rediriger vers la page du programme
+      router.push(`/program/${newProgram.id}`)
+    } catch (error) {
+      console.error('Erreur lors de la sauvegarde:', error)
+      alert('Une erreur est survenue lors de la sauvegarde du programme.')
+    } finally {
+      setIsLoading(false)
     }
-
-    // Récupérer les programmes existants
-    const existingPrograms = JSON.parse(localStorage.getItem('savedPrograms') || '[]')
-    
-    // Ajouter le nouveau programme
-    const updatedPrograms = [...existingPrograms, newProgram]
-    
-    // Sauvegarder dans le localStorage
-    localStorage.setItem('savedPrograms', JSON.stringify(updatedPrograms))
-    
-    // Nettoyer les données temporaires
-    localStorage.removeItem('savedActivities')
-    localStorage.removeItem('formData')
-
-    // Rediriger vers le dashboard
-    router.push('/dashboard')
   }
 
   const formatDate = (dateStr: string | null) => {
@@ -88,80 +118,56 @@ export default function ProgramPage() {
 
   if (!formData) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <main className="max-w-2xl mx-auto px-4 py-8">
-          <p className="text-center text-gray-600">
-            Aucune donnée de programme disponible
-          </p>
-        </main>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-600">Aucune donnée de programme</p>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <main className="max-w-2xl mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8">Votre Programme</h1>
+    <div className="min-h-screen bg-gray-50 p-4">
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-2xl font-bold text-gray-900 mb-8">Résumé de votre programme</h1>
 
-        <div className="bg-white rounded-xl p-6 shadow-sm mb-8 space-y-2">
-          <p className="text-gray-800">
-            <span className="font-medium">Destination :</span> {formData.destination}
-          </p>
-          <p className="text-gray-800">
-            <span className="font-medium">Dates :</span> Du {formatDate(formData.startDate)} au {formatDate(formData.endDate)}
-          </p>
-          <p className="text-gray-800">
-            <span className="font-medium">Voyageurs :</span> {getCompanionLabel(formData.companion)}
-          </p>
-          <p className="text-gray-800">
-            <span className="font-medium">Budget :</span> {getBudgetLabel(formData.budget)}€
-          </p>
+        <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-8">
+          <div className="relative h-48">
+            <ImageWithFallback
+              src={`https://source.unsplash.com/featured/1200x400/?${formData.destination}`}
+              alt={`Photo de ${formData.destination}`}
+              fill
+              className="object-cover"
+              priority
+            />
+            <div className="absolute inset-0 bg-black/40" />
+            <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+              <h2 className="text-2xl font-bold">Séjour à {formData.destination}</h2>
+              <p className="text-lg">
+                Du {formData.startDate ? new Date(formData.startDate).toLocaleDateString('fr-FR') : ''} au{' '}
+                {formData.endDate ? new Date(formData.endDate).toLocaleDateString('fr-FR') : ''}
+              </p>
+            </div>
+          </div>
         </div>
 
-        <h2 className="text-2xl font-bold mb-4">Activités sélectionnées</h2>
-        
-        {savedActivities.length === 0 ? (
-          <p className="text-center text-gray-600 py-8">
-            Aucune activité sélectionnée
-          </p>
-        ) : (
-          <div className="space-y-4">
-            {savedActivities.map((activity) => (
-              <div 
-                key={activity.id}
-                className="bg-white rounded-xl overflow-hidden shadow-sm"
-              >
-                <div className="flex">
-                  <div className="w-1/3 h-40">
-                    <ImageWithFallback
-                      src={activity.imageUrl || `https://placehold.co/600x400/e4e4e7/1f2937?text=${encodeURIComponent(activity.title)}`}
-                      alt={`Photo de l'activité ${activity.title}`}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                  <div className="w-2/3 p-4">
-                    <h3 className="font-bold text-lg mb-1">{activity.title}</h3>
-                    <p className="text-gray-600 text-sm mb-2">{activity.description}</p>
-                    <div className="flex items-center justify-between mt-auto">
-                      <p className="text-gray-500 text-sm">📍 {activity.address}</p>
-                      <p className="text-indigo-600 font-semibold">{activity.price}€</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+        <div className="space-y-4 mb-8">
+          {savedActivities.map((activity, index) => (
+            <div key={activity.id} className="bg-white rounded-lg shadow-sm p-4">
+              <h3 className="font-semibold text-gray-900">{activity.title}</h3>
+              <p className="text-gray-600">{activity.description}</p>
+            </div>
+          ))}
+        </div>
 
         <button
           onClick={handleSaveProgram}
-          disabled={!formData || savedActivities.length === 0}
-          className="w-full mt-8 px-6 py-3 bg-indigo-600 text-white font-medium rounded-xl hover:bg-indigo-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+          disabled={isLoading}
+          className="w-full py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Enregistrer le programme
+          {isLoading ? 'Sauvegarde en cours...' : 'Sauvegarder le programme'}
         </button>
-      </main>
+      </div>
     </div>
   )
 } 

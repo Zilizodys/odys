@@ -12,6 +12,7 @@ CREATE TABLE programs (
   budget INTEGER,
   companion TEXT,
   activities JSONB DEFAULT '[]'::jsonb NOT NULL,
+  moods TEXT[] DEFAULT '{}'::text[] NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
 );

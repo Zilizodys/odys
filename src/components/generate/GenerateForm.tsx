@@ -1,13 +1,16 @@
 'use client'
 
-import React, { useState, useRef, forwardRef } from 'react'
+import React, { useState, useRef, forwardRef, useEffect, useCallback, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { fr } from 'date-fns/locale'
 import { differenceInDays } from 'date-fns'
 import DatePicker, { registerLocale } from 'react-datepicker'
+import { FiMapPin, FiSearch, FiX } from 'react-icons/fi'
+import Fuse from 'fuse.js'
 import "react-datepicker/dist/react-datepicker.css"
 import StepWrapper from '../ui/StepWrapper'
+import { createClient } from '@/lib/supabase/client'
 import { 
   FormData, 
   INITIAL_FORM_DATA, 
@@ -15,11 +18,47 @@ import {
   COMPANION_OPTIONS, 
   BUDGET_OPTIONS,
   SUGGESTED_DESTINATIONS,
+  WORLD_CITIES,
   MoodType
 } from '@/types/form'
 
 // Enregistrer la localisation française
 registerLocale('fr', fr)
+
+// Cache pour les résultats de recherche
+const searchCache: { [key: string]: { city: string; country: string; source: string }[] } = {}
+
+// Normaliser le texte (enlever les accents, mettre en minuscule)
+const normalizeText = (text: string) => {
+  return text
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim()
+}
+
+// Fonction de debounce
+function debounce<T extends (...args: any[]) => any>(
+  func: T,
+  wait: number
+): (...args: Parameters<T>) => void {
+  let timeout: NodeJS.Timeout | null = null
+
+  return (...args: Parameters<T>) => {
+    if (timeout) clearTimeout(timeout)
+    timeout = setTimeout(() => func(...args), wait)
+  }
+}
+
+// Options de configuration pour Fuse.js
+const fuseOptions = {
+  keys: ['city', 'country'],
+  threshold: 0.3,
+  distance: 100,
+  minMatchCharLength: 2,
+  shouldSort: true,
+  includeScore: true
+}
 
 const CustomInput = forwardRef<HTMLDivElement, { value?: string; onClick?: () => void }>(
   ({ value, onClick }, ref) => (
@@ -47,8 +86,121 @@ export default function GenerateForm() {
   const [currentStep, setCurrentStep] = useState(1)
   const [direction, setDirection] = useState<'left' | 'right'>('right')
   const [isCalendarOpen, setIsCalendarOpen] = useState(false)
+  const [suggestions, setSuggestions] = useState<Array<{
+    city: string
+    country: string
+    source: string
+    score?: number
+  }>>([])
+  const [isLoading, setIsLoading] = useState(false)
   const datePickerRef = useRef<any>(null)
   const router = useRouter()
+  const [highlightedIndex, setHighlightedIndex] = useState<number>(-1)
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  // Initialiser Fuse.js avec la liste des villes mondiales
+  const fuse = useMemo(() => new Fuse(WORLD_CITIES, fuseOptions), [])
+
+  const fetchCitySuggestions = useCallback(async (input: string) => {
+    if (!input.trim() || input.length < 2) {
+      setSuggestions([])
+      return
+    }
+
+    const normalizedInput = normalizeText(input)
+
+    // Vérifier le cache
+    if (searchCache[normalizedInput]) {
+      setSuggestions(searchCache[normalizedInput])
+      return
+    }
+
+    setIsLoading(true)
+    try {
+      // Recherche floue dans la liste prédéfinie
+      const fuseResults = fuse.search(normalizedInput)
+      const worldCitiesResults = fuseResults
+        .filter(result => result.score && result.score < 0.4) // Filtrer les résultats trop éloignés
+        .map(result => ({
+          ...result.item,
+          source: 'predefined',
+          score: result.score
+        }))
+
+      // Rechercher dans Supabase avec une recherche plus flexible
+      const supabase = createClient()
+      let dbResults: Array<{ city: string; country: string; source: string; score?: number }> = []
+      
+      if (supabase) {
+        // Utiliser une recherche plus flexible avec ILIKE
+        const { data: exactMatches, error: exactError } = await supabase
+          .from('activities')
+          .select('city')
+          .ilike('city', `%${normalizedInput}%`)
+          .limit(5)
+
+        // Rechercher aussi avec les mots partiels
+        const searchWords = normalizedInput.split(/\s+/)
+        const { data: partialMatches, error: partialError } = await supabase
+          .from('activities')
+          .select('city')
+          .or(searchWords.map(word => `city.ilike.%${word}%`).join(','))
+          .limit(5)
+
+        if (!exactError && !partialError && (exactMatches || partialMatches)) {
+          const allMatches = [...(exactMatches || []), ...(partialMatches || [])]
+          dbResults = Array.from(new Set(allMatches.map(item => item.city)))
+            .map(city => ({
+              city,
+              country: 'France',
+              source: 'database',
+              score: exactMatches?.some(m => m.city === city) ? 0 : 0.1 // Meilleur score pour les correspondances exactes
+            }))
+        }
+      }
+
+      // Combiner et trier les résultats
+      const allResults = [...worldCitiesResults, ...dbResults]
+      const uniqueResults = Array.from(
+        new Map(
+          allResults
+            .sort((a, b) => (a.score || 0) - (b.score || 0))
+            .map(item => [item.city, item])
+        ).values()
+      ).slice(0, 5)
+
+      // Mettre en cache
+      searchCache[normalizedInput] = uniqueResults
+      setSuggestions(uniqueResults)
+    } catch (error) {
+      console.error('Erreur:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }, [fuse])
+
+  // Créer une version debounced de la fonction de recherche
+  const debouncedFetchSuggestions = useCallback(
+    debounce((input: string) => fetchCitySuggestions(input), 300),
+    [fetchCitySuggestions]
+  )
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    updateFormData('destination', value)
+    debouncedFetchSuggestions(value)
+  }
+
+  // Nettoyer le cache périodiquement
+  useEffect(() => {
+    const cacheCleanupInterval = setInterval(() => {
+      Object.keys(searchCache).forEach(key => {
+        delete searchCache[key]
+      })
+    }, 1000 * 60 * 5) // Nettoyer toutes les 5 minutes
+
+    return () => clearInterval(cacheCleanupInterval)
+  }, [])
 
   const updateFormData = (key: keyof FormData, value: any) => {
     setFormData(prev => ({ ...prev, [key]: value }))
@@ -143,6 +295,36 @@ export default function GenerateForm() {
     return ''
   }
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!suggestions.length) return
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault()
+        setHighlightedIndex(prev => 
+          prev < suggestions.length - 1 ? prev + 1 : prev
+        )
+        break
+      case 'ArrowUp':
+        e.preventDefault()
+        setHighlightedIndex(prev => prev > 0 ? prev - 1 : -1)
+        break
+      case 'Enter':
+        e.preventDefault()
+        if (highlightedIndex >= 0) {
+          const selectedCity = suggestions[highlightedIndex]
+          updateFormData('destination', selectedCity.city)
+          setSuggestions([])
+          handleDestinationSelect(selectedCity.city)
+        }
+        break
+      case 'Escape':
+        setSuggestions([])
+        setHighlightedIndex(-1)
+        break
+    }
+  }
+
   return (
     <div className="max-w-2xl mx-auto relative min-h-[500px]">
       {/* Progress bar */}
@@ -179,17 +361,92 @@ export default function GenerateForm() {
           {currentStep === 1 && (
             <StepWrapper key="step1" title="Où veux-tu partir ?" direction={direction}>
               <div className="space-y-6">
-                <div className="space-y-4">
+                <div className="space-y-4 relative">
                   <p className="text-sm text-gray-500 text-left mb-1">
                     Entrez la ville ou le pays de votre choix
                   </p>
-                  <input
-                    type="text"
-                    placeholder="Ex: Paris, Tokyo, New York..."
-                    value={formData.destination}
-                    onChange={(e) => updateFormData('destination', e.target.value)}
-                    className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                  />
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <FiSearch className="h-5 w-5 text-gray-400" />
+                    </div>
+                    <input
+                      ref={inputRef}
+                      type="text"
+                      placeholder="Ex: Paris, Tokyo, New York..."
+                      value={formData.destination}
+                      onChange={handleInputChange}
+                      onKeyDown={handleKeyDown}
+                      className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    />
+                    {formData.destination && (
+                      <button
+                        onClick={() => {
+                          updateFormData('destination', '')
+                          setSuggestions([])
+                          inputRef.current?.focus()
+                        }}
+                        className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                      >
+                        <FiX className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                      </button>
+                    )}
+                  </div>
+                  
+                  {/* Liste des suggestions améliorée */}
+                  <AnimatePresence>
+                    {suggestions.length > 0 && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        className="absolute z-10 w-full bg-white mt-1 rounded-lg shadow-lg border border-gray-200 overflow-hidden"
+                      >
+                        {suggestions.map((item, index) => (
+                          <motion.button
+                            key={index}
+                            className={`w-full text-left px-4 py-3 flex items-center gap-3 transition-colors ${
+                              index === highlightedIndex
+                                ? 'bg-indigo-50'
+                                : 'hover:bg-gray-50'
+                            }`}
+                            onClick={() => {
+                              updateFormData('destination', item.city)
+                              setSuggestions([])
+                              handleDestinationSelect(item.city)
+                            }}
+                            onMouseEnter={() => setHighlightedIndex(index)}
+                            whileHover={{ scale: 1.01 }}
+                            transition={{ duration: 0.1 }}
+                          >
+                            <div className="flex-shrink-0">
+                              <FiMapPin className={`h-5 w-5 ${
+                                index === highlightedIndex
+                                  ? 'text-indigo-600'
+                                  : 'text-gray-400'
+                              }`} />
+                            </div>
+                            <div className="flex-1">
+                              <div className="font-medium text-gray-900">{item.city}</div>
+                              <div className="text-sm text-gray-500 flex items-center justify-between">
+                                <span>{item.country}</span>
+                                {item.source === 'database' && (
+                                  <span className="ml-2 px-2 py-0.5 text-xs bg-indigo-50 text-indigo-600 rounded-full">
+                                    Suggestions disponibles
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </motion.button>
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {isLoading && (
+                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                      <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-indigo-600"></div>
+                    </div>
+                  )}
                 </div>
 
                 <div className="space-y-3">

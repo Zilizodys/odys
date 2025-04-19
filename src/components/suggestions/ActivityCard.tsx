@@ -7,12 +7,14 @@ interface ActivityCardProps {
   activity: Activity
   onDelete: (id: string) => void
   direction?: number
+  onSwipe?: (direction: number | PanInfo) => void
 }
 
 export default function ActivityCard({
   activity,
   onDelete,
-  direction = 0
+  direction = 0,
+  onSwipe
 }: ActivityCardProps) {
   const controls = useAnimation()
   const [isDragging, setIsDragging] = useState(false)
@@ -24,6 +26,11 @@ export default function ActivityCard({
     if (offset < -100 || velocity < -500) {
       await controls.start({ x: "-100%", opacity: 0 })
       onDelete(activity.id)
+    } else if (offset > 100 || velocity > 500) {
+      await controls.start({ x: "100%", opacity: 0 })
+      if (onSwipe) {
+        onSwipe(1)
+      }
     } else {
       controls.start({ x: 0, opacity: 1 })
     }

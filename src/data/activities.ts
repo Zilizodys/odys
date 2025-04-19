@@ -5,7 +5,7 @@ export interface Activity {
   category: string
   price: number
   address: string
-  imageUrl: string
+  imageurl: string
   city: string
   price_range: string
 }
@@ -19,7 +19,7 @@ export const activities: Activity[] = [
     category: 'culture',
     price: 17,
     address: 'Rue de Rivoli, 75001 Paris',
-    imageUrl: '/images/activities/louvre.jpg',
+    imageurl: '/images/activities/louvre.jpg',
     city: 'paris',
     price_range: '17€'
   },
@@ -30,7 +30,7 @@ export const activities: Activity[] = [
     category: 'culture',
     price: 16,
     address: '1 Rue de la Légion d\'Honneur, 75007 Paris',
-    imageUrl: '/images/activities/orsay.jpg',
+    imageurl: '/images/activities/orsay.jpg',
     city: 'paris',
     price_range: '16€'
   },
@@ -41,7 +41,7 @@ export const activities: Activity[] = [
     category: 'culture',
     price: 14,
     address: 'Place Georges-Pompidou, 75004 Paris',
-    imageUrl: '/images/activities/pompidou.jpg',
+    imageurl: '/images/activities/pompidou.jpg',
     city: 'paris',
     price_range: '14€'
   },
@@ -52,7 +52,7 @@ export const activities: Activity[] = [
     category: 'culture',
     price: 12,
     address: 'Jardin des Tuileries, 75001 Paris',
-    imageUrl: '/images/activities/orangerie.jpg',
+    imageurl: '/images/activities/orangerie.jpg',
     city: 'paris',
     price_range: '12€'
   },
@@ -63,7 +63,7 @@ export const activities: Activity[] = [
     category: 'culture',
     price: 0,
     address: '23 Rue de Sévigné, 75003 Paris',
-    imageUrl: '/images/activities/carnavalet.jpg',
+    imageurl: '/images/activities/carnavalet.jpg',
     city: 'paris',
     price_range: 'gratuit'
   },
@@ -76,7 +76,7 @@ export const activities: Activity[] = [
     category: 'gastronomie',
     price: 95,
     address: '129 Avenue Parmentier, 75011 Paris',
-    imageUrl: '/images/activities/chateaubriand.jpg',
+    imageurl: '/images/activities/chateaubriand.jpg',
     city: 'paris',
     price_range: '95€'
   },
@@ -87,7 +87,7 @@ export const activities: Activity[] = [
     category: 'gastronomie',
     price: 175,
     address: '84 Rue de Varenne, 75007 Paris',
-    imageUrl: '/images/activities/arpege.jpg',
+    imageurl: '/images/activities/arpege.jpg',
     city: 'paris',
     price_range: '175€'
   },
@@ -98,7 +98,7 @@ export const activities: Activity[] = [
     category: 'gastronomie',
     price: 65,
     address: '18 Rue Paul Bert, 75011 Paris',
-    imageUrl: '/images/activities/paul-bert.jpg',
+    imageurl: '/images/activities/paul-bert.jpg',
     city: 'paris',
     price_range: '65€'
   },
@@ -109,7 +109,7 @@ export const activities: Activity[] = [
     category: 'gastronomie',
     price: 55,
     address: '3 Rue Jouye-Rouve, 75020 Paris',
-    imageUrl: '/images/activities/baratin.jpg',
+    imageurl: '/images/activities/baratin.jpg',
     city: 'paris',
     price_range: '55€'
   },
@@ -120,7 +120,7 @@ export const activities: Activity[] = [
     category: 'gastronomie',
     price: 85,
     address: '114 Rue Amelot, 75011 Paris',
-    imageUrl: '/images/activities/clown-bar.jpg',
+    imageurl: '/images/activities/clown-bar.jpg',
     city: 'paris',
     price_range: '85€'
   },
@@ -133,7 +133,7 @@ export const activities: Activity[] = [
     category: 'vie nocturne',
     price: 12,
     address: '80 Quai de Jemmapes, 75010 Paris',
-    imageUrl: '/images/activities/comptoir-general.jpg',
+    imageurl: '/images/activities/comptoir-general.jpg',
     city: 'paris',
     price_range: '12€'
   },
@@ -144,7 +144,7 @@ export const activities: Activity[] = [
     category: 'vie nocturne',
     price: 15,
     address: '33 Rue de la Verrerie, 75004 Paris',
-    imageUrl: '/images/activities/perchoir.jpg',
+    imageurl: '/images/activities/perchoir.jpg',
     city: 'paris',
     price_range: '15€'
   },
@@ -155,7 +155,7 @@ export const activities: Activity[] = [
     category: 'vie nocturne',
     price: 20,
     address: '19-21 Rue Boyer, 75020 Paris',
-    imageUrl: '/images/activities/bellevilloise.jpg',
+    imageurl: '/images/activities/bellevilloise.jpg',
     city: 'paris',
     price_range: '20€'
   },
@@ -166,7 +166,7 @@ export const activities: Activity[] = [
     category: 'vie nocturne',
     price: 8,
     address: '1 Rue Théophile Roussel, 75012 Paris',
-    imageUrl: '/images/activities/baron-rouge.jpg',
+    imageurl: '/images/activities/baron-rouge.jpg',
     city: 'paris',
     price_range: '8€'
   },
@@ -177,7 +177,7 @@ export const activities: Activity[] = [
     category: 'vie nocturne',
     price: 14,
     address: '37 Rue Saint-Sauveur, 75002 Paris',
-    imageUrl: '/images/activities/ecc.jpg',
+    imageurl: '/images/activities/ecc.jpg',
     city: 'paris',
     price_range: '14€'
   },
@@ -190,7 +190,7 @@ export const activities: Activity[] = [
     category: 'sport',
     price: 20,
     address: '2 Avenue Gordon Bennett, 75016 Paris',
-    imageUrl: '/images/activities/roland-garros.jpg',
+    imageurl: '/images/activities/roland-garros.jpg',
     city: 'paris',
     price_range: '20€'
   },
@@ -201,7 +201,7 @@ export const activities: Activity[] = [
     category: 'sport',
     price: 25,
     address: '24 Rue du Commandant Guilbaud, 75016 Paris',
-    imageUrl: '/images/activities/parc-princes.jpg',
+    imageurl: '/images/activities/parc-princes.jpg',
     city: 'paris',
     price_range: '25€'
   },
@@ -212,7 +212,7 @@ export const activities: Activity[] = [
     category: 'sport',
     price: 5,
     address: 'Stations partout dans Paris',
-    imageUrl: '/images/activities/velib.jpg',
+    imageurl: '/images/activities/velib.jpg',
     city: 'paris',
     price_range: '5€'
   },
@@ -223,7 +223,7 @@ export const activities: Activity[] = [
     category: 'sport',
     price: 4,
     address: 'Quai François Mauriac, 75013 Paris',
-    imageUrl: '/images/activities/piscine-baker.jpg',
+    imageurl: '/images/activities/piscine-baker.jpg',
     city: 'paris',
     price_range: '4€'
   },
@@ -234,7 +234,7 @@ export const activities: Activity[] = [
     category: 'sport',
     price: 15,
     address: '33 Rue Traversière, 75012 Paris',
-    imageUrl: '/images/activities/arkose.jpg',
+    imageurl: '/images/activities/arkose.jpg',
     city: 'paris',
     price_range: '15€'
   },
@@ -247,7 +247,7 @@ export const activities: Activity[] = [
     category: 'nature',
     price: 0,
     address: 'Place de la Concorde, 75001 Paris',
-    imageUrl: '/images/activities/tuileries.jpg',
+    imageurl: '/images/activities/tuileries.jpg',
     city: 'paris',
     price_range: 'gratuit'
   },
@@ -258,7 +258,7 @@ export const activities: Activity[] = [
     category: 'nature',
     price: 0,
     address: 'Route de la Pyramide, 75012 Paris',
-    imageUrl: '/images/activities/vincennes.jpg',
+    imageurl: '/images/activities/vincennes.jpg',
     city: 'paris',
     price_range: 'gratuit'
   },
@@ -269,7 +269,7 @@ export const activities: Activity[] = [
     category: 'nature',
     price: 0,
     address: '57 Rue Cuvier, 75005 Paris',
-    imageUrl: '/images/activities/jardin-plantes.jpg',
+    imageurl: '/images/activities/jardin-plantes.jpg',
     city: 'paris',
     price_range: 'gratuit'
   },
@@ -280,7 +280,7 @@ export const activities: Activity[] = [
     category: 'nature',
     price: 0,
     address: '1 Rue Botzaris, 75019 Paris',
-    imageUrl: '/images/activities/buttes-chaumont.jpg',
+    imageurl: '/images/activities/buttes-chaumont.jpg',
     city: 'paris',
     price_range: 'gratuit'
   },
@@ -291,7 +291,7 @@ export const activities: Activity[] = [
     category: 'nature',
     price: 0,
     address: '1 Coulée verte René-Dumont, 75012 Paris',
-    imageUrl: '/images/activities/coulee-verte.jpg',
+    imageurl: '/images/activities/coulee-verte.jpg',
     city: 'paris',
     price_range: 'gratuit'
   },
@@ -304,7 +304,7 @@ export const activities: Activity[] = [
     category: 'culture',
     price: 12,
     address: '86 Quai Perrache, 69002 Lyon',
-    imageUrl: '/images/activities/confluences.jpg',
+    imageurl: '/images/activities/confluences.jpg',
     city: 'lyon',
     price_range: '12€'
   },
@@ -315,7 +315,7 @@ export const activities: Activity[] = [
     category: 'culture',
     price: 0,
     address: '8 Place de Fourvière, 69005 Lyon',
-    imageUrl: '/images/activities/fourviere.jpg',
+    imageurl: '/images/activities/fourviere.jpg',
     city: 'lyon',
     price_range: 'gratuit'
   },
@@ -326,7 +326,7 @@ export const activities: Activity[] = [
     category: 'culture',
     price: 0,
     address: 'Vieux Lyon, 69005 Lyon',
-    imageUrl: '/images/activities/vieux-lyon.jpg',
+    imageurl: '/images/activities/vieux-lyon.jpg',
     city: 'lyon',
     price_range: 'gratuit'
   },
@@ -339,7 +339,7 @@ export const activities: Activity[] = [
     category: 'gastronomie',
     price: 0,
     address: '102 Cours Lafayette, 69003 Lyon',
-    imageUrl: '/images/activities/halles-bocuse.jpg',
+    imageurl: '/images/activities/halles-bocuse.jpg',
     city: 'lyon',
     price_range: 'gratuit'
   },
@@ -350,7 +350,7 @@ export const activities: Activity[] = [
     category: 'gastronomie',
     price: 45,
     address: '36 Rue Tramassac, 69005 Lyon',
-    imageUrl: '/images/activities/bouchon.jpg',
+    imageurl: '/images/activities/bouchon.jpg',
     city: 'lyon',
     price_range: '45€'
   },
@@ -361,7 +361,7 @@ export const activities: Activity[] = [
     category: 'gastronomie',
     price: 160,
     address: '12 Rue Royale, 69001 Lyon',
-    imageUrl: '/images/activities/mere-brazier.jpg',
+    imageurl: '/images/activities/mere-brazier.jpg',
     city: 'lyon',
     price_range: '160€'
   },
@@ -374,7 +374,7 @@ export const activities: Activity[] = [
     category: 'vie nocturne',
     price: 15,
     address: '50 Quai Rambaud, 69002 Lyon',
-    imageUrl: '/images/activities/sucre.jpg',
+    imageurl: '/images/activities/sucre.jpg',
     city: 'lyon',
     price_range: '15€'
   },
@@ -385,7 +385,7 @@ export const activities: Activity[] = [
     category: 'vie nocturne',
     price: 10,
     address: '19 Rue Burdeau, 69001 Lyon',
-    imageUrl: '/images/activities/bec-jazz.jpg',
+    imageurl: '/images/activities/bec-jazz.jpg',
     city: 'lyon',
     price_range: '10€'
   },
@@ -398,7 +398,7 @@ export const activities: Activity[] = [
     category: 'nature',
     price: 0,
     address: '69006 Lyon',
-    imageUrl: '/images/activities/tete-or.jpg',
+    imageurl: '/images/activities/tete-or.jpg',
     city: 'lyon',
     price_range: 'gratuit'
   },
@@ -409,7 +409,7 @@ export const activities: Activity[] = [
     category: 'nature',
     price: 0,
     address: 'Quai Claude Bernard, 69007 Lyon',
-    imageUrl: '/images/activities/berges-rhone.jpg',
+    imageurl: '/images/activities/berges-rhone.jpg',
     city: 'lyon',
     price_range: 'gratuit'
   },
@@ -422,7 +422,7 @@ export const activities: Activity[] = [
     category: 'culture',
     price: 11,
     address: '7 Promenade Robert Laffont, 13002 Marseille',
-    imageUrl: '/images/activities/mucem.jpg',
+    imageurl: '/images/activities/mucem.jpg',
     city: 'marseille',
     price_range: '11€'
   },
@@ -433,7 +433,7 @@ export const activities: Activity[] = [
     category: 'culture',
     price: 0,
     address: 'Rue Fort du Sanctuaire, 13281 Marseille',
-    imageUrl: '/images/activities/notre-dame-garde.jpg',
+    imageurl: '/images/activities/notre-dame-garde.jpg',
     city: 'marseille',
     price_range: 'gratuit'
   },
@@ -446,7 +446,7 @@ export const activities: Activity[] = [
     category: 'gastronomie',
     price: 65,
     address: '6 Rue des Catalans, 13007 Marseille',
-    imageUrl: '/images/activities/chez-michel.jpg',
+    imageurl: '/images/activities/chez-michel.jpg',
     city: 'marseille',
     price_range: '65€'
   },
@@ -457,7 +457,7 @@ export const activities: Activity[] = [
     category: 'gastronomie',
     price: 95,
     address: 'Vallon des Auffes, 13007 Marseille',
-    imageUrl: '/images/activities/epuisette.jpg',
+    imageurl: '/images/activities/epuisette.jpg',
     city: 'marseille',
     price_range: '95€'
   },
@@ -470,7 +470,7 @@ export const activities: Activity[] = [
     category: 'nature',
     price: 0,
     address: 'Calanques, 13009 Marseille',
-    imageUrl: '/images/activities/calanques.jpg',
+    imageurl: '/images/activities/calanques.jpg',
     city: 'marseille',
     price_range: 'gratuit'
   },
@@ -481,7 +481,7 @@ export const activities: Activity[] = [
     category: 'nature',
     price: 12,
     address: 'Quai du Port, 13001 Marseille',
-    imageUrl: '/images/activities/frioul.jpg',
+    imageurl: '/images/activities/frioul.jpg',
     city: 'marseille',
     price_range: '12€'
   },
@@ -494,7 +494,7 @@ export const activities: Activity[] = [
     category: 'sport',
     price: 18,
     address: '3 Boulevard Michelet, 13008 Marseille',
-    imageUrl: '/images/activities/velodrome.jpg',
+    imageurl: '/images/activities/velodrome.jpg',
     city: 'marseille',
     price_range: '18€'
   },
@@ -505,7 +505,7 @@ export const activities: Activity[] = [
     category: 'sport',
     price: 80,
     address: 'Port de la Pointe Rouge, 13008 Marseille',
-    imageUrl: '/images/activities/plongee.jpg',
+    imageurl: '/images/activities/plongee.jpg',
     city: 'marseille',
     price_range: '80€'
   },
@@ -518,7 +518,7 @@ export const activities: Activity[] = [
     category: 'culture',
     price: 0,
     address: 'Great Russell St, London WC1B 3DG',
-    imageUrl: '/images/activities/british-museum.jpg',
+    imageurl: '/images/activities/british-museum.jpg',
     city: 'londres',
     price_range: 'gratuit'
   },
@@ -529,7 +529,7 @@ export const activities: Activity[] = [
     category: 'culture',
     price: 0,
     address: 'Bankside, London SE1 9TG',
-    imageUrl: '/images/activities/tate-modern.jpg',
+    imageurl: '/images/activities/tate-modern.jpg',
     city: 'londres',
     price_range: 'gratuit'
   },
@@ -540,7 +540,7 @@ export const activities: Activity[] = [
     category: 'culture',
     price: 29.90,
     address: 'St Katharine\'s & Wapping, London EC3N 4AB',
-    imageUrl: '/images/activities/tower-london.jpg',
+    imageurl: '/images/activities/tower-london.jpg',
     city: 'londres',
     price_range: '29.90€'
   },
@@ -551,7 +551,7 @@ export const activities: Activity[] = [
     category: 'culture',
     price: 0,
     address: 'Trafalgar Square, London WC2N 5DN',
-    imageUrl: '/images/activities/national-gallery.jpg',
+    imageurl: '/images/activities/national-gallery.jpg',
     city: 'londres',
     price_range: 'gratuit'
   },
@@ -562,7 +562,7 @@ export const activities: Activity[] = [
     category: 'culture',
     price: 25,
     address: '21 New Globe Walk, London SE1 9DT',
-    imageUrl: '/images/activities/globe.jpg',
+    imageurl: '/images/activities/globe.jpg',
     city: 'londres',
     price_range: '25€'
   },
@@ -575,7 +575,7 @@ export const activities: Activity[] = [
     category: 'gastronomie',
     price: 0,
     address: '8 Southwark St, London SE1 1TL',
-    imageUrl: '/images/activities/borough-market.jpg',
+    imageurl: '/images/activities/borough-market.jpg',
     city: 'londres',
     price_range: 'gratuit'
   },
@@ -586,7 +586,7 @@ export const activities: Activity[] = [
     category: 'gastronomie',
     price: 180,
     address: '68 Royal Hospital Rd, London SW3 4HP',
-    imageUrl: '/images/activities/gordon-ramsay.jpg',
+    imageurl: '/images/activities/gordon-ramsay.jpg',
     city: 'londres',
     price_range: '180€'
   },
@@ -597,7 +597,7 @@ export const activities: Activity[] = [
     category: 'gastronomie',
     price: 95,
     address: '9 Conduit St, London W1S 2XG',
-    imageUrl: '/images/activities/sketch.jpg',
+    imageurl: '/images/activities/sketch.jpg',
     city: 'londres',
     price_range: '95€'
   },
@@ -608,7 +608,7 @@ export const activities: Activity[] = [
     category: 'gastronomie',
     price: 25,
     address: 'Brick Lane, London E1 6SB',
-    imageUrl: '/images/activities/brick-lane.jpg',
+    imageurl: '/images/activities/brick-lane.jpg',
     city: 'londres',
     price_range: '25€'
   },
@@ -619,7 +619,7 @@ export const activities: Activity[] = [
     category: 'gastronomie',
     price: 60,
     address: '181 Piccadilly, St. James\'s, London W1A 1ER',
-    imageUrl: '/images/activities/fortnum.jpg',
+    imageurl: '/images/activities/fortnum.jpg',
     city: 'londres',
     price_range: '60€'
   },
@@ -632,7 +632,7 @@ export const activities: Activity[] = [
     category: 'vie nocturne',
     price: 25,
     address: '103 Gaunt St, London SE1 6DP',
-    imageUrl: '/images/activities/ministry.jpg',
+    imageurl: '/images/activities/ministry.jpg',
     city: 'londres',
     price_range: '25€'
   },
@@ -643,7 +643,7 @@ export const activities: Activity[] = [
     category: 'vie nocturne',
     price: 30,
     address: '47 Frith St, London W1D 4HT',
-    imageUrl: '/images/activities/ronnie-scotts.jpg',
+    imageurl: '/images/activities/ronnie-scotts.jpg',
     city: 'londres',
     price_range: '30€'
   },
@@ -654,7 +654,7 @@ export const activities: Activity[] = [
     category: 'vie nocturne',
     price: 0,
     address: '20 Fenchurch St, London EC3M 8AF',
-    imageUrl: '/images/activities/sky-garden.jpg',
+    imageurl: '/images/activities/sky-garden.jpg',
     city: 'londres',
     price_range: 'gratuit'
   },
@@ -665,7 +665,7 @@ export const activities: Activity[] = [
     category: 'vie nocturne',
     price: 20,
     address: '77A Charterhouse St, London EC1M 6HJ',
-    imageUrl: '/images/activities/fabric.jpg',
+    imageurl: '/images/activities/fabric.jpg',
     city: 'londres',
     price_range: '20€'
   },
@@ -676,7 +676,7 @@ export const activities: Activity[] = [
     category: 'vie nocturne',
     price: 15,
     address: '32 London Bridge St, London SE1 9SG',
-    imageUrl: '/images/activities/shard.jpg',
+    imageurl: '/images/activities/shard.jpg',
     city: 'londres',
     price_range: '15€'
   },

@@ -1,6 +1,6 @@
 'use client'
 
-import { FiTrash2 } from 'react-icons/fi'
+import { FiTrash2, FiClock } from 'react-icons/fi'
 import type { Suggestion } from '@/types/suggestion'
 
 interface ProgramActivityProps {
@@ -9,6 +9,11 @@ interface ProgramActivityProps {
 }
 
 export default function ProgramActivity({ activity, onDelete }: ProgramActivityProps) {
+  const formatDuration = (duration: string | undefined) => {
+    if (!duration) return 'Durée non spécifiée'
+    return `${duration}`
+  }
+
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-4">
       <div className="flex items-start justify-between">
@@ -20,7 +25,10 @@ export default function ProgramActivity({ activity, onDelete }: ProgramActivityP
             {activity.description}
           </p>
           <div className="flex items-center gap-4 text-sm text-gray-500">
-            <span>Durée : {activity.duration}</span>
+            <span className="flex items-center gap-1">
+              <FiClock className="w-4 h-4" />
+              {formatDuration(activity.duration)}
+            </span>
             <span>Prix : {activity.price}€</span>
           </div>
         </div>

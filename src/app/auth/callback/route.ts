@@ -10,6 +10,11 @@ export async function GET(request: Request) {
   const code = requestUrl.searchParams.get('code')
   const next = requestUrl.searchParams.get('next') || '/dashboard'
 
+  // Forcer l'utilisation de localhost en développement
+  const baseUrl = process.env.NEXT_PUBLIC_FORCE_LOCAL === 'true'
+    ? 'http://localhost:3000'
+    : process.env.NEXT_PUBLIC_SITE_URL || requestUrl.origin
+
   if (code) {
     const supabase = createRouteHandlerClient({ cookies })
     
@@ -21,12 +26,12 @@ export async function GET(request: Request) {
         await syncUser(supabase, user)
       }
 
-      return NextResponse.redirect(new URL(next, requestUrl.origin))
+      return NextResponse.redirect(new URL(next, baseUrl))
     } catch (error) {
       console.error('Erreur lors de l\'échange du code:', error)
-      return NextResponse.redirect(new URL('/login', requestUrl.origin))
+      return NextResponse.redirect(new URL('/login', baseUrl))
     }
   }
 
-  return NextResponse.redirect(new URL('/login', requestUrl.origin))
+  return NextResponse.redirect(new URL('/login', baseUrl))
 } 

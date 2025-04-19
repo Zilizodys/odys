@@ -7,6 +7,11 @@ export async function middleware(request: NextRequest) {
   const supabase = createMiddlewareClient({ req: request, res })
   const { pathname } = request.nextUrl
 
+  // Forcer l'utilisation de localhost en développement
+  const baseUrl = process.env.NEXT_PUBLIC_FORCE_LOCAL === 'true'
+    ? 'http://localhost:3000'
+    : process.env.NEXT_PUBLIC_SITE_URL || request.nextUrl.origin
+
   // Vérifier la session
   const { data: { session } } = await supabase.auth.getSession()
 
@@ -33,7 +38,7 @@ export async function middleware(request: NextRequest) {
       )
     }
     // Pour les routes normales, rediriger vers la page de connexion
-    const redirectUrl = new URL('/login', request.url)
+    const redirectUrl = new URL('/login', baseUrl)
     redirectUrl.searchParams.set('redirect', pathname)
     return NextResponse.redirect(redirectUrl)
   }
@@ -42,11 +47,11 @@ export async function middleware(request: NextRequest) {
   if (session) {
     // Rediriger de la page d'accueil vers le tableau de bord
     if (pathname === '/') {
-      return NextResponse.redirect(new URL('/dashboard', request.url))
+      return NextResponse.redirect(new URL('/dashboard', baseUrl))
     }
     // Rediriger de la page de login vers le tableau de bord
     if (pathname === '/login') {
-      return NextResponse.redirect(new URL('/dashboard', request.url))
+      return NextResponse.redirect(new URL('/dashboard', baseUrl))
     }
   }
 
