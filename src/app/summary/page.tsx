@@ -89,12 +89,15 @@ export default function SummaryPage() {
     setIsSaving(true)
 
     try {
-      const supabase = createClient()
-      const { data: { session } } = await supabase.auth.getSession()
+      const client = createClient()
+      if (!client) {
+        throw new Error('Impossible de créer le client Supabase')
+      }
+      const { data: { session } } = await client.auth.getSession()
 
       if (!session) {
         localStorage.setItem('tempProgram', JSON.stringify(program))
-        router.push('/login?redirect=/summary')
+        router.push('/login')
         return
       }
 
@@ -119,7 +122,7 @@ export default function SummaryPage() {
 
       console.log('Tentative de sauvegarde avec:', programData)
 
-      const { error } = await supabase
+      const { error } = await client
         .from('programs')
         .insert([programData])
 
