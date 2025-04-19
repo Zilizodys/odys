@@ -1,7 +1,8 @@
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import { Database } from '@/types/supabase'
+import type { Database } from '@/types/supabase'
+import type { SupabaseClient } from '@supabase/supabase-js'
 
-let supabaseInstance: ReturnType<typeof createClientComponentClient<Database>> | null = null
+let supabaseInstance: SupabaseClient<Database, 'public'> | null = null
 
 export const createClient = () => {
   if (supabaseInstance) return supabaseInstance
@@ -11,16 +12,12 @@ export const createClient = () => {
     : undefined
 
   supabaseInstance = createClientComponentClient<Database>({
-    options: {
-      global: {
-        headers: { 'x-application-name': 'odys' }
-      }
-    },
     cookieOptions: {
       name: 'sb-auth-token',
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      path: '/'
+      path: '/',
+      domain: process.env.NEXT_PUBLIC_DOMAIN || 'localhost'
     }
   })
 
