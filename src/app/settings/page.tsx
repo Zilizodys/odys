@@ -5,35 +5,40 @@ import { createClient } from '@/lib/supabase/client'
 import { User } from '@supabase/supabase-js'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { SupabaseClient } from '@supabase/supabase-js'
 
 export default function SettingsPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [user, setUser] = useState<User | null>(null)
   const router = useRouter()
+  const supabase = createClient()
 
   useEffect(() => {
-    const supabase = createClient()
-
-    const getUser = async () => {
-      try {
-        const { data: { user }, error } = await supabase.auth.getUser()
-        if (error) throw error
-        setUser(user)
-      } catch (error) {
-        console.error('Erreur lors de la récupération de l\'utilisateur:', error)
-        router.push('/login')
-      } finally {
-        setIsLoading(false)
+    if (supabase) {
+      const getUser = async () => {
+        try {
+          const { data: { user }, error } = await (supabase as SupabaseClient).auth.getUser()
+          if (error) throw error
+          setUser(user)
+        } catch (error) {
+          console.error('Erreur lors de la récupération de l\'utilisateur:', error)
+          router.push('/login')
+        } finally {
+          setIsLoading(false)
+        }
       }
-    }
 
-    getUser()
+      getUser()
+    }
   }, [router])
 
   const handleSignOut = async () => {
     try {
-      const supabase = createClient()
-      await supabase.auth.signOut()
+      const client = createClient()
+      if (!client) {
+        throw new Error('Impossible de créer le client Supabase')
+      }
+      await client.auth.signOut()
       router.push('/login')
     } catch (error) {
       console.error('Erreur lors de la déconnexion:', error)
