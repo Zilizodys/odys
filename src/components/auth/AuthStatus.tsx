@@ -7,31 +7,61 @@ import GoogleSignInButton from './GoogleSignInButton'
 import { AuthChangeEvent, Session } from '@supabase/supabase-js'
 
 export default function AuthStatus() {
-  const supabase = createClient()
   const router = useRouter()
   const pathname = usePathname()
   const [user, setUser] = useState<any>(null)
 
   useEffect(() => {
     const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
+      const client = createClient()
+      if (!client) {
+        throw new Error('Impossible de créer le client Supabase')
+      }
+      const { data: { user } } = await client.auth.getUser()
       setUser(user)
     }
 
     getUser()
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: AuthChangeEvent, session: Session | null) => {
+    const client = createClient()
+    if (!client) {
+      throw new Error('Impossible de créer le client Supabase')
+    }
+    const { data: { subscription } } = client.auth.onAuthStateChange((_event: AuthChangeEvent, session: Session | null) => {
       setUser(session?.user ?? null)
     })
 
     return () => {
       subscription.unsubscribe()
     }
-  }, [supabase.auth])
+  }, [])
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut()
-    router.refresh()
+    try {
+      const client = createClient()
+      if (!client) {
+        throw new Error('Impossible de créer le client Supabase')
+      }
+      await client.auth.signOut()
+      setUser(null)
+      router.push('/login')
+    } catch (error) {
+      console.error('Erreur lors de la déconnexion:', error)
+    }
+  }
+
+  const handleDeleteAccount = async () => {
+    try {
+      const client = createClient()
+      if (!client) {
+        throw new Error('Impossible de créer le client Supabase')
+      }
+      await client.auth.admin.deleteUser(user?.id || '')
+      setUser(null)
+      router.push('/login')
+    } catch (error) {
+      console.error('Erreur lors de la suppression du compte:', error)
+    }
   }
 
   if (!user) {
