@@ -13,7 +13,7 @@ export default function Home() {
   useEffect(() => {
     const checkSession = async () => {
       if (!supabase) return;
-      const { data: { session } } = await supabase.auth.getSession()
+      const { data: { session } } = await supabase!.auth.getSession()
       if (session) {
         router.replace('/dashboard')
       }
