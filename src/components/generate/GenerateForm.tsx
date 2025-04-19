@@ -97,6 +97,7 @@ export default function GenerateForm() {
   const router = useRouter()
   const [highlightedIndex, setHighlightedIndex] = useState<number>(-1)
   const inputRef = useRef<HTMLInputElement>(null)
+  const [error, setError] = useState<string>('')
 
   // Initialiser Fuse.js avec la liste des villes mondiales
   const fuse = useMemo(() => new Fuse(WORLD_CITIES, fuseOptions), [])
@@ -322,6 +323,32 @@ export default function GenerateForm() {
         setSuggestions([])
         setHighlightedIndex(-1)
         break
+    }
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsLoading(true)
+    setError('')
+
+    try {
+      const client = createClient()
+      if (!client) {
+        throw new Error('Impossible de créer le client Supabase')
+      }
+      const { data: { session } } = await client.auth.getSession()
+
+      if (!session) {
+        localStorage.setItem('formData', JSON.stringify(formData))
+        router.push('/login')
+        return
+      }
+
+      // Continuer avec la génération du programme...
+    } catch (error: any) {
+      setError(error.message)
+    } finally {
+      setIsLoading(false)
     }
   }
 

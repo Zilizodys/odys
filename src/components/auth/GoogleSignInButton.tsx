@@ -9,35 +9,31 @@ interface GoogleSignInButtonProps {
 
 export default function GoogleSignInButton({ redirectTo }: GoogleSignInButtonProps) {
   const router = useRouter()
-  const supabase = createClient()
 
-  const handleSignIn = async () => {
-    if (!supabase) return
-
+  const handleGoogleSignIn = async () => {
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
+      const client = createClient()
+      if (!client) {
+        throw new Error('Impossible de créer le client Supabase')
+      }
+      const { error } = await client.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: 'http://localhost:3000/auth/callback',
-          queryParams: {
-            access_type: 'offline',
-            prompt: 'consent',
-            next: redirectTo
-          },
+          redirectTo: `${window.location.origin}/auth/callback?redirect=${redirectTo}`,
         },
       })
 
       if (error) {
-        console.error('Erreur lors de la connexion:', error.message)
+        throw error
       }
     } catch (error) {
-      console.error('Erreur inattendue:', error)
+      console.error('Erreur lors de la connexion avec Google:', error)
     }
   }
 
   return (
     <button
-      onClick={handleSignIn}
+      onClick={handleGoogleSignIn}
       className="flex items-center justify-center w-full gap-2 px-4 py-2 text-gray-600 transition-colors duration-300 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-300"
     >
       <svg className="w-5 h-5" viewBox="0 0 24 24">

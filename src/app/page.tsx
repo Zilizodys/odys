@@ -8,19 +8,25 @@ import Image from 'next/image'
 
 export default function Home() {
   const router = useRouter()
-  const supabase = createClient()
 
   useEffect(() => {
     const checkSession = async () => {
-      if (!supabase) return;
-      const { data: { session } } = await supabase!.auth.getSession()
-      if (session) {
-        router.replace('/dashboard')
+      try {
+        const client = createClient()
+        if (!client) {
+          throw new Error('Impossible de créer le client Supabase')
+        }
+        const { data: { session } } = await client.auth.getSession()
+        if (session) {
+          router.push('/dashboard')
+        }
+      } catch (error) {
+        console.error('Erreur lors de la vérification de la session:', error)
       }
     }
 
     checkSession()
-  }, [router, supabase])
+  }, [router])
 
   return (
     <div className="min-h-screen bg-white">

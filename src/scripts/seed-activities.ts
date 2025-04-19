@@ -10,7 +10,7 @@ interface Activity {
   description: string
   price: number
   address: string
-  imageUrl: string
+  imageurl: string
   category: string
   city: string
   price_range: string
@@ -52,7 +52,7 @@ async function seedActivities() {
           description: activity.description,
           price: Math.round(activity.price),
           address: activity.address,
-          imageUrl: activity.imageUrl,
+          imageurl: activity.imageurl,
           category: activity.category,
           city: activity.city,
           price_range: activity.price_range

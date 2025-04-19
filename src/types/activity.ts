@@ -7,6 +7,7 @@ export interface Activity {
   imageurl: string
   category: string
   city: string
+  duration?: string
   created_at?: string
   updated_at?: string
 }

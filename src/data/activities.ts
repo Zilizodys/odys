@@ -8,6 +8,9 @@ export interface Activity {
   imageurl: string
   city: string
   price_range: string
+  duration?: string
+  created_at?: string
+  updated_at?: string
 }
 
 export const activities: Activity[] = [
@@ -689,7 +692,7 @@ export const activities: Activity[] = [
     category: 'sport',
     price: 25,
     address: 'Church Rd, London SW19 5AE',
-    imageUrl: '/images/activities/wimbledon.jpg',
+    imageurl: '/images/activities/wimbledon.jpg',
     city: 'londres',
     price_range: '25€'
   },
@@ -700,7 +703,7 @@ export const activities: Activity[] = [
     category: 'sport',
     price: 27,
     address: 'Hornsey Rd, London N7 7AJ',
-    imageUrl: '/images/activities/emirates.jpg',
+    imageurl: '/images/activities/emirates.jpg',
     city: 'londres',
     price_range: '27€'
   },
@@ -711,7 +714,7 @@ export const activities: Activity[] = [
     category: 'sport',
     price: 20,
     address: 'St John\'s Wood Rd, London NW8 8QN',
-    imageUrl: '/images/activities/lords.jpg',
+    imageurl: '/images/activities/lords.jpg',
     city: 'londres',
     price_range: '20€'
   },
@@ -722,7 +725,7 @@ export const activities: Activity[] = [
     category: 'sport',
     price: 5,
     address: 'Queen Elizabeth Olympic Park, London E20 2ZQ',
-    imageUrl: '/images/activities/aquatics.jpg',
+    imageurl: '/images/activities/aquatics.jpg',
     city: 'londres',
     price_range: '5€'
   },
@@ -733,7 +736,7 @@ export const activities: Activity[] = [
     category: 'sport',
     price: 35,
     address: 'Abercrombie Road, Queen Elizabeth Olympic Park, London E20 3AB',
-    imageUrl: '/images/activities/velopark.jpg',
+    imageurl: '/images/activities/velopark.jpg',
     city: 'londres',
     price_range: '35€'
   },
@@ -746,7 +749,7 @@ export const activities: Activity[] = [
     category: 'nature',
     price: 0,
     address: 'Hyde Park, London W2 2UH',
-    imageUrl: '/images/activities/hyde-park.jpg',
+    imageurl: '/images/activities/hyde-park.jpg',
     city: 'londres',
     price_range: 'gratuit'
   },
@@ -757,7 +760,7 @@ export const activities: Activity[] = [
     category: 'nature',
     price: 19.50,
     address: 'Richmond, London TW9 3AE',
-    imageUrl: '/images/activities/kew.jpg',
+    imageurl: '/images/activities/kew.jpg',
     city: 'londres',
     price_range: '19.50€'
   },
@@ -768,7 +771,7 @@ export const activities: Activity[] = [
     category: 'nature',
     price: 0,
     address: 'Hampstead, London NW3 7JP',
-    imageUrl: '/images/activities/hampstead.jpg',
+    imageurl: '/images/activities/hampstead.jpg',
     city: 'londres',
     price_range: 'gratuit'
   },
@@ -779,7 +782,7 @@ export const activities: Activity[] = [
     category: 'nature',
     price: 0,
     address: 'Richmond, London TW10 5HS',
-    imageUrl: '/images/activities/richmond.jpg',
+    imageurl: '/images/activities/richmond.jpg',
     city: 'londres',
     price_range: 'gratuit'
   },
@@ -790,7 +793,7 @@ export const activities: Activity[] = [
     category: 'nature',
     price: 0,
     address: 'Greenwich, London SE10 8QY',
-    imageUrl: '/images/activities/greenwich.jpg',
+    imageurl: '/images/activities/greenwich.jpg',
     city: 'londres',
     price_range: 'gratuit'
   },
@@ -803,7 +806,7 @@ export const activities: Activity[] = [
     category: 'culture',
     price: 16,
     address: 'Piazza del Colosseo, 1, 00184 Roma RM',
-    imageUrl: '/images/activities/colosseum.jpg',
+    imageurl: '/images/activities/colosseum.jpg',
     city: 'rome',
     price_range: '16€'
   },
@@ -814,7 +817,7 @@ export const activities: Activity[] = [
     category: 'culture',
     price: 17,
     address: '00120 Vatican City',
-    imageUrl: '/images/activities/vatican.jpg',
+    imageurl: '/images/activities/vatican.jpg',
     city: 'rome',
     price_range: '17€'
   },
@@ -825,7 +828,7 @@ export const activities: Activity[] = [
     category: 'culture',
     price: 0,
     address: 'Piazza della Rotonda, 00186 Roma RM',
-    imageUrl: '/images/activities/pantheon.jpg',
+    imageurl: '/images/activities/pantheon.jpg',
     city: 'rome',
     price_range: 'gratuit'
   },
@@ -836,7 +839,7 @@ export const activities: Activity[] = [
     category: 'culture',
     price: 16,
     address: 'Via della Salara Vecchia, 5/6, 00186 Roma RM',
-    imageUrl: '/images/activities/forum.jpg',
+    imageurl: '/images/activities/forum.jpg',
     city: 'rome',
     price_range: '16€'
   },
@@ -847,7 +850,7 @@ export const activities: Activity[] = [
     category: 'culture',
     price: 13,
     address: 'Piazzale Scipione Borghese, 5, 00197 Roma RM',
-    imageUrl: '/images/activities/borghese.jpg',
+    imageurl: '/images/activities/borghese.jpg',
     city: 'rome',
     price_range: '13€'
   },
@@ -860,7 +863,7 @@ export const activities: Activity[] = [
     category: 'gastronomie',
     price: 60,
     address: 'Via dei Giubbonari, 21/22, 00186 Roma RM',
-    imageUrl: '/images/activities/roscioli.jpg',
+    imageurl: '/images/activities/roscioli.jpg',
     city: 'rome',
     price_range: '60€'
   },
@@ -871,7 +874,7 @@ export const activities: Activity[] = [
     category: 'gastronomie',
     price: 250,
     address: 'Via Alberto Cadlolo, 101, 00136 Roma RM',
-    imageUrl: '/images/activities/pergola.jpg',
+    imageurl: '/images/activities/pergola.jpg',
     city: 'rome',
     price_range: '250€'
   },
@@ -882,7 +885,7 @@ export const activities: Activity[] = [
     category: 'gastronomie',
     price: 0,
     address: 'Via Giovanni Giolitti, 36, 00185 Roma RM',
-    imageUrl: '/images/activities/mercato-centrale.jpg',
+    imageurl: '/images/activities/mercato-centrale.jpg',
     city: 'rome',
     price_range: 'gratuit'
   },
@@ -893,7 +896,7 @@ export const activities: Activity[] = [
     category: 'gastronomie',
     price: 45,
     address: 'Salita dei Crescenzi, 31, 00186 Roma RM',
-    imageUrl: '/images/activities/armando.jpg',
+    imageurl: '/images/activities/armando.jpg',
     city: 'rome',
     price_range: '45€'
   },
@@ -904,7 +907,7 @@ export const activities: Activity[] = [
     category: 'gastronomie',
     price: 15,
     address: 'Piazza di Santa Maria Liberatrice, 44, 00153 Roma RM',
-    imageUrl: '/images/activities/remo.jpg',
+    imageurl: '/images/activities/remo.jpg',
     city: 'rome',
     price_range: '15€'
   },
@@ -917,7 +920,7 @@ export const activities: Activity[] = [
     category: 'vie nocturne',
     price: 0,
     address: 'Trastevere, Rome',
-    imageUrl: '/images/activities/trastevere.jpg',
+    imageurl: '/images/activities/trastevere.jpg',
     city: 'rome',
     price_range: 'gratuit'
   },
@@ -928,7 +931,7 @@ export const activities: Activity[] = [
     category: 'vie nocturne',
     price: 15,
     address: 'Via della Penna, 22, 00186 Roma RM',
-    imageUrl: '/images/activities/locarno.jpg',
+    imageurl: '/images/activities/locarno.jpg',
     city: 'rome',
     price_range: '15€'
   },
@@ -939,7 +942,7 @@ export const activities: Activity[] = [
     category: 'vie nocturne',
     price: 20,
     address: 'Vicolo Cellini, 30, 00186 Roma RM',
-    imageUrl: '/images/activities/jerry-thomas.jpg',
+    imageurl: '/images/activities/jerry-thomas.jpg',
     city: 'rome',
     price_range: '20€'
   },
@@ -950,7 +953,7 @@ export const activities: Activity[] = [
     category: 'vie nocturne',
     price: 15,
     address: 'Via Giuseppe Libetta, 13, 00154 Roma RM',
-    imageUrl: '/images/activities/goa.jpg',
+    imageurl: '/images/activities/goa.jpg',
     city: 'rome',
     price_range: '15€'
   },
@@ -961,7 +964,7 @@ export const activities: Activity[] = [
     category: 'vie nocturne',
     price: 20,
     address: 'Via Giovanni Vitelleschi, 34, 00193 Roma RM',
-    imageUrl: '/images/activities/etoiles.jpg',
+    imageurl: '/images/activities/etoiles.jpg',
     city: 'rome',
     price_range: '20€'
   },
@@ -974,7 +977,7 @@ export const activities: Activity[] = [
     category: 'sport',
     price: 15,
     address: 'Viale dei Gladiatori, 00135 Roma RM',
-    imageUrl: '/images/activities/olimpico.jpg',
+    imageurl: '/images/activities/olimpico.jpg',
     city: 'rome',
     price_range: '15€'
   },
@@ -985,7 +988,7 @@ export const activities: Activity[] = [
     category: 'sport',
     price: 50,
     address: 'Largo Uberto de Morpurgo, 00199 Roma RM',
-    imageUrl: '/images/activities/parioli.jpg',
+    imageurl: '/images/activities/parioli.jpg',
     city: 'rome',
     price_range: '50€'
   },
@@ -996,7 +999,7 @@ export const activities: Activity[] = [
     category: 'sport',
     price: 35,
     address: 'Via Labicana, 49, 00184 Roma RM',
-    imageUrl: '/images/activities/bike-rome.jpg',
+    imageurl: '/images/activities/bike-rome.jpg',
     city: 'rome',
     price_range: '35€'
   },
@@ -1007,7 +1010,7 @@ export const activities: Activity[] = [
     category: 'sport',
     price: 10,
     address: 'Viale del Foro Italico, 00197 Roma RM',
-    imageUrl: '/images/activities/foro-italico.jpg',
+    imageurl: '/images/activities/foro-italico.jpg',
     city: 'rome',
     price_range: '10€'
   },
@@ -1018,7 +1021,7 @@ export const activities: Activity[] = [
     category: 'sport',
     price: 8,
     address: 'Viale America, 20, 00144 Roma RM',
-    imageUrl: '/images/activities/piscina-rose.jpg',
+    imageurl: '/images/activities/piscina-rose.jpg',
     city: 'rome',
     price_range: '8€'
   },
@@ -1031,7 +1034,7 @@ export const activities: Activity[] = [
     category: 'nature',
     price: 0,
     address: 'Piazzale Napoleone I, 00197 Roma RM',
-    imageUrl: '/images/activities/villa-borghese.jpg',
+    imageurl: '/images/activities/villa-borghese.jpg',
     city: 'rome',
     price_range: 'gratuit'
   },
@@ -1042,7 +1045,7 @@ export const activities: Activity[] = [
     category: 'nature',
     price: 0,
     address: 'Piazza Pietro D\'Illiria, 00153 Roma RM',
-    imageUrl: '/images/activities/orangers.jpg',
+    imageurl: '/images/activities/orangers.jpg',
     city: 'rome',
     price_range: 'gratuit'
   },
@@ -1053,7 +1056,7 @@ export const activities: Activity[] = [
     category: 'nature',
     price: 0,
     address: 'Via Lemonia, 00174 Roma RM',
-    imageUrl: '/images/activities/aqueducs.jpg',
+    imageurl: '/images/activities/aqueducs.jpg',
     city: 'rome',
     price_range: 'gratuit'
   },
@@ -1064,7 +1067,7 @@ export const activities: Activity[] = [
     category: 'nature',
     price: 0,
     address: 'Via Salaria, 267, 00199 Roma RM',
-    imageUrl: '/images/activities/villa-ada.jpg',
+    imageurl: '/images/activities/villa-ada.jpg',
     city: 'rome',
     price_range: 'gratuit'
   },
@@ -1075,7 +1078,7 @@ export const activities: Activity[] = [
     category: 'nature',
     price: 8,
     address: 'Largo Cristina di Svezia, 24, 00165 Roma RM',
-    imageUrl: '/images/activities/botanique-rome.jpg',
+    imageurl: '/images/activities/botanique-rome.jpg',
     city: 'rome',
     price_range: '8€'
   },
@@ -1088,7 +1091,7 @@ export const activities: Activity[] = [
     category: 'culture',
     price: 19,
     address: 'Bodestraße 1-3, 10178 Berlin',
-    imageUrl: '/images/activities/pergamon.jpg',
+    imageurl: '/images/activities/pergamon.jpg',
     city: 'berlin',
     price_range: '19€'
   },
@@ -1099,7 +1102,7 @@ export const activities: Activity[] = [
     category: 'culture',
     price: 0,
     address: 'Mühlenstraße 3-100, 10243 Berlin',
-    imageUrl: '/images/activities/east-side.jpg',
+    imageurl: '/images/activities/east-side.jpg',
     city: 'berlin',
     price_range: 'gratuit'
   },
@@ -1110,7 +1113,7 @@ export const activities: Activity[] = [
     category: 'culture',
     price: 14.50,
     address: 'Friedrichstraße 43-45, 10117 Berlin',
-    imageUrl: '/images/activities/checkpoint.jpg',
+    imageurl: '/images/activities/checkpoint.jpg',
     city: 'berlin',
     price_range: '14.50€'
   },
@@ -1121,7 +1124,7 @@ export const activities: Activity[] = [
     category: 'culture',
     price: 14,
     address: 'Potsdamer Straße 50, 10785 Berlin',
-    imageUrl: '/images/activities/neue.jpg',
+    imageurl: '/images/activities/neue.jpg',
     city: 'berlin',
     price_range: '14€'
   },
@@ -1132,7 +1135,7 @@ export const activities: Activity[] = [
     category: 'culture',
     price: 0,
     address: 'Platz der Republik 1, 11011 Berlin',
-    imageUrl: '/images/activities/reichstag.jpg',
+    imageurl: '/images/activities/reichstag.jpg',
     city: 'berlin',
     price_range: 'gratuit'
   },
@@ -1145,7 +1148,7 @@ export const activities: Activity[] = [
     category: 'gastronomie',
     price: 0,
     address: 'Eisenbahnstraße 42/43, 10997 Berlin',
-    imageUrl: '/images/activities/markthalle.jpg',
+    imageurl: '/images/activities/markthalle.jpg',
     city: 'berlin',
     price_range: 'gratuit'
   },
@@ -1156,7 +1159,7 @@ export const activities: Activity[] = [
     category: 'gastronomie',
     price: 198,
     address: 'Rudi-Dutschke-Straße 26, 10969 Berlin',
-    imageUrl: '/images/activities/raue.jpg',
+    imageurl: '/images/activities/raue.jpg',
     city: 'berlin',
     price_range: '198€'
   },
@@ -1167,7 +1170,7 @@ export const activities: Activity[] = [
     category: 'gastronomie',
     price: 5,
     address: 'Mehringdamm 32, 10961 Berlin',
-    imageUrl: '/images/activities/mustafas.jpg',
+    imageurl: '/images/activities/mustafas.jpg',
     city: 'berlin',
     price_range: '5€'
   },
@@ -1178,7 +1181,7 @@ export const activities: Activity[] = [
     category: 'gastronomie',
     price: 4,
     address: 'Mehringdamm 36, 10961 Berlin',
-    imageUrl: '/images/activities/curry36.jpg',
+    imageurl: '/images/activities/curry36.jpg',
     city: 'berlin',
     price_range: '4€'
   },
@@ -1189,7 +1192,7 @@ export const activities: Activity[] = [
     category: 'gastronomie',
     price: 128,
     address: 'Friedelstraße 47, 12047 Berlin',
-    imageUrl: '/images/activities/coda.jpg',
+    imageurl: '/images/activities/coda.jpg',
     city: 'berlin',
     price_range: '128€'
   },
@@ -1202,7 +1205,7 @@ export const activities: Activity[] = [
     category: 'vie nocturne',
     price: 20,
     address: 'Am Wriezener Bahnhof, 10243 Berlin',
-    imageUrl: '/images/activities/berghain.jpg',
+    imageurl: '/images/activities/berghain.jpg',
     city: 'berlin',
     price_range: '20€'
   },
@@ -1213,7 +1216,7 @@ export const activities: Activity[] = [
     category: 'vie nocturne',
     price: 5,
     address: 'Karl-Marx-Straße 66, 12043 Berlin',
-    imageUrl: '/images/activities/klunkerkranich.jpg',
+    imageurl: '/images/activities/klunkerkranich.jpg',
     city: 'berlin',
     price_range: '5€'
   },
@@ -1224,7 +1227,7 @@ export const activities: Activity[] = [
     category: 'vie nocturne',
     price: 0,
     address: 'Kastanienallee 7-9, 10435 Berlin',
-    imageUrl: '/images/activities/prater.jpg',
+    imageurl: '/images/activities/prater.jpg',
     city: 'berlin',
     price_range: 'gratuit'
   },
@@ -1235,7 +1238,7 @@ export const activities: Activity[] = [
     category: 'vie nocturne',
     price: 15,
     address: 'Falckensteinstraße 49, 10997 Berlin',
-    imageUrl: '/images/activities/watergate.jpg',
+    imageurl: '/images/activities/watergate.jpg',
     city: 'berlin',
     price_range: '15€'
   },
@@ -1246,7 +1249,7 @@ export const activities: Activity[] = [
     category: 'vie nocturne',
     price: 0,
     address: 'Budapester Str. 40, 10787 Berlin',
-    imageUrl: '/images/activities/monkey-bar.jpg',
+    imageurl: '/images/activities/monkey-bar.jpg',
     city: 'berlin',
     price_range: 'gratuit'
   },
@@ -1259,7 +1262,7 @@ export const activities: Activity[] = [
     category: 'sport',
     price: 8,
     address: 'Olympischer Platz 3, 14053 Berlin',
-    imageUrl: '/images/activities/olympiastadion.jpg',
+    imageurl: '/images/activities/olympiastadion.jpg',
     city: 'berlin',
     price_range: '8€'
   },
@@ -1270,7 +1273,7 @@ export const activities: Activity[] = [
     category: 'sport',
     price: 8,
     address: 'Eichenstraße 4, 12435 Berlin',
-    imageUrl: '/images/activities/badeschiff.jpg',
+    imageurl: '/images/activities/badeschiff.jpg',
     city: 'berlin',
     price_range: '8€'
   },
@@ -1281,7 +1284,7 @@ export const activities: Activity[] = [
     category: 'sport',
     price: 0,
     address: 'Tempelhofer Damm, 12101 Berlin',
-    imageUrl: '/images/activities/tempelhof.jpg',
+    imageurl: '/images/activities/tempelhof.jpg',
     city: 'berlin',
     price_range: 'gratuit'
   },
@@ -1292,7 +1295,7 @@ export const activities: Activity[] = [
     category: 'sport',
     price: 12,
     address: 'Paul-Heyse-Straße 26, 10407 Berlin',
-    imageUrl: '/images/activities/velodrom.jpg',
+    imageurl: '/images/activities/velodrom.jpg',
     city: 'berlin',
     price_range: '12€'
   },
@@ -1303,7 +1306,7 @@ export const activities: Activity[] = [
     category: 'sport',
     price: 15,
     address: 'Swinemünder Str. 45, 13355 Berlin',
-    imageUrl: '/images/activities/kletterwerk.jpg',
+    imageurl: '/images/activities/kletterwerk.jpg',
     city: 'berlin',
     price_range: '15€'
   },
@@ -1316,7 +1319,7 @@ export const activities: Activity[] = [
     category: 'nature',
     price: 0,
     address: 'Straße des 17. Juni 100, 10557 Berlin',
-    imageUrl: '/images/activities/tiergarten.jpg',
+    imageurl: '/images/activities/tiergarten.jpg',
     city: 'berlin',
     price_range: 'gratuit'
   },
@@ -1327,7 +1330,7 @@ export const activities: Activity[] = [
     category: 'nature',
     price: 6,
     address: 'Königin-Luise-Straße 6-8, 14195 Berlin',
-    imageUrl: '/images/activities/botanischer.jpg',
+    imageurl: '/images/activities/botanischer.jpg',
     city: 'berlin',
     price_range: '6€'
   },
@@ -1338,7 +1341,7 @@ export const activities: Activity[] = [
     category: 'nature',
     price: 0,
     address: 'Alt-Treptow, 12435 Berlin',
-    imageUrl: '/images/activities/treptower.jpg',
+    imageurl: '/images/activities/treptower.jpg',
     city: 'berlin',
     price_range: 'gratuit'
   },
@@ -1349,7 +1352,7 @@ export const activities: Activity[] = [
     category: 'nature',
     price: 4,
     address: 'Nikolskoer Weg, 14109 Berlin',
-    imageUrl: '/images/activities/pfaueninsel.jpg',
+    imageurl: '/images/activities/pfaueninsel.jpg',
     city: 'berlin',
     price_range: '4€'
   },
@@ -1360,7 +1363,7 @@ export const activities: Activity[] = [
     category: 'nature',
     price: 0,
     address: 'Grunewald, 14193 Berlin',
-    imageUrl: '/images/activities/grunewald.jpg',
+    imageurl: '/images/activities/grunewald.jpg',
     city: 'berlin',
     price_range: 'gratuit'
   },
@@ -1373,7 +1376,7 @@ export const activities: Activity[] = [
     category: 'culture',
     price: 25,
     address: '11 W 53rd St, New York, NY 10019',
-    imageUrl: '/images/activities/moma.jpg',
+    imageurl: '/images/activities/moma.jpg',
     city: 'newyork',
     price_range: '25€'
   },
@@ -1384,7 +1387,7 @@ export const activities: Activity[] = [
     category: 'culture',
     price: 25,
     address: '1000 5th Ave, New York, NY 10028',
-    imageUrl: '/images/activities/met.jpg',
+    imageurl: '/images/activities/met.jpg',
     city: 'newyork',
     price_range: '25€'
   },
@@ -1395,7 +1398,7 @@ export const activities: Activity[] = [
     category: 'culture',
     price: 89,
     address: 'Broadway, New York, NY',
-    imageUrl: '/images/activities/broadway.jpg',
+    imageurl: '/images/activities/broadway.jpg',
     city: 'newyork',
     price_range: '89€'
   },
@@ -1406,7 +1409,7 @@ export const activities: Activity[] = [
     category: 'culture',
     price: 25,
     address: '1071 5th Ave, New York, NY 10128',
-    imageUrl: '/images/activities/guggenheim.jpg',
+    imageurl: '/images/activities/guggenheim.jpg',
     city: 'newyork',
     price_range: '25€'
   },
@@ -1417,7 +1420,7 @@ export const activities: Activity[] = [
     category: 'culture',
     price: 25,
     address: '99 Gansevoort St, New York, NY 10014',
-    imageUrl: '/images/activities/whitney.jpg',
+    imageurl: '/images/activities/whitney.jpg',
     city: 'newyork',
     price_range: '25€'
   },
@@ -1430,7 +1433,7 @@ export const activities: Activity[] = [
     category: 'gastronomie',
     price: 25,
     address: '205 E Houston St, New York, NY 10002',
-    imageUrl: '/images/activities/katz.jpg',
+    imageurl: '/images/activities/katz.jpg',
     city: 'newyork',
     price_range: '25€'
   },
@@ -1441,7 +1444,7 @@ export const activities: Activity[] = [
     category: 'gastronomie',
     price: 275,
     address: '155 W 51st St, New York, NY 10019',
-    imageUrl: '/images/activities/bernardin.jpg',
+    imageurl: '/images/activities/bernardin.jpg',
     city: 'newyork',
     price_range: '275€'
   },
@@ -1452,7 +1455,7 @@ export const activities: Activity[] = [
     category: 'gastronomie',
     price: 0,
     address: '75 9th Ave, New York, NY 10011',
-    imageUrl: '/images/activities/chelsea-market.jpg',
+    imageurl: '/images/activities/chelsea-market.jpg',
     city: 'newyork',
     price_range: 'gratuit'
   },
@@ -1463,7 +1466,7 @@ export const activities: Activity[] = [
     category: 'gastronomie',
     price: 20,
     address: '1 Front St, Brooklyn, NY 11201',
-    imageUrl: '/images/activities/grimaldis.jpg',
+    imageurl: '/images/activities/grimaldis.jpg',
     city: 'newyork',
     price_range: '20€'
   },
@@ -1474,7 +1477,7 @@ export const activities: Activity[] = [
     category: 'gastronomie',
     price: 0,
     address: '200 5th Ave, New York, NY 10010',
-    imageUrl: '/images/activities/eataly.jpg',
+    imageurl: '/images/activities/eataly.jpg',
     city: 'newyork',
     price_range: 'gratuit'
   },
@@ -1487,7 +1490,7 @@ export const activities: Activity[] = [
     category: 'vie nocturne',
     price: 0,
     address: '230 5th Ave, New York, NY 10001',
-    imageUrl: '/images/activities/230fifth.jpg',
+    imageurl: '/images/activities/230fifth.jpg',
     city: 'newyork',
     price_range: 'gratuit'
   },
@@ -1498,7 +1501,7 @@ export const activities: Activity[] = [
     category: 'vie nocturne',
     price: 45,
     address: '131 W 3rd St, New York, NY 10012',
-    imageUrl: '/images/activities/blue-note.jpg',
+    imageurl: '/images/activities/blue-note.jpg',
     city: 'newyork',
     price_range: '45€'
   },
@@ -1509,7 +1512,7 @@ export const activities: Activity[] = [
     category: 'vie nocturne',
     price: 30,
     address: '2 Wyckoff Ave, Brooklyn, NY 11237',
-    imageUrl: '/images/activities/house-yes.jpg',
+    imageurl: '/images/activities/house-yes.jpg',
     city: 'newyork',
     price_range: '30€'
   },
@@ -1520,7 +1523,7 @@ export const activities: Activity[] = [
     category: 'vie nocturne',
     price: 15,
     address: '113 St Marks Pl, New York, NY 10009',
-    imageUrl: '/images/activities/pdt.jpg',
+    imageurl: '/images/activities/pdt.jpg',
     city: 'newyork',
     price_range: '15€'
   },
@@ -1531,7 +1534,7 @@ export const activities: Activity[] = [
     category: 'vie nocturne',
     price: 25,
     address: '61 Wythe Ave, Brooklyn, NY 11249',
-    imageUrl: '/images/activities/brooklyn-bowl.jpg',
+    imageurl: '/images/activities/brooklyn-bowl.jpg',
     city: 'newyork',
     price_range: '25€'
   },
@@ -1544,7 +1547,7 @@ export const activities: Activity[] = [
     category: 'sport',
     price: 75,
     address: '4 Pennsylvania Plaza, New York, NY 10001',
-    imageUrl: '/images/activities/msg.jpg',
+    imageurl: '/images/activities/msg.jpg',
     city: 'newyork',
     price_range: '75€'
   },
@@ -1555,7 +1558,7 @@ export const activities: Activity[] = [
     category: 'sport',
     price: 30,
     address: '1 E 161 St, The Bronx, NY 10451',
-    imageUrl: '/images/activities/yankees.jpg',
+    imageurl: '/images/activities/yankees.jpg',
     city: 'newyork',
     price_range: '30€'
   },
@@ -1566,7 +1569,7 @@ export const activities: Activity[] = [
     category: 'sport',
     price: 15,
     address: 'Central Park, New York, NY',
-    imageUrl: '/images/activities/central-park-bike.jpg',
+    imageurl: '/images/activities/central-park-bike.jpg',
     city: 'newyork',
     price_range: '15€'
   },
@@ -1577,7 +1580,7 @@ export const activities: Activity[] = [
     category: 'sport',
     price: 60,
     address: '62 Chelsea Piers, New York, NY 10011',
-    imageUrl: '/images/activities/chelsea-piers.jpg',
+    imageurl: '/images/activities/chelsea-piers.jpg',
     city: 'newyork',
     price_range: '60€'
   },
@@ -1588,7 +1591,7 @@ export const activities: Activity[] = [
     category: 'sport',
     price: 32,
     address: '575 Degraw St, Brooklyn, NY 11217',
-    imageUrl: '/images/activities/brooklyn-boulders.jpg',
+    imageurl: '/images/activities/brooklyn-boulders.jpg',
     city: 'newyork',
     price_range: '32€'
   },
@@ -1601,7 +1604,7 @@ export const activities: Activity[] = [
     category: 'nature',
     price: 0,
     address: 'Central Park, New York, NY',
-    imageUrl: '/images/activities/central-park.jpg',
+    imageurl: '/images/activities/central-park.jpg',
     city: 'newyork',
     price_range: 'gratuit'
   },
@@ -1612,7 +1615,7 @@ export const activities: Activity[] = [
     category: 'nature',
     price: 15,
     address: '990 Washington Ave, Brooklyn, NY 11225',
-    imageUrl: '/images/activities/bbg.jpg',
+    imageurl: '/images/activities/bbg.jpg',
     city: 'newyork',
     price_range: '15€'
   },
@@ -1623,7 +1626,7 @@ export const activities: Activity[] = [
     category: 'nature',
     price: 0,
     address: 'High Line, New York, NY 10011',
-    imageUrl: '/images/activities/high-line.jpg',
+    imageurl: '/images/activities/high-line.jpg',
     city: 'newyork',
     price_range: 'gratuit'
   },
@@ -1634,7 +1637,7 @@ export const activities: Activity[] = [
     category: 'nature',
     price: 0,
     address: 'Prospect Park, Brooklyn, NY',
-    imageUrl: '/images/activities/prospect-park.jpg',
+    imageurl: '/images/activities/prospect-park.jpg',
     city: 'newyork',
     price_range: 'gratuit'
   },
@@ -1645,7 +1648,7 @@ export const activities: Activity[] = [
     category: 'nature',
     price: 15,
     address: '2900 Southern Blvd, Bronx, NY 10458',
-    imageUrl: '/images/activities/nybg.jpg',
+    imageurl: '/images/activities/nybg.jpg',
     city: 'newyork',
     price_range: '15€'
   },
@@ -1658,7 +1661,7 @@ export const activities: Activity[] = [
     category: 'culture',
     price: 16,
     address: 'Place de l\'Atomium 1, 1020 Bruxelles',
-    imageUrl: '/images/activities/atomium.jpg',
+    imageurl: '/images/activities/atomium.jpg',
     city: 'bruxelles',
     price_range: '16€'
   },
@@ -1669,7 +1672,7 @@ export const activities: Activity[] = [
     category: 'culture',
     price: 10,
     address: 'Rue de la Régence 3, 1000 Bruxelles',
-    imageUrl: '/images/activities/beaux-arts.jpg',
+    imageurl: '/images/activities/beaux-arts.jpg',
     city: 'bruxelles',
     price_range: '10€'
   },
@@ -1680,7 +1683,7 @@ export const activities: Activity[] = [
     category: 'culture',
     price: 12,
     address: 'Rue des Sables 20, 1000 Bruxelles',
-    imageUrl: '/images/activities/cbbd.jpg',
+    imageurl: '/images/activities/cbbd.jpg',
     city: 'bruxelles',
     price_range: '12€'
   },
@@ -1691,7 +1694,7 @@ export const activities: Activity[] = [
     category: 'culture',
     price: 17,
     address: 'Avenue du Football 1, 1020 Bruxelles',
-    imageUrl: '/images/activities/mini-europe.jpg',
+    imageurl: '/images/activities/mini-europe.jpg',
     city: 'bruxelles',
     price_range: '17€'
   },
@@ -1702,7 +1705,7 @@ export const activities: Activity[] = [
     category: 'culture',
     price: 12,
     address: 'Rue Américaine 25, 1060 Bruxelles',
-    imageUrl: '/images/activities/horta.jpg',
+    imageurl: '/images/activities/horta.jpg',
     city: 'bruxelles',
     price_range: '12€'
   },
@@ -1715,7 +1718,7 @@ export const activities: Activity[] = [
     category: 'gastronomie',
     price: 175,
     address: 'Place Rouppe 23, 1000 Bruxelles',
-    imageUrl: '/images/activities/comme-chez-soi.jpg',
+    imageurl: '/images/activities/comme-chez-soi.jpg',
     city: 'bruxelles',
     price_range: '175€'
   },
@@ -1726,7 +1729,7 @@ export const activities: Activity[] = [
     category: 'gastronomie',
     price: 5,
     address: 'Place Jourdan 1, 1040 Bruxelles',
-    imageUrl: '/images/activities/antoine.jpg',
+    imageurl: '/images/activities/antoine.jpg',
     city: 'bruxelles',
     price_range: '5€'
   },
@@ -1737,7 +1740,7 @@ export const activities: Activity[] = [
     category: 'gastronomie',
     price: 50,
     address: 'Rue des Bouchers 13, 1000 Bruxelles',
-    imageUrl: '/images/activities/armes.jpg',
+    imageurl: '/images/activities/armes.jpg',
     city: 'bruxelles',
     price_range: '50€'
   },
@@ -1748,7 +1751,7 @@ export const activities: Activity[] = [
     category: 'gastronomie',
     price: 0,
     address: 'Rue Ropsy Chaudron 24, 1070 Bruxelles',
-    imageUrl: '/images/activities/abattoirs.jpg',
+    imageurl: '/images/activities/abattoirs.jpg',
     city: 'bruxelles',
     price_range: 'gratuit'
   },
@@ -1759,7 +1762,7 @@ export const activities: Activity[] = [
     category: 'gastronomie',
     price: 5,
     address: 'Impasse de la Fidélité 4, 1000 Bruxelles',
-    imageUrl: '/images/activities/delirium.jpg',
+    imageurl: '/images/activities/delirium.jpg',
     city: 'bruxelles',
     price_range: '5€'
   },
@@ -1772,7 +1775,7 @@ export const activities: Activity[] = [
     category: 'vie nocturne',
     price: 15,
     address: 'Rue Blaes 208, 1000 Bruxelles',
-    imageUrl: '/images/activities/fuse.jpg',
+    imageurl: '/images/activities/fuse.jpg',
     city: 'bruxelles',
     price_range: '15€'
   },
@@ -1783,7 +1786,7 @@ export const activities: Activity[] = [
     category: 'vie nocturne',
     price: 0,
     address: 'Place Saint-Géry, 1000 Bruxelles',
-    imageUrl: '/images/activities/saint-gery.jpg',
+    imageurl: '/images/activities/saint-gery.jpg',
     city: 'bruxelles',
     price_range: 'gratuit'
   },
@@ -1794,7 +1797,7 @@ export const activities: Activity[] = [
     category: 'vie nocturne',
     price: 10,
     address: 'Rue Antoine Dansaert 6, 1000 Bruxelles',
-    imageUrl: '/images/activities/archiduc.jpg',
+    imageurl: '/images/activities/archiduc.jpg',
     city: 'bruxelles',
     price_range: '10€'
   },
@@ -1805,7 +1808,7 @@ export const activities: Activity[] = [
     category: 'vie nocturne',
     price: 0,
     address: 'Avenue Louise 92, 1050 Bruxelles',
-    imageUrl: '/images/activities/floreo.jpg',
+    imageurl: '/images/activities/floreo.jpg',
     city: 'bruxelles',
     price_range: 'gratuit'
   },
@@ -1816,7 +1819,7 @@ export const activities: Activity[] = [
     category: 'vie nocturne',
     price: 15,
     address: 'Avenue Louise 315, 1050 Bruxelles',
-    imageUrl: '/images/activities/you.jpg',
+    imageurl: '/images/activities/you.jpg',
     city: 'bruxelles',
     price_range: '15€'
   },
@@ -1829,7 +1832,7 @@ export const activities: Activity[] = [
     category: 'sport',
     price: 10,
     address: 'Avenue de Marathon 135, 1020 Bruxelles',
-    imageUrl: '/images/activities/baudouin.jpg',
+    imageurl: '/images/activities/baudouin.jpg',
     city: 'bruxelles',
     price_range: '10€'
   },
@@ -1840,7 +1843,7 @@ export const activities: Activity[] = [
     category: 'sport',
     price: 1.60,
     address: 'Stations partout dans Bruxelles',
-    imageUrl: '/images/activities/villo.jpg',
+    imageurl: '/images/activities/villo.jpg',
     city: 'bruxelles',
     price_range: '1.60€'
   },
@@ -1851,7 +1854,7 @@ export const activities: Activity[] = [
     category: 'sport',
     price: 5,
     address: 'Avenue des Vaillants 2, 1200 Bruxelles',
-    imageUrl: '/images/activities/poseidon.jpg',
+    imageurl: '/images/activities/poseidon.jpg',
     city: 'bruxelles',
     price_range: '5€'
   },
@@ -1862,7 +1865,7 @@ export const activities: Activity[] = [
     category: 'sport',
     price: 30,
     address: 'Rue Neuve 123, 1000 Bruxelles',
-    imageUrl: '/images/activities/basic-fit.jpg',
+    imageurl: '/images/activities/basic-fit.jpg',
     city: 'bruxelles',
     price_range: '30€'
   },
@@ -1873,7 +1876,7 @@ export const activities: Activity[] = [
     category: 'sport',
     price: 0,
     address: 'Bruxelles',
-    imageUrl: '/images/activities/promenade-verte.jpg',
+    imageurl: '/images/activities/promenade-verte.jpg',
     city: 'bruxelles',
     price_range: 'gratuit'
   },
@@ -1886,7 +1889,7 @@ export const activities: Activity[] = [
     category: 'nature',
     price: 0,
     address: 'Bois de la Cambre, 1000 Bruxelles',
-    imageUrl: '/images/activities/cambre.jpg',
+    imageurl: '/images/activities/cambre.jpg',
     city: 'bruxelles',
     price_range: 'gratuit'
   },
@@ -1897,7 +1900,7 @@ export const activities: Activity[] = [
     category: 'nature',
     price: 7,
     address: 'Nieuwelaan 38, 1860 Meise',
-    imageUrl: '/images/activities/meise.jpg',
+    imageurl: '/images/activities/meise.jpg',
     city: 'bruxelles',
     price_range: '7€'
   },
@@ -1908,7 +1911,7 @@ export const activities: Activity[] = [
     category: 'nature',
     price: 0,
     address: 'Parc du Cinquantenaire, 1000 Bruxelles',
-    imageUrl: '/images/activities/cinquantenaire.jpg',
+    imageurl: '/images/activities/cinquantenaire.jpg',
     city: 'bruxelles',
     price_range: 'gratuit'
   },
@@ -1919,7 +1922,7 @@ export const activities: Activity[] = [
     category: 'nature',
     price: 0,
     address: 'Forêt de Soignes, 1160 Bruxelles',
-    imageUrl: '/images/activities/soignes.jpg',
+    imageurl: '/images/activities/soignes.jpg',
     city: 'bruxelles',
     price_range: 'gratuit'
   },
@@ -1930,7 +1933,7 @@ export const activities: Activity[] = [
     category: 'nature',
     price: 0,
     address: 'Avenue des Azalées, 1030 Bruxelles',
-    imageUrl: '/images/activities/josaphat.jpg',
+    imageurl: '/images/activities/josaphat.jpg',
     city: 'bruxelles',
     price_range: 'gratuit'
   }

@@ -1,4 +1,4 @@
-import { Activity } from '@/components/suggestions/ActivityCard'
+import { Activity } from '@/types/activity'
 
 export const MOCK_ACTIVITIES: Record<string, Activity[]> = {
   restaurant: [
@@ -9,8 +9,9 @@ export const MOCK_ACTIVITIES: Record<string, Activity[]> = {
       price: 45,
       duration: '2 heures',
       address: '15 rue de la Gastronomie',
-      imageUrl: '/images/restaurant1.jpg',
-      category: 'restaurant'
+      imageurl: '/images/restaurant1.jpg',
+      category: 'restaurant',
+      city: 'paris'
     },
     {
       id: 'rest2',
@@ -19,8 +20,9 @@ export const MOCK_ACTIVITIES: Record<string, Activity[]> = {
       price: 35,
       duration: '1.5 heures',
       address: '8 avenue des Saveurs',
-      imageUrl: '/images/restaurant2.jpg',
-      category: 'restaurant'
+      imageurl: '/images/restaurant2.jpg',
+      category: 'restaurant',
+      city: 'paris'
     },
     // ... ajouter 3 autres restaurants
   ],
@@ -32,8 +34,9 @@ export const MOCK_ACTIVITIES: Record<string, Activity[]> = {
       price: 15,
       duration: '2 heures',
       address: '3 ruelle des Secrets',
-      imageUrl: '/images/bar1.jpg',
-      category: 'bar'
+      imageurl: '/images/bar1.jpg',
+      category: 'bar',
+      city: 'paris'
     },
     {
       id: 'bar2',
@@ -42,8 +45,9 @@ export const MOCK_ACTIVITIES: Record<string, Activity[]> = {
       price: 20,
       duration: '3 heures',
       address: '42 rue du Panorama',
-      imageUrl: '/images/bar2.jpg',
-      category: 'bar'
+      imageurl: '/images/bar2.jpg',
+      category: 'bar',
+      city: 'paris'
     },
     // ... ajouter 3 autres bars
   ],
@@ -55,8 +59,9 @@ export const MOCK_ACTIVITIES: Record<string, Activity[]> = {
       price: 12,
       duration: '3 heures',
       address: '1 place des Arts',
-      imageUrl: '/images/culture1.jpg',
-      category: 'culture'
+      imageurl: '/images/culture1.jpg',
+      category: 'culture',
+      city: 'paris'
     },
     {
       id: 'cult2',
@@ -65,8 +70,9 @@ export const MOCK_ACTIVITIES: Record<string, Activity[]> = {
       price: 35,
       duration: '2.5 heures',
       address: '25 boulevard des Spectacles',
-      imageUrl: '/images/culture2.jpg',
-      category: 'culture'
+      imageurl: '/images/culture2.jpg',
+      category: 'culture',
+      city: 'paris'
     },
     // ... ajouter 3 autres activités culturelles
   ],
@@ -78,8 +84,9 @@ export const MOCK_ACTIVITIES: Record<string, Activity[]> = {
       price: 8,
       duration: '2 heures',
       address: '100 allée des Jardins',
-      imageUrl: '/images/nature1.jpg',
-      category: 'nature'
+      imageurl: '/images/nature1.jpg',
+      category: 'nature',
+      city: 'paris'
     },
     {
       id: 'nat2',
@@ -88,8 +95,9 @@ export const MOCK_ACTIVITIES: Record<string, Activity[]> = {
       price: 25,
       duration: '4 heures',
       address: 'Point de départ : Office de Tourisme',
-      imageUrl: '/images/nature2.jpg',
-      category: 'nature'
+      imageurl: '/images/nature2.jpg',
+      category: 'nature',
+      city: 'paris'
     },
     // ... ajouter 3 autres activités nature
   ],
@@ -101,8 +109,9 @@ export const MOCK_ACTIVITIES: Record<string, Activity[]> = {
       price: 0,
       duration: '2 heures',
       address: '5 place du Marché',
-      imageUrl: '/images/shopping1.jpg',
-      category: 'shopping'
+      imageurl: '/images/shopping1.jpg',
+      category: 'shopping',
+      city: 'paris'
     },
     {
       id: 'shop2',
@@ -111,8 +120,9 @@ export const MOCK_ACTIVITIES: Record<string, Activity[]> = {
       price: 0,
       duration: '3 heures',
       address: '55 rue du Commerce',
-      imageUrl: '/images/shopping2.jpg',
-      category: 'shopping'
+      imageurl: '/images/shopping2.jpg',
+      category: 'shopping',
+      city: 'paris'
     },
     // ... ajouter 3 autres activités shopping
   ]

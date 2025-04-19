@@ -14,6 +14,7 @@ export default function ProgramPage() {
   const [savedActivities, setSavedActivities] = useState<Activity[]>([])
   const [formData, setFormData] = useState<FormData | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [programs, setPrograms] = useState<Program[]>([])
 
   useEffect(() => {
     // Récupérer les activités sauvegardées
@@ -27,7 +28,40 @@ export default function ProgramPage() {
     if (formDataStr) {
       setFormData(JSON.parse(formDataStr))
     }
-  }, [])
+
+    const fetchPrograms = async () => {
+      try {
+        const client = createClient()
+        if (!client) {
+          throw new Error('Impossible de créer le client Supabase')
+        }
+        const { data: { session } } = await client.auth.getSession()
+
+        if (!session) {
+          router.push('/login')
+          return
+        }
+
+        const { data, error } = await client
+          .from('programs')
+          .select('*')
+          .eq('user_id', session.user.id)
+          .order('created_at', { ascending: false })
+
+        if (error) {
+          throw error
+        }
+
+        setPrograms(data || [])
+      } catch (error) {
+        console.error('Erreur lors de la récupération des programmes:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchPrograms()
+  }, [router])
 
   const handleSaveProgram = async () => {
     if (!formData) return

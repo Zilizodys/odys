@@ -10,7 +10,7 @@ export interface Program {
   budget: number
   companion: string
   activities: Activity[]
-  imageUrl: string | null
+  imageurl: string | null
   coverImage: string | null
   moods: string[]
   createdAt: Date
