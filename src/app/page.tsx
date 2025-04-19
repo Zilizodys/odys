@@ -12,6 +12,7 @@ export default function Home() {
 
   useEffect(() => {
     const checkSession = async () => {
+      if (!supabase) return;
       const { data: { session } } = await supabase.auth.getSession()
       if (session) {
         router.replace('/dashboard')
@@ -19,7 +20,7 @@ export default function Home() {
     }
 
     checkSession()
-  }, [router])
+  }, [router, supabase])
 
   return (
     <div className="min-h-screen bg-white">
