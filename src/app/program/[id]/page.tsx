@@ -19,7 +19,7 @@ interface Program {
   title: string;
   description: string;
   activities: Activity[];
-  imageUrl: string;
+  imageurl: string;
   createdAt: Date;
   updatedAt: Date;
   destination: string;
@@ -54,7 +54,7 @@ function validateAndTransformProgram(data: any): Program {
     id: data.id,
     title: data.title || `Séjour à ${data.destination}`,
     description: data.description || '',
-    imageUrl: data.imageUrl || '',
+    imageurl: data.imageurl || '',
     createdAt: new Date(data.created_at || Date.now()),
     updatedAt: new Date(data.updated_at || Date.now()),
     destination: data.destination,
@@ -68,7 +68,7 @@ function validateAndTransformProgram(data: any): Program {
       description: activity.description,
       address: activity.address,
       price: activity.price,
-      imageUrl: activity.imageUrl,
+      imageurl: activity.imageurl,
       category: activity.category,
       city: activity.city
     })),
