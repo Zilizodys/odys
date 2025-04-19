@@ -21,7 +21,7 @@ const ActivityContent = ({ activity }: { activity: Activity }) => (
     <div className="relative h-64">
       <ImageWithFallback
         src={getActivityImageUrl(activity.imageurl || '')}
-        alt={activity.imageAlt || `Photo de l'activité ${activity.title}`}
+        alt={`Photo de l'activité ${activity.title}`}
         fill
         className="object-cover"
         priority
@@ -234,8 +234,8 @@ function ActivityCard({ activity }: { activity: Activity }) {
     <div className="bg-white rounded-xl overflow-hidden shadow-lg">
       <div className="relative h-64">
         <ImageWithFallback
-          src={getActivityImageUrl(activity.imageUrl || '')}
-          alt={activity.imageAlt || `Photo de l'activité ${activity.title}`}
+          src={getActivityImageUrl(activity.imageurl || '')}
+          alt={`Photo de l'activité ${activity.title}`}
           fill
           className="object-cover"
           priority
