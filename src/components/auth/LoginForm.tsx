@@ -13,26 +13,29 @@ export default function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const redirectTo = searchParams.get('redirect') || '/dashboard'
-  const supabase = createClient()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError(null)
     setLoading(true)
+    setError('')
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const client = createClient()
+      if (!client) {
+        throw new Error('Impossible de créer le client Supabase')
+      }
+      const { error } = await client.auth.signInWithPassword({
         email,
         password,
       })
 
       if (error) {
-        setError(error.message)
-      } else {
-        router.push(redirectTo)
+        throw error
       }
-    } catch (err) {
-      setError('Une erreur est survenue lors de la connexion')
+
+      router.push(redirectTo || '/')
+    } catch (error: any) {
+      setError(error.message)
     } finally {
       setLoading(false)
     }
