@@ -2,8 +2,10 @@
 
 import { Activity, getActivityImageUrl } from '@/types/activity'
 import { FiMapPin, FiDollarSign, FiX, FiNavigation, FiCalendar } from 'react-icons/fi'
-import { useEffect, useState } from 'react'
-import ImageWithFallback from '@/components/ImageWithFallback'
+import { useEffect, useState, Fragment, useRef } from 'react'
+import ImageWithFallback from './ui/ImageWithFallback'
+import { Dialog, Transition } from '@headlessui/react'
+import Image from 'next/image'
 
 interface ActivityModalProps {
   activity: Activity
@@ -18,7 +20,7 @@ const ActivityContent = ({ activity }: { activity: Activity }) => (
     {/* Image */}
     <div className="relative h-64">
       <ImageWithFallback
-        src={getActivityImageUrl(activity.imageUrl || '')}
+        src={getActivityImageUrl(activity.imageurl || '')}
         alt={activity.imageAlt || `Photo de l'activité ${activity.title}`}
         fill
         className="object-cover"
@@ -138,54 +140,91 @@ export default function ActivityModal({ activity, onClose, activities, onNext, o
     setTouchStart(null)
   }
 
-  return (
-    <div 
-      className="fixed inset-0 bg-black/50 flex items-center justify-center z-[9999]" 
-      onClick={onClose}
-    >
-      <div 
-        className="w-full max-w-2xl mx-auto p-4 relative flex flex-col items-center"
-        onClick={e => e.stopPropagation()}
-      >
-        {/* Bouton fermer */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 z-[102] bg-white/10 backdrop-blur-sm text-white rounded-full p-2 hover:bg-white/20 transition-colors"
-        >
-          <FiX className="w-6 h-6" />
-        </button>
+  const cancelButtonRef = useRef(null)
 
-        {/* Container pour le carousel */}
-        <div className="w-full overflow-hidden">
-          <div 
-            className="w-full transition-transform duration-300 ease-out"
-            style={{ 
-              transform: direction === 'left' ? 'translateX(-100%)' : 
-                        direction === 'right' ? 'translateX(100%)' : 
-                        'translateX(0)'
-            }}
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
-          >
-            <ActivityContent activity={currentActivity} />
+  return (
+    <Transition.Root show as={Fragment}>
+      <Dialog
+        as="div"
+        className="relative z-50"
+        initialFocus={cancelButtonRef}
+        onClose={onClose}
+      >
+        <Transition.Child
+          as={Fragment}
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+        </Transition.Child>
+
+        <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+          <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              enterTo="opacity-100 translate-y-0 sm:scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+              leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            >
+              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                <div className="relative h-64 w-full">
+                  <Image
+                    src={getActivityImageUrl(activity.imageurl || '')}
+                    alt={activity.title}
+                    fill
+                    className="object-cover"
+                  />
+                  <button
+                    type="button"
+                    className="absolute top-4 right-4 text-white hover:text-gray-200 transition-colors"
+                    onClick={onClose}
+                  >
+                    <FiX size={24} />
+                  </button>
+                </div>
+
+                <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                  <div>
+                    <Dialog.Title as="h3" className="text-xl font-semibold leading-6 text-gray-900 mb-4">
+                      {activity.title}
+                    </Dialog.Title>
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className="flex items-center gap-1 text-gray-500">
+                        <FiMapPin className="text-indigo-500" />
+                        <span>{activity.address}</span>
+                      </div>
+                      <div className="flex items-center gap-1 text-gray-500">
+                        <FiDollarSign className="text-indigo-500" />
+                        <span>{activity.price}€</span>
+                      </div>
+                    </div>
+                    <p className="text-gray-600">{activity.description}</p>
+                  </div>
+                </div>
+
+                <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                  <button
+                    type="button"
+                    className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                    onClick={onClose}
+                    ref={cancelButtonRef}
+                  >
+                    Fermer
+                  </button>
+                </div>
+              </Dialog.Panel>
+            </Transition.Child>
           </div>
         </div>
-
-        {/* Indicateurs de position */}
-        {activities && activities.length > 1 && (
-          <div className="flex gap-2 mt-4">
-            {activities.map((_, index) => (
-              <div
-                key={index}
-                className={`w-2 h-2 rounded-full transition-colors ${
-                  index === currentIndex ? 'bg-white' : 'bg-white/50'
-                }`}
-              />
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
+      </Dialog>
+    </Transition.Root>
   )
 }
 

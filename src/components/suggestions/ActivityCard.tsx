@@ -3,19 +3,14 @@ import { useState } from 'react'
 import ImageWithFallback from '@/components/ui/ImageWithFallback'
 import { Activity } from '@/types/activity'
 
-interface ActivityCardProps extends Activity {
+interface ActivityCardProps {
+  activity: Activity
   onDelete: (id: string) => void
   direction?: number
 }
 
 export default function ActivityCard({
-  id,
-  title,
-  description,
-  price,
-  address,
-  imageurl,
-  category,
+  activity,
   onDelete,
   direction = 0
 }: ActivityCardProps) {
@@ -28,7 +23,7 @@ export default function ActivityCard({
 
     if (offset < -100 || velocity < -500) {
       await controls.start({ x: "-100%", opacity: 0 })
-      onDelete(id)
+      onDelete(activity.id)
     } else {
       controls.start({ x: 0, opacity: 1 })
     }
@@ -52,8 +47,8 @@ export default function ActivityCard({
     >
       <div className="relative h-48 w-full">
         <ImageWithFallback
-          src={getImageUrl(imageurl)}
-          alt={title}
+          src={getImageUrl(activity.imageurl)}
+          alt={activity.title}
           fill
           className="object-cover rounded-t-xl"
           priority={direction < 3}
@@ -62,15 +57,15 @@ export default function ActivityCard({
       <div className="p-4">
         <div className="flex justify-between items-start mb-2">
           <div>
-            <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
-            <p className="text-sm text-gray-500">{address}</p>
+            <h3 className="text-lg font-semibold text-gray-900">{activity.title}</h3>
+            <p className="text-sm text-gray-500">{activity.address}</p>
           </div>
-          <span className="text-indigo-600 font-medium">{price}€</span>
+          <span className="text-indigo-600 font-medium">{activity.price}€</span>
         </div>
-        <p className="text-gray-600 text-sm">{description}</p>
+        <p className="text-gray-600 text-sm">{activity.description}</p>
         <div className="mt-3">
           <span className="inline-block bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded-full">
-            {category}
+            {activity.category}
           </span>
         </div>
       </div>
