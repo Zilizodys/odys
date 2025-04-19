@@ -112,7 +112,7 @@ export default function SummaryPage() {
           description: activity.description,
           price: activity.price,
           address: activity.address,
-          imageUrl: activity.imageUrl,
+          imageurl: activity.imageurl,
           category: activity.category
         }))
       }
