@@ -1,18 +1,22 @@
 import { motion, PanInfo, useAnimation } from 'framer-motion'
 import { Activity } from '@/types/activity'
 import { FiMapPin, FiClock, FiDollarSign, FiTrash2 } from 'react-icons/fi'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 
-interface SwipeableActivityCardProps {
+export interface SwipeableActivityCardProps {
   activity: Activity
   onDelete: (id: string) => void
+  onClick?: (activity: Activity) => void
 }
 
-export default function SwipeableActivityCard({ activity, onDelete }: SwipeableActivityCardProps) {
+export default function SwipeableActivityCard({ activity, onDelete, onClick }: SwipeableActivityCardProps) {
   const controls = useAnimation()
   const [isOpen, setIsOpen] = useState(false)
+  const [isDragging, setIsDragging] = useState(false)
+  const startXRef = useRef(0)
 
   const handleDragEnd = async (event: any, info: PanInfo) => {
+    setIsDragging(false)
     const offset = info.offset.x
     const velocity = info.velocity.x
 
@@ -35,9 +39,25 @@ export default function SwipeableActivityCard({ activity, onDelete }: SwipeableA
     }
   }
 
-  const handleDragStart = () => {
-    if (!isOpen) {
-      controls.start({ x: 0 })
+  const handleTouchStart = (e: React.TouchEvent) => {
+    startXRef.current = e.touches[0].clientX
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging) {
+      const diffX = Math.abs(e.touches[0].clientX - startXRef.current)
+      const diffY = Math.abs(e.touches[0].clientY - e.touches[0].clientY)
+      
+      // Si le mouvement est plus horizontal que vertical, on active le drag
+      if (diffX > diffY && diffX > 10) {
+        setIsDragging(true)
+      }
+    }
+  }
+
+  const handleClick = () => {
+    if (!isDragging && onClick) {
+      onClick(activity)
     }
   }
 
@@ -51,14 +71,16 @@ export default function SwipeableActivityCard({ activity, onDelete }: SwipeableA
       </div>
       
       <motion.div
-        className="relative bg-white rounded-lg shadow-sm overflow-hidden z-10 border border-gray-100"
+        className="relative bg-white rounded-lg shadow-sm overflow-hidden z-10 border border-gray-100 cursor-pointer"
         animate={controls}
-        drag="x"
+        drag={isDragging ? "x" : false}
         dragConstraints={{ left: isOpen ? -100 : 0, right: 0 }}
         dragElastic={0.1}
-        onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
         initial={{ x: 0 }}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onClick={handleClick}
       >
         <div className="p-4">
           <h3 className="font-semibold text-gray-900 mb-2">{activity.title}</h3>

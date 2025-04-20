@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi'
 import { Activity } from '@/types/activity'
-import SwipeableActivityCard from './SwipeableActivityCard'
+import SwipeableActivityCard, { SwipeableActivityCardProps } from './SwipeableActivityCard'
 
 interface CategorySectionProps {
   category: string
   activities: Activity[]
-  onActivityClick: (activity: Activity) => void
-  onActivityDelete: (activityId: string) => void
+  onActivityClick: NonNullable<SwipeableActivityCardProps['onClick']>
+  onActivityDelete: SwipeableActivityCardProps['onDelete']
 }
 
 const CATEGORY_LABELS: Record<string, string> = {
