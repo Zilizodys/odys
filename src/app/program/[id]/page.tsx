@@ -3,47 +3,51 @@ import { cookies } from 'next/headers'
 import { Database } from '@/types/database'
 import { notFound } from 'next/navigation'
 import ProgramClient from './ProgramClient'
+import type { Activity } from '@/types/activity'
 
 export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 async function getProgram(id: string) {
   const supabase = createServerComponentClient<Database>({ cookies })
 
-  const { data: rawProgramData, error: programError } = await supabase
+  const { data: program, error: programError } = await supabase
     .from('programs')
-    .select(`
-      *,
-      program_activities (
-        activities (
-          id,
-          title,
-          description,
-          price,
-          address,
-          imageurl,
-          category,
-          city
-        )
-      )
-    `)
+    .select('*')
     .eq('id', id)
     .single()
 
-  if (programError) {
-    if (programError.code === 'PGRST116') {
+  if (programError || !program) {
+    if (programError?.code === 'PGRST116') {
       return null
     }
     throw programError
   }
 
-  if (!rawProgramData) {
-    return null
+  const { data: programActivities, error: activitiesError } = await supabase
+    .from('program_activities')
+    .select(`
+      activities (
+        id,
+        title,
+        description,
+        price,
+        address,
+        imageurl,
+        category,
+        city
+      )
+    `)
+    .eq('program_id', id)
+
+  if (activitiesError) {
+    throw activitiesError
   }
 
-  // Transformer les données pour avoir les activités directement dans le programme
   return {
-    ...rawProgramData,
-    activities: rawProgramData.program_activities?.map(pa => pa.activities) || []
+    ...program,
+    activities: programActivities
+      ?.map((pa: { activities: Activity[] }) => pa.activities[0]) || []
   }
 }
 
