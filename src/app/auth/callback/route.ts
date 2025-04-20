@@ -1,37 +1,44 @@
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
-import { syncUser } from '@/lib/supabase/sync'
 
 export const dynamic = 'force-dynamic'
 
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url)
   const code = requestUrl.searchParams.get('code')
-  const next = requestUrl.searchParams.get('next') || '/dashboard'
-
-  // Forcer l'utilisation de localhost en développement
-  const baseUrl = process.env.NEXT_PUBLIC_FORCE_LOCAL === 'true'
-    ? 'http://localhost:3000'
-    : process.env.NEXT_PUBLIC_SITE_URL || requestUrl.origin
+  const redirectTo = requestUrl.searchParams.get('redirectTo') || '/'
 
   if (code) {
-    const supabase = createRouteHandlerClient({ cookies })
-    
+    const cookieStore = cookies()
+    const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
+
     try {
-      const { data: { user } } = await supabase.auth.exchangeCodeForSession(code)
+      // Échanger le code contre une session
+      const { data: { session }, error: sessionError } = await supabase.auth.exchangeCodeForSession(code)
       
-      if (user) {
-        // Synchroniser l'utilisateur avec notre table users
-        await syncUser(supabase, user)
+      if (sessionError) {
+        console.error('Erreur lors de l\'échange du code:', sessionError)
+        throw sessionError
       }
 
-      return NextResponse.redirect(new URL(next, baseUrl))
+      if (!session) {
+        throw new Error('Pas de session après l\'échange du code')
+      }
+
+      // Créer une réponse avec la redirection
+      const response = NextResponse.redirect(new URL(redirectTo, requestUrl.origin))
+
+      // S'assurer que les cookies de session sont correctement définis
+      await supabase.auth.setSession(session)
+
+      return response
     } catch (error) {
-      console.error('Erreur lors de l\'échange du code:', error)
-      return NextResponse.redirect(new URL('/login', baseUrl))
+      console.error('Erreur dans le callback:', error)
+      return NextResponse.redirect(new URL('/login', requestUrl.origin))
     }
   }
 
-  return NextResponse.redirect(new URL('/login', baseUrl))
+  // En cas d'absence de code, rediriger vers la page de connexion
+  return NextResponse.redirect(new URL('/login', requestUrl.origin))
 } 

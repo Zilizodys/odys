@@ -36,9 +36,8 @@ export default function SummaryPage() {
       if (tempProgramStr) {
         try {
           const tempProgram = JSON.parse(tempProgramStr)
+          console.log('Programme temporaire trouvé:', tempProgram)
           handleSaveProgram(tempProgram)
-          // Nettoyer le programme temporaire
-          localStorage.removeItem('tempProgram')
         } catch (error) {
           console.error('Erreur lors de la récupération du programme temporaire:', error)
         }
@@ -98,12 +97,16 @@ export default function SummaryPage() {
       const { data: { session } } = await client.auth.getSession()
 
       if (!session) {
+        console.log('Pas de session, sauvegarde temporaire et redirection')
         // Sauvegarder le programme temporairement
         localStorage.setItem('tempProgram', JSON.stringify(programToSave))
-        router.push('/login?redirectTo=/summary?auth-callback=true')
+        const currentUrl = '/summary'
+        const redirectUrl = `/login?redirectTo=${encodeURIComponent(currentUrl + '?auth-callback=true')}`
+        router.push(redirectUrl)
         return
       }
 
+      console.log('Session trouvée, sauvegarde du programme')
       // Préparer les données de base du programme
       const programData = {
         user_id: session.user.id,
