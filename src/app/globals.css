@@ -2,6 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
+html, body {
+  height: 100%;
+}
+
+body {
+  color: #000;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Styles pour les barres de défilement sur WebKit */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
 @layer utilities {
   .animate-fade-in {
     animation: fadeIn 0.5s ease-out;
@@ -46,11 +77,6 @@
     transform: translateY(0);
     opacity: 1;
   }
-}
-
-body {
-  color: #000;
-  background: #fff;
 }
 
 /* Styles du DatePicker */

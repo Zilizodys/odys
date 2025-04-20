@@ -2,7 +2,6 @@
 
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
-import ImageWithFallback from 'next/image'
 
 interface HeaderProps {
   showBackButton?: boolean
@@ -28,12 +27,13 @@ export default function Header({ showBackButton = false }: HeaderProps) {
           <h1 className="text-2xl font-bold text-indigo-600">Odys</h1>
         </div>
         <div className="relative w-[50px] h-[50px]">
-          <ImageWithFallback
+          <Image
             src="/images/activities/Mascot.png"
             alt="Mascotte Odys"
-            fill
+            width={50}
+            height={50}
             priority
-            className="object-contain"
+            className="object-contain w-auto h-auto"
           />
         </div>
       </div>

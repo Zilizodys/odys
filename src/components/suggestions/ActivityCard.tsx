@@ -2,6 +2,7 @@ import { motion, PanInfo, useAnimation } from 'framer-motion'
 import { useState } from 'react'
 import ImageWithFallback from '@/components/ui/ImageWithFallback'
 import { Activity } from '@/types/activity'
+import { FiX, FiHeart } from 'react-icons/fi'
 
 interface ActivityCardProps {
   activity: Activity
@@ -18,72 +19,110 @@ export default function ActivityCard({
 }: ActivityCardProps) {
   const controls = useAnimation()
   const [isDragging, setIsDragging] = useState(false)
+  const [dragDirection, setDragDirection] = useState<'left' | 'right' | null>(null)
 
   const handleDragEnd = async (event: any, info: PanInfo) => {
     const offset = info.offset.x
     const velocity = info.velocity.x
 
     if (offset < -100 || velocity < -500) {
+      // Swipe gauche = passer
       await controls.start({ x: "-100%", opacity: 0 })
-      onDelete(activity.id)
-    } else if (offset > 100 || velocity > 500) {
-      await controls.start({ x: "100%", opacity: 0 })
       if (onSwipe) {
-        onSwipe(1)
+        onSwipe(-1)
       }
+    } else if (offset > 100 || velocity > 500) {
+      // Swipe droite = sauvegarder
+      await controls.start({ x: "100%", opacity: 0 })
+      onDelete(activity.id)
     } else {
       controls.start({ x: 0, opacity: 1 })
     }
     setIsDragging(false)
+    setDragDirection(null)
+  }
+
+  const handleDrag = (event: any, info: PanInfo) => {
+    const offset = info.offset.x
+    if (offset > 50) {
+      setDragDirection('right')
+    } else if (offset < -50) {
+      setDragDirection('left')
+    } else {
+      setDragDirection(null)
+    }
   }
 
   const getImageUrl = (url: string | undefined) => {
     if (!url) return '/images/fallback/activityfallback.png'
-    return url.startsWith('/') ? url : `/images/activities/${url}`
+    return url
   }
 
   return (
-    <motion.div
-      animate={controls}
-      drag="x"
-      dragConstraints={{ left: 0, right: 0 }}
-      dragElastic={0.9}
-      onDragStart={() => setIsDragging(true)}
-      onDragEnd={handleDragEnd}
-      className="relative bg-white rounded-xl shadow-md overflow-hidden mb-4"
-    >
-      <div className="relative h-48 w-full">
-        <ImageWithFallback
-          src={getImageUrl(activity.imageurl)}
-          alt={activity.title}
-          fill
-          className="object-cover rounded-t-xl"
-          priority={direction < 3}
-        />
-      </div>
-      <div className="p-4">
-        <div className="flex justify-between items-start mb-2">
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900">{activity.title}</h3>
-            <p className="text-sm text-gray-500">{activity.address}</p>
+    <div className="flex flex-col items-center">
+      <motion.div
+        animate={controls}
+        drag="x"
+        dragConstraints={{ left: 0, right: 0 }}
+        dragElastic={0.9}
+        onDragStart={() => setIsDragging(true)}
+        onDrag={handleDrag}
+        onDragEnd={handleDragEnd}
+        className="relative bg-white rounded-xl shadow-md overflow-hidden mb-8 max-w-2xl w-full"
+      >
+        {/* Indicateurs de swipe */}
+        <div className={`absolute left-4 top-4 z-10 transition-opacity ${dragDirection === 'left' ? 'opacity-100' : 'opacity-0'}`}>
+          <div className="bg-red-500 text-white rounded-full p-2">
+            <FiX className="w-8 h-8" />
           </div>
-          <span className="text-indigo-600 font-medium">{activity.price}€</span>
         </div>
-        <p className="text-gray-600 text-sm">{activity.description}</p>
-        <div className="mt-3">
-          <span className="inline-block bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded-full">
-            {activity.category}
-          </span>
+        <div className={`absolute right-4 top-4 z-10 transition-opacity ${dragDirection === 'right' ? 'opacity-100' : 'opacity-0'}`}>
+          <div className="bg-green-500 text-white rounded-full p-2">
+            <FiHeart className="w-8 h-8" />
+          </div>
         </div>
+
+        <div className="relative h-64 w-full">
+          <ImageWithFallback
+            src={getImageUrl(activity.imageurl)}
+            alt={activity.title}
+            fill
+            className="object-cover rounded-t-xl"
+            priority={direction < 3}
+          />
+        </div>
+        <div className="p-6">
+          <div className="flex justify-between items-start mb-3">
+            <div>
+              <h3 className="text-xl font-semibold text-gray-900">{activity.title}</h3>
+              <p className="text-sm text-gray-500">{activity.address}</p>
+            </div>
+            <span className="text-indigo-600 font-medium text-lg">{activity.price}€</span>
+          </div>
+          <p className="text-gray-600 text-base mb-4">{activity.description}</p>
+          <div className="mt-3">
+            <span className="inline-block bg-indigo-100 text-indigo-800 text-sm px-3 py-1 rounded-full">
+              {activity.category}
+            </span>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Boutons Like/Dislike */}
+      <div className="flex justify-center gap-8 mt-4">
+        <button
+          onClick={() => onSwipe && onSwipe(-1)}
+          className="flex items-center justify-center w-16 h-16 rounded-full bg-white shadow-lg hover:bg-red-50 transition-colors border-2 border-red-500"
+        >
+          <FiX className="w-8 h-8 text-red-500" />
+        </button>
+        <button
+          onClick={() => onDelete(activity.id)}
+          className="flex items-center justify-center w-16 h-16 rounded-full bg-white shadow-lg hover:bg-green-50 transition-colors border-2 border-green-500"
+        >
+          <FiHeart className="w-8 h-8 text-green-500" />
+        </button>
       </div>
-      
-      {isDragging && (
-        <div className="absolute inset-y-0 right-0 w-16 bg-red-500 flex items-center justify-center">
-          <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-          </svg>
-        </div>
-      )}
-    </motion.div>
+    </div>
   )
 } 

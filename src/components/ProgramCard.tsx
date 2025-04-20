@@ -125,102 +125,92 @@ const ProgramCard = ({ program, onDelete, onClick }: ProgramCardProps) => {
 
   const companion = COMPANION_OPTIONS.find(option => option.value === program.companion)
 
+  const formatDate = (date: Date) => {
+    return format(new Date(date), 'dd MMM yyyy', { locale: fr })
+  }
+
   return (
-    <div className="relative overflow-hidden rounded-xl">
-      <div className="absolute inset-y-0 right-0 flex items-center justify-center bg-red-500 w-[150px]">
-        <button
-          onClick={handleDelete}
-          className="text-white hover:text-red-500 transition-colors w-full h-full flex items-center justify-center"
+    <div className="w-full max-w-md mx-auto">
+      <div className="relative rounded-3xl overflow-hidden bg-white shadow">
+        {/* Background rouge pour le swipe delete */}
+        <div className="absolute inset-y-0 right-0 flex items-center justify-center bg-red-500 w-[150px]">
+          <button
+            onClick={handleDelete}
+            className="text-white w-full h-full flex items-center justify-center"
+            aria-label="Supprimer le programme"
+          >
+            <FiTrash2 size={24} />
+          </button>
+        </div>
+
+        {/* Carte principale */}
+        <div
+          ref={cardRef}
+          style={{ transform: `translateX(${offsetX}px)` }}
+          className="relative bg-white transition-transform cursor-pointer"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleDragEnd}
+          onMouseDown={handleMouseDown}
+          onClick={handleClick}
         >
-          <FiTrash2 size={24} />
-        </button>
-      </div>
-
-      <div
-        ref={cardRef}
-        style={{ transform: `translateX(${offsetX}px)` }}
-        className="relative bg-white rounded-xl shadow-sm transition-transform cursor-pointer"
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleDragEnd}
-        onMouseDown={handleMouseDown}
-        onClick={handleClick}
-      >
-        <div className="relative h-48 w-full">
-          <ImageWithFallback
-            src={program.coverImage || getDestinationImage(program.destination)}
-            alt={program.title}
-            width={400}
-            height={225}
-            className="w-full h-full object-cover rounded-t-xl"
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent">
-            <div className="absolute bottom-0 left-0 p-10">
-              <h2 className="font-bold text-white mb-1" style={{ fontSize: '28px' }}>
-                {program.title || `Séjour à ${program.destination}`}
-              </h2>
-              <div className="flex items-center gap-2 text-white/90">
-                <FiMapPin size={16} />
-                <span className="text-sm">{program.destination}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="px-4 py-3">
-          <div className="flex flex-wrap gap-3 text-sm">
-            <div className="flex items-center gap-2">
-              <FiClock className="text-gray-400" size={18} />
-              <span className="text-gray-700">
-                {format(new Date(program.start_date), 'dd MMM', { locale: fr })} -{' '}
-                {format(new Date(program.end_date), 'dd MMM yyyy', { locale: fr })}
-              </span>
-            </div>
-            {companion && (
-              <div className="flex items-center gap-2">
-                <FiUsers className="text-gray-400" size={18} />
-                <span className="text-gray-700 flex items-center gap-1">
-                  {companion.label} {companion.icon}
-                </span>
-              </div>
-            )}
-            <div className="flex items-center gap-2">
-              <FiDollarSign className="text-gray-400" size={18} />
-              <span className="text-gray-700">{program.budget > 0 ? `${program.budget}€` : 'Gratuit'}</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="px-4 pt-2">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-gray-900">Activités sélectionnées</h3>
-            <span className="text-gray-500">({program.activities?.length || 0})</span>
-          </div>
-
-          <div className="space-y-3">
-            {program.activities?.slice(0, 3).map((activity) => (
-              <div
-                key={activity.id}
-                className="p-4 bg-gray-50 rounded-xl"
-              >
-                <h4 className="font-medium text-gray-900 mb-2">{activity.title}</h4>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1 text-gray-500">
-                    <FiMapPin size={14} />
-                    <span className="text-sm">{activity.address}</span>
-                  </div>
-                  <span className="text-indigo-600 font-medium">
-                    {activity.price === 0 ? 'Gratuit' : `${activity.price}€`}
-                  </span>
+          {/* Section image avec titre */}
+          <div className="relative h-[200px]">
+            <ImageWithFallback
+              src={program.coverImage || getDestinationImage(program.destination)}
+              alt={`Photo de ${program.destination}`}
+              width={400}
+              height={200}
+              className="w-full h-full object-cover"
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent">
+              <div className="absolute bottom-6 left-6">
+                <h2 className="font-bold text-white text-3xl mb-3">
+                  {program.title || `Séjour à ${program.destination}`}
+                </h2>
+                <div className="flex items-center gap-2 text-white/90">
+                  <FiMapPin size={20} />
+                  <span className="text-lg">{program.destination}</span>
                 </div>
               </div>
-            ))}
-            {(program.activities?.length || 0) > 3 && (
-              <div className="text-sm text-gray-500 text-center p-3 bg-gray-50 rounded-xl">
-                +{program.activities.length - 3} autres activités
+            </div>
+          </div>
+
+          {/* Section informations */}
+          <div className="px-8 pt-16 pb-6 space-y-5">
+            <div className="flex items-center gap-3">
+              <FiClock className="text-indigo-600 shrink-0" size={22} />
+              <div>
+                <div className="text-gray-500 text-sm">Dates</div>
+                <div className="text-gray-900">Du 19/04/2025 au 20/04/2025</div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <div className="text-indigo-600 text-2xl shrink-0">$</div>
+              <div>
+                <div className="text-gray-500 text-sm">Budget</div>
+                <div className="text-gray-900">{program.budget}€</div>
+              </div>
+            </div>
+
+            {companion && (
+              <div className="flex items-center gap-3">
+                <FiUsers className="text-indigo-600 shrink-0" size={22} />
+                <div>
+                  <div className="text-gray-500 text-sm">Voyageurs</div>
+                  <div className="text-gray-900 flex items-center gap-1">
+                    En couple {companion.icon}
+                  </div>
+                </div>
               </div>
             )}
+
+            <div className="flex items-center gap-2">
+              <span className="text-indigo-600 text-xl">10</span>
+              <span className="text-gray-900">activités sélectionnées</span>
+            </div>
           </div>
         </div>
       </div>

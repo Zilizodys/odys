@@ -215,9 +215,17 @@ export default function GenerateForm() {
       // Sauvegarder les données du formulaire
       localStorage.setItem('formData', JSON.stringify(formData))
       
-      // Rediriger vers la page des suggestions avec les moods sélectionnés
-      const moodsParam = formData.moods.join(',')
-      router.push(`/suggestions?moods=${moodsParam}`)
+      // Construire l'URL avec tous les paramètres requis
+      const params = new URLSearchParams({
+        destination: formData.destination,
+        startDate: formData.startDate || '',
+        endDate: formData.endDate || '',
+        budget: formData.budget?.toString() || '',
+        companion: formData.companion || '',
+        moods: formData.moods.join(',')
+      })
+      
+      router.push(`/suggestions?${params.toString()}`)
     }
   }
 

@@ -14,8 +14,9 @@ export default function LoginPage() {
             alt="Logo"
             width={100}
             height={100}
-            className="mx-auto w-auto h-auto"
             priority
+            style={{ width: 'auto', height: 'auto' }}
+            className="mx-auto"
           />
           <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
             Connectez-vous à votre compte

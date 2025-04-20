@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 interface ImageWithFallbackProps {
   src: string;
-  alt?: string;
+  alt: string;
   width?: number;
   height?: number;
   className?: string;
@@ -14,46 +14,67 @@ interface ImageWithFallbackProps {
   sizes?: string;
 }
 
+const FALLBACK_IMAGE = '/images/fallback/activityfallback.png';
+
 export default function ImageWithFallback({
   src,
-  alt = 'Image',
+  alt,
   width,
   height,
   className = '',
   priority = false,
   fill = false,
-  sizes
+  sizes = '100vw'
 }: ImageWithFallbackProps) {
-  const [error, setError] = useState(false);
+  const [imgSrc, setImgSrc] = useState(src);
+  const [hasError, setHasError] = useState(false);
 
-  if (error) {
+  const handleError = () => {
+    if (!hasError) {
+      setHasError(true);
+      setImgSrc(FALLBACK_IMAGE);
+    }
+  };
+
+  // Fonction pour normaliser l'URL de l'image
+  const normalizeImageUrl = (url: string) => {
+    if (!url) return FALLBACK_IMAGE;
+    if (url.startsWith('http')) return url;
+    if (url.startsWith('/')) return url;
+    return `/images/activities/${url}`;
+  };
+
+  const imgProps = {
+    src: normalizeImageUrl(imgSrc),
+    alt,
+    className: `${className} transition-opacity duration-300`,
+    onError: handleError,
+    priority,
+    sizes,
+    loading: priority ? ('eager' as const) : ('lazy' as const),
+    quality: 75,
+  };
+
+  if (fill) {
     return (
-      <div 
-        className={`bg-gray-100 flex items-center justify-center ${className}`}
-        style={{ 
-          width: fill ? '100%' : width,
-          height: fill ? '100%' : height,
-          position: fill ? 'absolute' : 'relative'
-        }}
-      >
-        <span className="text-gray-400 text-sm text-center px-4">
-          {alt}
-        </span>
+      <div className="relative w-full h-full">
+        <Image 
+          {...imgProps} 
+          fill 
+          style={{ objectFit: 'cover' }}
+        />
       </div>
     );
   }
 
   return (
-    <Image
-      src={src}
-      alt={alt}
-      width={!fill ? width : undefined}
-      height={!fill ? height : undefined}
-      className={className}
-      priority={priority}
-      fill={fill}
-      onError={() => setError(true)}
-      sizes={fill ? "100vw" : sizes}
-    />
+    <div className="relative">
+      <Image
+        {...imgProps}
+        width={width || 400}
+        height={height || 400}
+        style={{ width: '100%', height: 'auto' }}
+      />
+    </div>
   );
 } 

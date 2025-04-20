@@ -8,6 +8,7 @@ import { createClient } from '@/lib/supabase/client'
 import ImageWithFallback from '@/components/ui/ImageWithFallback'
 import EmptyStateCard from '@/components/suggestions/EmptyStateCard'
 import MoodTabBar from '@/components/suggestions/MoodTabBar'
+import ProgressBar from '@/components/suggestions/ProgressBar'
 import { Activity } from '@/types/activity'
 
 interface DatabaseActivity extends Activity {}
@@ -58,63 +59,147 @@ const getBudgetRanges = (budget: number | null): string[] => {
 export default function SuggestionsPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const moodsParam = searchParams.get('moods')
-  const programId = searchParams.get('programId')
   const destination = searchParams.get('destination')
   const startDate = searchParams.get('startDate')
   const endDate = searchParams.get('endDate')
   const budget = searchParams.get('budget')
   const companion = searchParams.get('companion')
-  
-  const moods = moodsParam?.split(',') || []
-  
-  const [currentActivityIndex, setCurrentActivityIndex] = useState(0)
-  const [allActivities, setAllActivities] = useState<Activity[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [currentMoodIndex, setCurrentMoodIndex] = useState(0)
-  const [savedActivities, setSavedActivities] = useState<Activity[]>([])
-  const [direction, setDirection] = useState<number>(0)
-  const [filteredActivities, setFilteredActivities] = useState<Activity[]>([])
+  const moodsParam = searchParams.get('moods')
+  const moods = moodsParam ? moodsParam.split(',') : []
+
   const [error, setError] = useState<string | null>(null)
-  const [formData, setFormData] = useState<FormData | null>(null)
-  const [program, setProgram] = useState<Program | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [allActivities, setAllActivities] = useState<Activity[]>([])
+  const [filteredActivities, setFilteredActivities] = useState<Activity[]>([])
+  const [currentActivityIndex, setCurrentActivityIndex] = useState(0)
+  const [currentMoodIndex, setCurrentMoodIndex] = useState(0)
+  const [direction, setDirection] = useState(0)
+  const [savedActivities, setSavedActivities] = useState<Activity[]>([])
+  const [program, setProgram] = useState<{ formData: any; activities: Activity[] } | null>(null)
 
-  // Si on a les paramètres du programme, on les utilise directement
+  // Vérifier les paramètres requis
   useEffect(() => {
-    if (programId && destination && startDate && endDate && budget && companion) {
-      const formData = {
+    const requiredParams = {
+      destination,
+      startDate,
+      endDate,
+      budget,
+      companion
+    }
+
+    const missingParams = Object.entries(requiredParams)
+      .filter(([_, value]) => !value)
+      .map(([key]) => key)
+
+    if (missingParams.length > 0) {
+      console.error('Paramètres manquants:', missingParams)
+      router.push('/generate?error=missing_params')
+      return
+    }
+
+    // Si tous les paramètres sont présents, sauvegarder dans le localStorage
+    const formData = {
+      destination,
+      startDate,
+      endDate,
+      budget: parseInt(budget!),
+      companion,
+      moods: moods.length > 0 ? moods : ['romantic', 'cultural', 'adventure', 'party', 'relaxation']
+    }
+    localStorage.setItem('formData', JSON.stringify(formData))
+
+    // Charger les activités seulement si tous les paramètres sont présents
+    loadAllActivities()
+  }, [])
+
+  const loadAllActivities = async () => {
+    try {
+      if (!destination) {
+        console.error('Aucune destination sélectionnée')
+        setError('Destination manquante')
+        return
+      }
+
+      const supabase = createClient()
+      if (!supabase) {
+        throw new Error('Erreur de connexion à Supabase')
+      }
+
+      console.log('Chargement des activités pour:', destination)
+      console.log('Catégorie actuelle:', currentCategory)
+
+      const { data: activitiesData, error: activitiesError } = await supabase
+        .from('activities')
+        .select('*')
+        .eq('city', destination.toLowerCase())
+
+      if (activitiesError) {
+        throw activitiesError
+      }
+
+      console.log('Activités trouvées:', activitiesData?.length)
+
+      if (activitiesData && activitiesData.length > 0) {
+        const groupedActivities: Record<string, Activity[]> = activitiesData.reduce((acc, activity) => {
+          const category = activity.category.toLowerCase()
+          if (!acc[category]) {
+            acc[category] = []
+          }
+          acc[category].push(activity)
+          return acc
+        }, {} as Record<string, Activity[]>)
+
+        console.log('Activités groupées par catégorie:', groupedActivities)
+
+        const limitedActivities = Object.values(groupedActivities).flatMap(categoryActivities => {
+          const shuffled = [...categoryActivities].sort(() => Math.random() - 0.5)
+          return shuffled.slice(0, 10)
+        })
+
+        console.log('Activités limitées:', limitedActivities.length)
+        setAllActivities(limitedActivities)
+        setCurrentActivityIndex(0)
+      } else {
+        console.log('Aucune activité trouvée pour', destination)
+        setAllActivities([])
+      }
+    } catch (error) {
+      console.error('Erreur lors du chargement des activités:', error)
+      setError('Erreur lors du chargement des activités')
+      setAllActivities([])
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  // Si une erreur est détectée, rediriger vers la page d'accueil
+  useEffect(() => {
+    if (error) {
+      const missingParams = Object.entries({
         destination,
         startDate,
         endDate,
-        budget: parseInt(budget),
-        companion,
-        moods: moods.length > 0 ? moods : ['romantic', 'cultural', 'adventure', 'party', 'relaxation']
-      }
-      localStorage.setItem('formData', JSON.stringify(formData))
-    }
-  }, [programId, destination, startDate, endDate, budget, companion, moods])
+        budget,
+        companion
+      })
+        .filter(([_, value]) => !value)
+        .map(([key]) => key)
 
-  useEffect(() => {
-    if (destination && startDate && endDate && budget && companion) {
-      const formData = {
-        destination,
-        startDate,
-        endDate,
-        budget: parseInt(budget),
-        companion,
-        moods: moods.length > 0 ? moods : ['romantic', 'cultural', 'adventure', 'party', 'relaxation']
+      if (missingParams.length > 0) {
+        router.push('/generate?error=missing_params')
+      } else {
+        router.push('/')
       }
-      localStorage.setItem('formData', JSON.stringify(formData))
     }
-  }, [destination, startDate, endDate, budget, companion, moods])
+  }, [error])
 
   useEffect(() => {
     const savedFormData = localStorage.getItem('formData')
-    const savedActivities = localStorage.getItem('savedActivities')
-    if (savedFormData && savedActivities) {
+    const savedActivitiesData = localStorage.getItem('savedActivities')
+    if (savedFormData && savedActivitiesData) {
       setProgram({
         formData: JSON.parse(savedFormData),
-        activities: JSON.parse(savedActivities)
+        activities: JSON.parse(savedActivitiesData)
       })
     }
   }, [])
@@ -132,99 +217,15 @@ export default function SuggestionsPage() {
     }
   }, [currentMoodIndex, moods.length, savedActivities])
 
-  // Charger toutes les activités au début
-  useEffect(() => {
-    const loadAllActivities = async () => {
-      setIsLoading(true)
-      try {
-        const supabase = createClient()
-        if (!supabase) {
-          console.error('Erreur de connexion à Supabase')
-          setAllActivities([])
-          return
-        }
-        
-        const formDataStr = localStorage.getItem('formData')
-        const formData = formDataStr ? JSON.parse(formDataStr) : null
-        const city = formData?.destination?.toLowerCase() || ''
-        const budgetRanges = getBudgetRanges(formData?.budget)
-
-        if (!city) {
-          console.error('Ville manquante')
-          setAllActivities([])
-          return
-        }
-
-        const { data: activitiesData, error } = await supabase
-          .from('activities')
-          .select('id, title, description, price, address, imageurl, category, city')
-          .eq('city', city)
-          .in('price_range', budgetRanges)
-
-        if (error) {
-          console.error('Erreur Supabase:', error)
-          setAllActivities([])
-          return
-        }
-
-        if (activitiesData && activitiesData.length > 0) {
-          // Grouper les activités par catégorie
-          const groupedActivities: Record<string, DatabaseActivity[]> = activitiesData.reduce((acc, activity) => {
-            const category = activity.category
-            if (!acc[category]) {
-              acc[category] = []
-            }
-            acc[category].push(activity)
-            return acc
-          }, {} as Record<string, DatabaseActivity[]>)
-
-          // Pour chaque catégorie, prendre 10 activités au hasard
-          const limitedActivities = Object.values(groupedActivities).flatMap(categoryActivities => {
-            const shuffled = [...categoryActivities].sort(() => Math.random() - 0.5)
-            return shuffled.slice(0, 10)
-          })
-
-          const formattedActivities: Activity[] = limitedActivities.map(activity => {
-            // Vérifier que l'ID est un UUID valide
-            const isValidUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(activity.id)
-            if (!isValidUUID) {
-              console.error('ID invalide détecté:', activity.id, 'pour l\'activité:', activity.title)
-            }
-            
-            return {
-              id: activity.id,
-              title: activity.title,
-              description: activity.description,
-              price: activity.price,
-              address: activity.address,
-              imageurl: activity.imageurl,
-              category: activity.category,
-              city: activity.city
-            }
-          })
-          
-          console.log('Activités chargées:', formattedActivities)
-          setAllActivities(formattedActivities)
-          setCurrentActivityIndex(0)
-        } else {
-          setAllActivities([])
-        }
-      } catch (error) {
-        console.error('Erreur lors du chargement des activités:', error)
-        setAllActivities([])
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    loadAllActivities()
-  }, [])
-
-  // Filtrer les activités par catégorie
   useEffect(() => {
     if (allActivities.length > 0 && currentCategory) {
-      const filtered = allActivities.filter(activity => activity.category === currentCategory.toLowerCase())
+      console.log('Filtrage des activités pour la catégorie:', currentCategory)
+      const filtered = allActivities.filter(activity => 
+        activity.category.toLowerCase() === currentCategory.toLowerCase()
+      )
+      console.log('Activités filtrées trouvées:', filtered.length)
       setFilteredActivities(filtered)
+      setCurrentActivityIndex(0)
     } else {
       setFilteredActivities([])
     }
@@ -234,26 +235,11 @@ export default function SuggestionsPage() {
   const isLastActivity = currentActivityIndex === filteredActivities.length - 1
   const isLastMood = currentMoodIndex === moods.length - 1
 
-  const getMoodLabel = useCallback((mood: string) => {
-    switch (mood) {
-      case 'romantic': return 'Gastronomie'
-      case 'cultural': return 'Culture'
-      case 'adventure': return 'Sport'
-      case 'party': return 'Vie nocturne'
-      case 'relaxation': return 'Nature'
-      default: return mood
-    }
-  }, [])
-
   const handleDelete = (id: string) => {
-    console.log('handleDelete appelé avec ID:', id)
     const activity = allActivities.find(a => a.id === id)
     if (activity) {
-      console.log('Activité trouvée:', activity)
       setSavedActivities(prev => {
-        // Vérifier si l'activité n'est pas déjà sauvegardée
         if (!prev.some(a => a.id === activity.id)) {
-          console.log('Activité sauvegardée:', activity)
           return [...prev, activity]
         }
         return prev
@@ -266,172 +252,145 @@ export default function SuggestionsPage() {
       setCurrentActivityIndex(prev => prev + 1)
       setDirection(0)
     } else if (activity) {
-      // On est à la dernière activité de la dernière catégorie
       const allSavedActivities = [...savedActivities]
       if (!allSavedActivities.some(a => a.id === activity.id)) {
         allSavedActivities.push(activity)
       }
-      console.log('Sauvegarde du programme avec les activités:', allSavedActivities)
       saveProgram(allSavedActivities)
     }
   }
 
-  const handleSwipe = useCallback((swipeDirection: PanInfo | number) => {
-    if (!currentActivity) return;
-
-    let direction: number;
+  const handleSwipe = useCallback((direction: number | PanInfo) => {
+    let swipeDirection: number;
     
-    if (typeof swipeDirection === 'number') {
-      direction = swipeDirection;
+    if (typeof direction === 'number') {
+      swipeDirection = direction;
     } else {
-      // Calculer la direction à partir du PanInfo
-      direction = Math.sign(swipeDirection.offset.x);
+      const threshold = 50;
+      swipeDirection = direction.offset.x > threshold ? 1 : direction.offset.x < -threshold ? -1 : 0;
     }
 
-    // Appliquer la direction
-    setDirection(direction);
-    
-    if (direction === 1) {
-      // Swipe à droite - Accepter l'activité
-      handleDelete(currentActivity.id);
-    } else if (direction === -1) {
-      // Swipe à gauche - Refuser l'activité
-      if (isLastActivity) {
-        handleNextCategory();
+    if (swipeDirection !== 0) {
+      setDirection(swipeDirection);
+
+      if (swipeDirection === 1) {
+        // Swipe right - save activity
+        const activityToSave = filteredActivities[currentActivityIndex];
+        setSavedActivities(prev => [...prev, activityToSave]);
+      }
+
+      // Move to next activity
+      if (currentActivityIndex < filteredActivities.length - 1) {
+        setTimeout(() => {
+          setCurrentActivityIndex(prev => prev + 1);
+          setDirection(0);
+        }, 200);
+      } else if (currentMoodIndex < moods.length - 1) {
+        // Move to next category if available
+        setTimeout(() => {
+          setCurrentMoodIndex(prev => prev + 1);
+          setCurrentActivityIndex(0);
+          setDirection(0);
+        }, 200);
       } else {
-        setCurrentActivityIndex(prev => prev + 1);
+        // Save program if we're done with all categories
+        saveProgram(savedActivities);
       }
     }
-  }, [currentActivity, isLastActivity, handleNextCategory, handleDelete]);
+  }, [currentActivityIndex, filteredActivities, currentMoodIndex, moods.length, savedActivities]);
 
   const saveProgram = async (activities: Activity[]) => {
     try {
-      console.log('Début de saveProgram avec les activités:', activities)
+      console.log('Début de la sauvegarde du programme avec', activities.length, 'activités')
+      
       const supabase = createClient()
       if (!supabase) {
-        console.error('Erreur de connexion à Supabase')
-        return
+        throw new Error('Erreur de connexion à Supabase')
       }
 
-      const { data: { user } } = await supabase.auth.getUser()
+      const { data: { user }, error: userError } = await supabase.auth.getUser()
+      if (userError) {
+        console.error('Erreur lors de la récupération de l\'utilisateur:', userError)
+        throw userError
+      }
       if (!user) {
+        console.error('Aucun utilisateur connecté')
         throw new Error('Utilisateur non connecté')
       }
+      console.log('Utilisateur récupéré:', user.id)
 
-      // Récupérer les UUIDs des activités depuis la base de données
-      const { data: activitiesData, error } = await supabase
-        .from('activities')
-        .select('id, title')
-        .in('title', activities.map(a => a.title))
-
-      if (error) throw error
-
-      // Créer un mapping des titres vers les UUIDs
-      const titleToUuid = new Map(activitiesData?.map(a => [a.title, a.id]) || [])
-
+      const formData = JSON.parse(localStorage.getItem('formData') || '{}')
+      console.log('Données du formulaire récupérées:', formData)
+      
       // Créer le programme
-      const { data: program, error: programError } = await supabase
+      const programData = {
+        user_id: user.id,
+        destination: formData.destination,
+        start_date: formData.startDate,
+        end_date: formData.endDate,
+        budget: formData.budget,
+        companion: formData.companion,
+        activities: JSON.stringify(activities)
+      }
+      console.log('Données du programme à créer:', programData)
+
+      const { data: createdProgram, error: programError } = await supabase
         .from('programs')
-        .insert({
-          user_id: user.id,
-          title: 'Programme personnalisé',
-          description: 'Programme créé à partir des suggestions'
-        })
+        .insert(programData)
         .select()
         .single()
 
-      if (programError) throw programError
+      if (programError) {
+        console.error('Erreur lors de la création du programme:', programError)
+        throw programError
+      }
+      if (!createdProgram) {
+        console.error('Aucun programme créé')
+        throw new Error('Erreur lors de la création du programme')
+      }
+      console.log('Programme créé avec succès:', createdProgram)
 
-      // Créer les liens avec les activités en utilisant les UUIDs
-      const programActivities = activities.map(activity => ({
-        program_id: program.id,
-        activity_id: titleToUuid.get(activity.title),
-        order: activities.indexOf(activity)
+      // Créer les liens entre le programme et les activités
+      const programActivities = activities.map((activity, index) => ({
+        program_id: createdProgram.id,
+        activity_id: activity.id,
+        order_index: index
       }))
+      console.log('Création des liens programme-activités:', programActivities)
 
-      const { error: linksError } = await supabase
+      const { error: linkError } = await supabase
         .from('program_activities')
         .insert(programActivities)
 
-      if (linksError) throw linksError
+      if (linkError) {
+        console.error('Erreur lors de la création des liens programme-activités:', linkError)
+        throw linkError
+      }
+      console.log('Liens programme-activités créés avec succès')
 
-      // Sauvegarder dans le localStorage
-      const savedActivities = activities.map(activity => ({
-        ...activity,
-        id: titleToUuid.get(activity.title) || activity.id
-      }))
-      localStorage.setItem('savedActivities', JSON.stringify(savedActivities))
-      localStorage.setItem('savedFormData', JSON.stringify(formData))
+      // Nettoyer les données temporaires
+      localStorage.removeItem('savedActivities')
+      localStorage.removeItem('formData')
+      console.log('Données temporaires nettoyées')
 
-      router.push('/summary')
+      // Rediriger vers la page du programme
+      console.log('Redirection vers la page du programme:', createdProgram.id)
+      router.push(`/program/${createdProgram.id}`)
     } catch (error) {
       console.error('Erreur lors de la sauvegarde du programme:', error)
-      setError('Une erreur est survenue lors de la sauvegarde du programme')
+      alert('Une erreur est survenue lors de la sauvegarde du programme.')
     }
   }
 
-  const handleSaveProgram = async () => {
-    if (!program) return
-
-    try {
-      const client = createClient()
-      if (!client) {
-        throw new Error('Impossible de créer le client Supabase')
-      }
-      const { data: { session } } = await client.auth.getSession()
-
-      if (!session) {
-        localStorage.setItem('tempProgram', JSON.stringify(program))
-        router.push('/login')
-        return
-      }
-
-      // Récupérer les UUIDs des activités
-      const { data: activitiesData, error: activitiesError } = await client
-        .from('activities')
-        .select('id, title')
-        .in('title', program.activities.map((activity: Activity) => activity.title))
-
-      if (activitiesError) {
-        throw activitiesError
-      }
-
-      // Créer un mapping des titres vers les UUIDs
-      const activityIdMap = new Map(
-        activitiesData.map(activity => [activity.title, activity.id])
-      )
-
-      // Préparer les données du programme
-      const programData = {
-        user_id: session.user.id,
-        destination: program.formData.destination,
-        start_date: program.formData.startDate,
-        end_date: program.formData.endDate,
-        budget: program.formData.budget,
-        companion: program.formData.companion,
-        activities: program.activities.map((activity: Activity) => ({
-          activity_id: activityIdMap.get(activity.title),
-          title: activity.title,
-          description: activity.description,
-          price: activity.price,
-          address: activity.address,
-          imageurl: activity.imageurl,
-          category: activity.category
-        }))
-      }
-
-      const { error: insertError } = await client
-        .from('programs')
-        .insert([programData])
-
-      if (insertError) {
-        throw insertError
-      }
-
-      router.push('/dashboard')
-    } catch (error) {
-      console.error('Erreur lors de la sauvegarde du programme:', error)
+  const getMoodLabel = (mood: string): string => {
+    const moodLabels: Record<string, string> = {
+      'romantic': 'Gastronomie',
+      'cultural': 'Culture',
+      'adventure': 'Sport',
+      'party': 'Vie nocturne',
+      'relaxation': 'Nature'
     }
+    return moodLabels[mood] || mood
   }
 
   if (isLoading) {
@@ -454,21 +413,40 @@ export default function SuggestionsPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {error && (
-        <div className="mb-4 p-4 bg-red-100 text-red-700 rounded-lg">
-          {error}
-        </div>
+      {!isLoading && !error && (
+        <>
+          <div className="mb-8">
+            <MoodTabBar
+              moods={moods}
+              currentMoodIndex={currentMoodIndex}
+              getMoodLabel={getMoodLabel}
+            />
+            <div className="mt-4">
+              <ProgressBar
+                currentIndex={currentActivityIndex}
+                totalItems={filteredActivities.length}
+              />
+            </div>
+          </div>
+          <AnimatePresence mode="wait">
+            {currentActivity ? (
+              <ActivityCard
+                key={currentActivity.id}
+                activity={currentActivity}
+                onDelete={handleDelete}
+                direction={direction}
+                onSwipe={handleSwipe}
+              />
+            ) : (
+              <EmptyStateCard
+                categoryLabel={getMoodLabel(currentMood)}
+                isLastCategory={currentMoodIndex === moods.length - 1}
+                onNext={handleNextCategory}
+              />
+            )}
+          </AnimatePresence>
+        </>
       )}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredActivities.map((activity) => (
-          <ActivityCard
-            key={activity.id}
-            activity={activity}
-            onDelete={handleDelete}
-            onSwipe={handleSwipe}
-          />
-        ))}
-      </div>
     </div>
   )
 } 
