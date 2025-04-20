@@ -8,6 +8,12 @@ import type { Activity } from '@/types/activity'
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
+type ActivityResponse = Pick<Activity, 'id' | 'title' | 'description' | 'price' | 'address' | 'imageurl' | 'category' | 'city'>
+
+interface ProgramActivity {
+  activities: ActivityResponse[]
+}
+
 async function getProgram(id: string) {
   const supabase = createServerComponentClient<Database>({ cookies })
 
@@ -46,8 +52,7 @@ async function getProgram(id: string) {
 
   return {
     ...program,
-    activities: programActivities
-      ?.map((pa: { activities: Activity[] }) => pa.activities[0]) || []
+    activities: (programActivities as ProgramActivity[])?.map(pa => pa.activities[0] as Activity) || []
   }
 }
 
