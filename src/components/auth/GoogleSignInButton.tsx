@@ -16,10 +16,15 @@ export default function GoogleSignInButton({ redirectTo }: GoogleSignInButtonPro
       if (!client) {
         throw new Error('Impossible de créer le client Supabase')
       }
+
       const { error } = await client.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback?redirect=${redirectTo}`,
+          redirectTo: `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(redirectTo)}`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          }
         },
       })
 
