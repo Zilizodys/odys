@@ -12,8 +12,16 @@ export async function middleware(request: NextRequest) {
     ? 'http://localhost:3000'
     : process.env.NEXT_PUBLIC_SITE_URL || request.nextUrl.origin
 
-  // Vérifier la session
-  const { data: { session } } = await supabase.auth.getSession()
+  // Vérifier et rafraîchir la session
+  const {
+    data: { session },
+    error,
+  } = await supabase.auth.getSession()
+
+  // Rafraîchir la session si elle existe
+  if (session) {
+    await supabase.auth.refreshSession()
+  }
 
   // Liste des routes protégées
   const protectedRoutes = ['/dashboard', '/program', '/suggestions']
@@ -39,7 +47,7 @@ export async function middleware(request: NextRequest) {
     }
     // Pour les routes normales, rediriger vers la page de connexion
     const redirectUrl = new URL('/login', baseUrl)
-    redirectUrl.searchParams.set('redirect', pathname)
+    redirectUrl.searchParams.set('redirectTo', pathname)
     return NextResponse.redirect(redirectUrl)
   }
 

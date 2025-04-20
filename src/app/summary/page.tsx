@@ -36,7 +36,9 @@ export default function SummaryPage() {
       if (tempProgramStr) {
         try {
           const tempProgram = JSON.parse(tempProgramStr)
-          handleSaveProgram()
+          handleSaveProgram(tempProgram)
+          // Nettoyer le programme temporaire
+          localStorage.removeItem('tempProgram')
         } catch (error) {
           console.error('Erreur lors de la récupération du programme temporaire:', error)
         }
@@ -84,8 +86,8 @@ export default function SummaryPage() {
     }, {})
   }
 
-  const handleSaveProgram = async () => {
-    if (!program) return
+  const handleSaveProgram = async (programToSave = program) => {
+    if (!programToSave) return
     setIsSaving(true)
 
     try {
@@ -96,20 +98,21 @@ export default function SummaryPage() {
       const { data: { session } } = await client.auth.getSession()
 
       if (!session) {
-        localStorage.setItem('tempProgram', JSON.stringify(program))
-        router.push('/login')
+        // Sauvegarder le programme temporairement
+        localStorage.setItem('tempProgram', JSON.stringify(programToSave))
+        router.push('/login?redirectTo=/summary?auth-callback=true')
         return
       }
 
       // Préparer les données de base du programme
       const programData = {
         user_id: session.user.id,
-        destination: program.formData.destination || '',
-        start_date: program.formData.startDate || null,
-        end_date: program.formData.endDate || null,
-        budget: program.formData.budget || 0,
-        companion: program.formData.companion || '',
-        activities: program.activities.map(activity => ({
+        destination: programToSave.formData.destination || '',
+        start_date: programToSave.formData.startDate || null,
+        end_date: programToSave.formData.endDate || null,
+        budget: programToSave.formData.budget || 0,
+        companion: programToSave.formData.companion || '',
+        activities: programToSave.activities.map(activity => ({
           id: activity.id,
           title: activity.title,
           description: activity.description,
@@ -140,7 +143,7 @@ export default function SummaryPage() {
       router.push('/dashboard')
     } catch (error) {
       console.error('Erreur lors de la sauvegarde:', error)
-      alert('Une erreur est survenue lors de la sauvegarde. Veuillez réessayer.')
+      alert('Une erreur est survenue lors de la sauvegarde.')
     } finally {
       setIsSaving(false)
     }
@@ -288,7 +291,7 @@ export default function SummaryPage() {
             Créer un nouveau programme
           </button>
           <button
-            onClick={handleSaveProgram}
+            onClick={() => handleSaveProgram()}
             disabled={isSaving}
             className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
