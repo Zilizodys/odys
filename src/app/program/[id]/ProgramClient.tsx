@@ -10,6 +10,7 @@ import ActivityModal from '@/components/ActivityModal'
 import Link from 'next/link'
 import SwipeableActivityCard from '@/components/program/SwipeableActivityCard'
 import { createClient } from '@/lib/supabase/client'
+import CategorySection from '@/components/program/CategorySection'
 
 interface Program {
   id: string
@@ -26,6 +27,11 @@ interface Program {
   companion: string
   cover_image?: string | null
   moods?: string[]
+}
+
+interface ProgramActivityRow {
+  activity_id: string
+  activities: Activity
 }
 
 interface GroupedActivities {
@@ -74,15 +80,16 @@ export default function ProgramClient({ initialProgram }: { initialProgram: Prog
   const router = useRouter()
   const [program, setProgram] = useState<Program>(initialProgram)
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleDeleteActivity = async (activityId: string) => {
     try {
+      setIsLoading(true)
       const supabase = createClient()
       if (!supabase) {
-        throw new Error('Erreur de connexion à Supabase')
+        throw new Error('Client Supabase non initialisé')
       }
-      
-      // Supprimer le lien dans program_activities
+
       const { error: deleteError } = await supabase
         .from('program_activities')
         .delete()
@@ -90,11 +97,9 @@ export default function ProgramClient({ initialProgram }: { initialProgram: Prog
         .eq('activity_id', activityId)
 
       if (deleteError) {
-        console.error('Erreur lors de la suppression de l\'activité:', deleteError)
         throw deleteError
       }
 
-      // Mettre à jour l'état local
       setProgram(prev => ({
         ...prev,
         activities: prev.activities.filter(a => a.id !== activityId)
@@ -102,6 +107,8 @@ export default function ProgramClient({ initialProgram }: { initialProgram: Prog
     } catch (error) {
       console.error('Erreur lors de la suppression de l\'activité:', error)
       alert('Une erreur est survenue lors de la suppression de l\'activité.')
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -112,98 +119,100 @@ export default function ProgramClient({ initialProgram }: { initialProgram: Prog
     }))
   )
 
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <Link href="/dashboard" className="inline-flex items-center text-indigo-600 hover:text-indigo-700">
-          <FiArrowLeft className="mr-2" />
-          Retour au tableau de bord
-        </Link>
-      </div>
-
-      <div className="relative h-64 mb-8 rounded-xl overflow-hidden">
-        <Image 
-          src={getDestinationImage(program.destination).url}
-          alt={getDestinationImage(program.destination).alt}
-          priority={true}
-          fill
-          className="object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-          <h1 className="text-3xl font-bold mb-2">{program.title}</h1>
-          <div className="flex items-center gap-2">
-            <FiMapPin className="text-white" />
-            <span>{program.destination}</span>
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 pb-24">
+        <div className="container mx-auto px-4 py-8">
+          <div className="animate-pulse">
+            <div className="h-64 bg-gray-200 rounded-xl mb-8"></div>
+            <div className="space-y-4">
+              <div className="h-8 bg-gray-200 rounded w-1/4"></div>
+              <div className="h-32 bg-gray-200 rounded"></div>
+            </div>
           </div>
         </div>
       </div>
+    )
+  }
 
-      <div className="bg-white rounded-xl p-6 shadow-sm mb-8">
-        <div className="flex items-center justify-between mb-6">
-          <Link
-            href={`/program/${program.id}/add-activity`}
-            className="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
-          >
-            <FiPlus className="mr-2" />
-            Ajouter une activité
+  return (
+    <div className="min-h-screen bg-gray-50 pb-24">
+      <div className="container mx-auto px-4 py-8">
+        <div className="mb-8">
+          <Link href="/dashboard" className="inline-flex items-center text-indigo-600 hover:text-indigo-700">
+            <FiArrowLeft className="mr-2" />
+            Retour au tableau de bord
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="flex items-center gap-2">
-            <FiClock className="text-indigo-500" />
-            <div>
-              <p className="text-sm text-gray-500">Dates</p>
-              <p className="font-medium">
-                Du {new Date(program.start_date).toLocaleDateString('fr-FR')} au {new Date(program.end_date).toLocaleDateString('fr-FR')}
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <FiDollarSign className="text-indigo-500" />
-            <div>
-              <p className="text-sm text-gray-500">Budget</p>
-              <p className="font-medium">{program.budget}€</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <FiUsers className="text-indigo-500" />
-            <div>
-              <p className="text-sm text-gray-500">Voyageurs</p>
-              <p className="font-medium">
-                {COMPANION_OPTIONS.find(option => option.value === program.companion)?.label || program.companion}
-              </p>
+        <div className="relative h-64 mb-8 rounded-xl overflow-hidden">
+          <Image 
+            src={getDestinationImage(program.destination).url}
+            alt={getDestinationImage(program.destination).alt}
+            priority={true}
+            fill
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+            <h1 className="text-4xl font-bold mb-2">{program.title || `Séjour à ${program.destination}`}</h1>
+            <div className="flex items-center gap-2 text-lg">
+              <FiMapPin className="text-white" />
+              <span>{program.destination}</span>
             </div>
           </div>
         </div>
+
+        <div className="bg-white rounded-xl p-6 shadow-sm mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="flex items-center gap-2">
+              <FiClock className="text-indigo-500" />
+              <div>
+                <p className="text-sm text-gray-500">Dates</p>
+                <p className="font-medium">
+                  Du {new Date(program.start_date).toLocaleDateString('fr-FR')} au {new Date(program.end_date).toLocaleDateString('fr-FR')}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <FiDollarSign className="text-indigo-500" />
+              <div>
+                <p className="text-sm text-gray-500">Budget</p>
+                <p className="font-medium">{program.budget}€</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <FiUsers className="text-indigo-500" />
+              <div>
+                <p className="text-sm text-gray-500">Voyageurs</p>
+                <p className="font-medium">
+                  {COMPANION_OPTIONS.find(option => option.value === program.companion)?.label || program.companion}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-4 pb-8">
+          {Object.entries(groupedActivities).map(([category, activities]) => (
+            <CategorySection
+              key={category}
+              category={category}
+              activities={activities}
+              onActivityClick={setSelectedActivity}
+              onActivityDelete={handleDeleteActivity}
+            />
+          ))}
+        </div>
+
+        {selectedActivity && (
+          <ActivityModal
+            activity={selectedActivity}
+            onClose={() => setSelectedActivity(null)}
+            activities={program.activities}
+          />
+        )}
       </div>
-
-      {Object.entries(groupedActivities).map(([category, activities]) => (
-        <div key={category} className="mb-8">
-          <h2 className="text-xl font-semibold mb-4">{CATEGORY_LABELS[category] || category}</h2>
-          <div className="space-y-4">
-            {activities.map((activity) => (
-              <SwipeableActivityCard
-                key={activity.id}
-                activity={activity}
-                onDelete={handleDeleteActivity}
-              />
-            ))}
-          </div>
-        </div>
-      ))}
-
-      {selectedActivity && (
-        <ActivityModal
-          activity={{
-            ...selectedActivity,
-            imageurl: selectedActivity.imageurl || getDestinationImage(program.destination).url
-          }}
-          activities={program.activities}
-          onClose={() => setSelectedActivity(null)}
-        />
-      )}
     </div>
   )
 } 
