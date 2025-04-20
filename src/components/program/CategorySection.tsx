@@ -56,7 +56,7 @@ export default function CategorySection({
                 key={activity.id}
                 activity={activity}
                 onDelete={onActivityDelete}
-                onClick={() => onActivityClick(activity)}
+                onClick={onActivityClick}
               />
             ))}
           </div>
