@@ -37,6 +37,7 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/favicon.ico" />
         <link rel="icon" href="/icon.png" type="image/png" />
+        <link rel="manifest" href="/manifest.json" />
       </head>
       <body suppressHydrationWarning>
         <Header />
