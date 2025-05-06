@@ -38,6 +38,7 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" />
         <link rel="icon" href="/icon.png" type="image/png" />
         <link rel="manifest" href="/manifest.json" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
       </head>
       <body suppressHydrationWarning>
         <Header />
