@@ -39,3 +39,10 @@ next-env.d.ts
 .env.development
 .env.local
 .env.*.local
+
+# Fichiers d'environnement (ne jamais versionner vos clés !)
+.env.*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
