@@ -47,6 +47,10 @@ export default function RootLayout({
         </main>
         
         <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
+          {/*
+            La tab bar est toujours au-dessus du contenu (z-50),
+            mais la modale de connexion utilise z-[1000] pour passer au-dessus si besoin.
+          */}
           <div className="max-w-md mx-auto px-4">
             <div className="flex justify-between py-3">
               <Link href="/" prefetch={false} className="flex flex-col items-center text-xs text-gray-600 hover:text-indigo-600">

@@ -1,29 +1,25 @@
 import { Activity } from './activity'
 
-export type TravelCompanion = 'solo' | 'couple' | 'friends' | 'family'
-export type MoodType = 'romantic' | 'cultural' | 'adventure' | 'party' | 'relaxation'
+export type TravelCompanion = 'solo' | 'couple' | 'family' | 'friends'
+export type MoodType = 'romantic' | 'cultural' | 'adventure' | 'party' | 'relaxation' | 'shopping' | 'wellness' | 'food' | 'sport' | 'nature'
 export type BudgetLevel = 'low' | 'medium' | 'high'
 
 export interface FormData {
   destination: string
   startDate: string | null
   endDate: string | null
-  companion: TravelCompanion | null
   budget: number | null
+  companion: TravelCompanion | null
   moods: MoodType[]
-  name: string
-  activities: Activity[]
 }
 
 export const INITIAL_FORM_DATA: FormData = {
   destination: '',
   startDate: null,
   endDate: null,
-  companion: null,
   budget: null,
-  moods: [],
-  name: '',
-  activities: []
+  companion: null,
+  moods: []
 }
 
 // Liste des villes populaires avec leurs pays corrects
@@ -76,9 +72,26 @@ export const COMPANION_OPTIONS = [
 ]
 
 export const BUDGET_OPTIONS = [
-  { value: 500, label: 'Économique', icon: '💰' },
-  { value: 1000, label: 'Modéré', icon: '💰💰' },
-  { value: 2000, label: 'Confort', icon: '💰💰💰' }
+  {
+    value: 0,
+    label: 'Gratuit',
+    icon: '🆓',
+  },
+  {
+    value: 1,
+    label: 'Économique',
+    icon: '💰',
+  },
+  {
+    value: 2,
+    label: 'Modéré',
+    icon: '💰💰',
+  },
+  {
+    value: 3,
+    label: 'Confort',
+    icon: '💰💰💰',
+  },
 ]
 
 export const MOOD_OPTIONS = [
@@ -86,5 +99,17 @@ export const MOOD_OPTIONS = [
   { value: 'cultural', label: 'Culture', icon: '🏛' },
   { value: 'adventure', label: 'Sport', icon: '🏃‍♂️' },
   { value: 'party', label: 'Vie nocturne', icon: '🎉' },
-  { value: 'relaxation', label: 'Nature', icon: '🌿' }
-] 
+  { value: 'relaxation', label: 'Nature', icon: '🌿' },
+  { value: 'shopping', label: 'Shopping', icon: '🛍️' },
+  { value: 'wellness', label: 'Bien-être', icon: '🧘‍♀️' },
+  { value: 'food', label: 'Street Food', icon: '🍜' },
+  { value: 'sport', label: 'Sports extrêmes', icon: '🏄‍♂️' },
+  { value: 'nature', label: 'Randonnée', icon: '🥾' }
+]
+
+export interface CityResponse {
+  city: string
+  country: string
+  source: string
+  score?: number
+} 

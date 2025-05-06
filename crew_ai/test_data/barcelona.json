@@ -1,0 +1,57 @@
+[
+  {
+    "id": "1",
+    "title": "Visite de la Sagrada Familia",
+    "description": "Découvrez le chef-d'œuvre inachevé de Gaudí, un monument emblématique de Barcelone.",
+    "category": "culture",
+    "price": 35,
+    "address": "C/ de Mallorca, 401, 08013 Barcelona",
+    "imageurl": "https://images.unsplash.com/photo-1583779457094-ab6c9ab9fe59",
+    "city": "Barcelone",
+    "duration": "2h"
+  },
+  {
+    "id": "2",
+    "title": "Parc Güell",
+    "description": "Explorez ce parc magique conçu par Gaudí, offrant une vue imprenable sur la ville.",
+    "category": "culture",
+    "price": 25,
+    "address": "08024 Barcelona",
+    "imageurl": "https://images.unsplash.com/photo-1583779457094-ab6c9ab9fe60",
+    "city": "Barcelone",
+    "duration": "3h"
+  },
+  {
+    "id": "3",
+    "title": "Dîner romantique au bord de la mer",
+    "description": "Savourez un dîner aux chandelles avec vue sur la Méditerranée à Barceloneta.",
+    "category": "romantique",
+    "price": 45,
+    "address": "Passeig Marítim Barceloneta, 08003 Barcelona",
+    "imageurl": "https://images.unsplash.com/photo-1583779457094-ab6c9ab9fe61",
+    "city": "Barcelone",
+    "duration": "2h"
+  },
+  {
+    "id": "4",
+    "title": "Casa Batlló",
+    "description": "Visitez cette maison moderniste extraordinaire, chef-d'œuvre de l'architecture.",
+    "category": "culture",
+    "price": 30,
+    "address": "Passeig de Gràcia, 43, 08007 Barcelona",
+    "imageurl": "https://images.unsplash.com/photo-1583779457094-ab6c9ab9fe62",
+    "city": "Barcelone",
+    "duration": "1h30"
+  },
+  {
+    "id": "5",
+    "title": "Coucher de soleil au Bunkers del Carmel",
+    "description": "Profitez d'une vue panoramique sur Barcelone au coucher du soleil.",
+    "category": "romantique",
+    "price": 20,
+    "address": "Carrer de Marià Labèrnia, s/n, 08032 Barcelona",
+    "imageurl": "https://images.unsplash.com/photo-1583779457094-ab6c9ab9fe63",
+    "city": "Barcelone",
+    "duration": "2h"
+  }
+] 

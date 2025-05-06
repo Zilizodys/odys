@@ -107,22 +107,6 @@ export default function ActivityCard({
           </div>
         </div>
       </motion.div>
-
-      {/* Boutons Like/Dislike */}
-      <div className="flex justify-center gap-8 mt-4">
-        <button
-          onClick={() => onSwipe && onSwipe(-1)}
-          className="flex items-center justify-center w-16 h-16 rounded-full bg-white shadow-lg hover:bg-red-50 transition-colors border-2 border-red-500"
-        >
-          <FiX className="w-8 h-8 text-red-500" />
-        </button>
-        <button
-          onClick={() => onDelete(activity.id)}
-          className="flex items-center justify-center w-16 h-16 rounded-full bg-white shadow-lg hover:bg-green-50 transition-colors border-2 border-green-500"
-        >
-          <FiHeart className="w-8 h-8 text-green-500" />
-        </button>
-      </div>
     </div>
   )
 } 

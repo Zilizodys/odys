@@ -2,26 +2,29 @@ import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
+const getBaseUrl = (req: NextRequest) => {
+  const isDevelopment = process.env.NODE_ENV === 'development'
+  if (isDevelopment) {
+    return 'http://localhost:3000'
+  }
+  return process.env.NEXT_PUBLIC_SITE_URL || req.nextUrl.origin
+}
+
 export async function middleware(request: NextRequest) {
   const res = NextResponse.next()
   const supabase = createMiddlewareClient({ req: request, res })
   const { pathname } = request.nextUrl
-
-  // Forcer l'utilisation de localhost en développement
-  const baseUrl = process.env.NEXT_PUBLIC_FORCE_LOCAL === 'true'
-    ? 'http://localhost:3000'
-    : process.env.NEXT_PUBLIC_SITE_URL || request.nextUrl.origin
+  const baseUrl = getBaseUrl(request)
 
   // Vérifier la session
   const {
-    data: { session },
-    error: sessionError
+    data: { session }
   } = await supabase.auth.getSession()
 
   // Liste des routes protégées
-  const protectedRoutes = ['/dashboard', '/program', '/suggestions', '/summary']
+  const protectedRoutes = ['/dashboard', '/program', '/summary']
   const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route))
-  const isApiRoute = pathname.startsWith('/api/')
+  const isApiRoute = pathname.startsWith('/api/') && !pathname.startsWith('/api/crew/suggestions')
   const isAuthRoute = pathname.startsWith('/auth/')
   const isLoginPage = pathname === '/login'
 
@@ -32,7 +35,6 @@ export async function middleware(request: NextRequest) {
 
   // Si l'utilisateur est sur la page de login et est déjà connecté
   if (isLoginPage && session) {
-    // Récupérer le redirectTo ou aller au dashboard par défaut
     const searchParams = new URL(request.url).searchParams
     const redirectTo = searchParams.get('redirectTo') || '/dashboard'
     return NextResponse.redirect(new URL(redirectTo, baseUrl))
@@ -42,28 +44,14 @@ export async function middleware(request: NextRequest) {
   if (!session && isProtectedRoute) {
     if (isApiRoute) {
       return NextResponse.json(
-        { 
-          success: false, 
-          error: 'Authentication required' 
-        },
-        { 
-          status: 401,
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
+        { success: false, error: 'Authentication required' },
+        { status: 401 }
       )
     }
 
-    // Sauvegarder l'URL actuelle pour la redirection après connexion
     const redirectUrl = new URL('/login', baseUrl)
     redirectUrl.searchParams.set('redirectTo', pathname + request.nextUrl.search)
     return NextResponse.redirect(redirectUrl)
-  }
-
-  // Si l'utilisateur est connecté et sur la page d'accueil
-  if (session && pathname === '/') {
-    return NextResponse.redirect(new URL('/dashboard', baseUrl))
   }
 
   return res
@@ -74,7 +62,6 @@ export const config = {
     '/',
     '/dashboard/:path*',
     '/program/:path*',
-    '/suggestions/:path*',
     '/summary',
     '/login',
     '/auth/callback',

@@ -6,6 +6,8 @@ import { FiMapPin, FiClock, FiDollarSign, FiUsers, FiMap } from 'react-icons/fi'
 import { Activity } from '@/types/activity'
 import { FormData, COMPANION_OPTIONS } from '@/types/form'
 import { createClient } from '@/lib/supabase/client'
+import ActivityModal from '@/components/ActivityModal'
+import CategorySection from '@/components/program/CategorySection'
 
 interface ProgramSummary {
   formData: FormData
@@ -25,6 +27,7 @@ export default function SummaryPage() {
   const [program, setProgram] = useState<ProgramSummary | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
+  const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null)
 
   useEffect(() => {
     // Vérifier s'il y a un programme temporaire à sauvegarder après la connexion
@@ -58,7 +61,14 @@ export default function SummaryPage() {
 
     try {
       const formData = JSON.parse(formDataStr)
-      const activities = JSON.parse(savedActivitiesStr)
+      let activities = JSON.parse(savedActivitiesStr)
+      // Dédupliquer par id
+      const seen = new Set()
+      activities = activities.filter((a: any) => {
+        if (seen.has(a.id)) return false
+        seen.add(a.id)
+        return true
+      })
       setProgram({ formData, activities })
     } catch (error) {
       console.error('Erreur lors de la récupération des données:', error)
@@ -90,6 +100,14 @@ export default function SummaryPage() {
     setIsSaving(true)
 
     try {
+      // Dédupliquer les activités avant sauvegarde
+      let dedupedActivities = programToSave.activities
+      const seen = new Set()
+      dedupedActivities = dedupedActivities.filter((a: any) => {
+        if (seen.has(a.id)) return false
+        seen.add(a.id)
+        return true
+      })
       const client = createClient()
       if (!client) {
         throw new Error('Impossible de créer le client Supabase')
@@ -99,7 +117,7 @@ export default function SummaryPage() {
       if (!session) {
         console.log('Pas de session, sauvegarde temporaire et redirection')
         // Sauvegarder le programme temporairement
-        localStorage.setItem('tempProgram', JSON.stringify(programToSave))
+        localStorage.setItem('tempProgram', JSON.stringify({ ...programToSave, activities: dedupedActivities }))
         const currentUrl = '/summary'
         const redirectUrl = `/login?redirectTo=${encodeURIComponent(currentUrl + '?auth-callback=true')}`
         router.push(redirectUrl)
@@ -107,34 +125,44 @@ export default function SummaryPage() {
       }
 
       console.log('Session trouvée, sauvegarde du programme')
-      // Préparer les données de base du programme
-      const programData = {
-        user_id: session.user.id,
-        destination: programToSave.formData.destination || '',
-        start_date: programToSave.formData.startDate || null,
-        end_date: programToSave.formData.endDate || null,
-        budget: programToSave.formData.budget || 0,
-        companion: programToSave.formData.companion || '',
-        activities: programToSave.activities.map(activity => ({
-          id: activity.id,
-          title: activity.title,
-          description: activity.description,
-          price: activity.price,
-          address: activity.address,
-          imageurl: activity.imageurl,
-          category: activity.category
-        }))
+      // 1. Création du programme (sans activities)
+      const { data: insertedPrograms, error: programError } = await client
+        .from('programs')
+        .insert([{
+          user_id: session.user.id,
+          destination: programToSave.formData.destination || '',
+          start_date: programToSave.formData.startDate || null,
+          end_date: programToSave.formData.endDate || null,
+          budget: programToSave.formData.budget || 0,
+          companion: programToSave.formData.companion || '',
+          moods: programToSave.formData.moods || [],
+        }])
+        .select('id')
+        .single();
+
+      if (programError) {
+        console.error('Erreur détaillée:', programError)
+        throw programError
       }
 
-      console.log('Tentative de sauvegarde avec:', programData)
+      const programId = insertedPrograms.id;
 
-      const { error } = await client
-        .from('programs')
-        .insert([programData])
+      // 2. Insertion des activités likées dans la table de jointure
+      const activitiesToInsert = dedupedActivities.map((activity: Activity, idx: number) => ({
+        program_id: programId,
+        activity_id: activity.id,
+        order_index: idx
+      }));
 
-      if (error) {
-        console.error('Erreur détaillée:', error)
-        throw error
+      if (activitiesToInsert.length > 0) {
+        const { error: activitiesError } = await client
+          .from('program_activities')
+          .insert(activitiesToInsert);
+
+        if (activitiesError) {
+          console.error('Erreur lors de l\'insertion des activités:', activitiesError)
+          throw activitiesError
+        }
       }
 
       // Nettoyer les données temporaires
@@ -170,7 +198,7 @@ export default function SummaryPage() {
           <p className="text-gray-600">Aucun programme trouvé.</p>
           <button
             onClick={() => router.push('/generate')}
-            className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+            className="mt-4 px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
           >
             Créer un programme
           </button>
@@ -179,129 +207,116 @@ export default function SummaryPage() {
     )
   }
 
+  // Ajout du résumé visuel en haut de page (identique à la page programme)
+  const getDestinationImage = (destination: string) => {
+    const cityImages: { [key: string]: string } = {
+      'Paris': 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34',
+      'Lyon': 'https://images.unsplash.com/photo-1524396309943-e03f5249f002',
+      'Marseille': 'https://images.unsplash.com/photo-1544968464-9ba06f6fce3d',
+      'Rome': 'https://images.unsplash.com/photo-1552832230-c0197dd311b5',
+      'Londres': 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad',
+      'New York': 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9',
+      'Bruxelles': 'https://images.unsplash.com/photo-1581162907694-96ef5b0a75e5',
+      'Madeira': 'https://images.unsplash.com/photo-1593105544559-f0adc7d8a0b1'
+    }
+    return {
+      url: cityImages[program.formData.destination] || 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df',
+      alt: `Vue de ${program.formData.destination || 'la ville'}`
+    }
+  }
+
   const activitiesByCategory = getActivitiesByCategory()
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-32">
-      <main className="max-w-4xl mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Résumé de votre programme</h1>
-
-        {/* Informations du programme */}
-        <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center">
-              <FiMap className="w-6 h-6 text-indigo-600" />
-            </div>
-            <h2 className="text-2xl font-semibold text-gray-900">
-              Votre séjour à {program.formData.destination}
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Dates */}
-            <div className="bg-gray-50 rounded-lg p-4">
-              <div className="flex items-center gap-3 mb-2">
-                <FiClock className="w-5 h-5 text-indigo-500" />
-                <span className="font-medium text-gray-700">Dates</span>
-              </div>
-              <p className="text-gray-600 ml-8">
-                Du {program.formData.startDate ? new Date(program.formData.startDate).toLocaleDateString() : 'Non spécifié'} 
-                {program.formData.endDate && ` au ${new Date(program.formData.endDate).toLocaleDateString()}`}
-              </p>
-            </div>
-
-            {/* Type de voyage */}
-            <div className="bg-gray-50 rounded-lg p-4">
-              <div className="flex items-center gap-3 mb-2">
-                <FiUsers className="w-5 h-5 text-indigo-500" />
-                <span className="font-medium text-gray-700">Type de voyage</span>
-              </div>
-              <p className="text-gray-600 ml-8">
-                {COMPANION_OPTIONS.find(option => option.value === program.formData.companion)?.label || 'Non spécifié'} {' '}
-                {COMPANION_OPTIONS.find(option => option.value === program.formData.companion)?.icon}
-              </p>
-            </div>
-
-            {/* Budget prévu */}
-            <div className="bg-gray-50 rounded-lg p-4">
-              <div className="flex items-center gap-3 mb-2">
-                <FiDollarSign className="w-5 h-5 text-indigo-500" />
-                <span className="font-medium text-gray-700">Budget prévu</span>
-              </div>
-              <p className="text-gray-600 ml-8">
-                {program.formData.budget || 0}€
-              </p>
-            </div>
-
-            {/* Budget activités */}
-            <div className="bg-gray-50 rounded-lg p-4">
-              <div className="flex items-center gap-3 mb-2">
-                <FiDollarSign className="w-5 h-5 text-indigo-500" />
-                <span className="font-medium text-gray-700">Budget activités</span>
-              </div>
-              <p className="text-gray-600 ml-8">
-                {calculateTotalBudget()}€
-                {calculateTotalBudget() > (program.formData.budget || 0) && (
-                  <span className="text-red-500 text-sm ml-2">
-                    (Dépassement du budget prévu)
-                  </span>
-                )}
-              </p>
+    <div className="min-h-screen bg-gray-50 pb-24">
+      <div className="container mx-auto px-4 py-8">
+        {/* Résumé visuel du programme */}
+        <div className="relative h-64 mb-8 rounded-xl overflow-hidden">
+          <img 
+            src={getDestinationImage(program.formData.destination).url}
+            alt={getDestinationImage(program.formData.destination).alt}
+            className="object-cover w-full h-full"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+            <h1 className="text-4xl font-bold mb-2">{`Séjour à ${program.formData.destination}`}</h1>
+            <div className="flex items-center gap-2 text-lg">
+              <FiMapPin className="text-white" />
+              <span>{program.formData.destination}</span>
             </div>
           </div>
         </div>
-
-        {/* Liste des activités par catégorie */}
-        <div className="space-y-8">
-          {Object.entries(activitiesByCategory).map(([category, activities]) => (
-            <div key={category} className="bg-white rounded-xl shadow-sm p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                {CATEGORY_LABELS[category] || category}
-                <span className="text-sm font-normal text-gray-500">
-                  {activities.length} activité{activities.length > 1 ? 's' : ''}
-                </span>
-              </h2>
-              <div className="space-y-4">
-                {activities.map((activity) => (
-                  <div
-                    key={activity.id}
-                    className="border border-gray-100 rounded-lg p-4 hover:bg-gray-50 transition-colors"
-                  >
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h3 className="text-lg font-semibold text-gray-900">{activity.title}</h3>
-                        <p className="text-gray-500 flex items-center gap-1 mt-1">
-                          <FiMapPin className="text-indigo-500" />
-                          {activity.address}
-                        </p>
-                        <p className="mt-2 text-gray-600">{activity.description}</p>
-                      </div>
-                      <span className="text-lg font-semibold text-indigo-600">{activity.price}€</span>
-                    </div>
-                  </div>
-                ))}
+        <div className="bg-white rounded-xl p-6 shadow-sm mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="flex items-center gap-2">
+              <FiClock className="text-indigo-500" />
+              <div>
+                <p className="text-sm text-gray-500">Dates</p>
+                <p className="font-medium">
+                  Du {program.formData.startDate ? new Date(program.formData.startDate).toLocaleDateString('fr-FR') : '-'} au {program.formData.endDate ? new Date(program.formData.endDate).toLocaleDateString('fr-FR') : '-'}
+                </p>
               </div>
             </div>
-          ))}
+            <div className="flex items-center gap-2">
+              <FiDollarSign className="text-indigo-500" />
+              <div>
+                <p className="text-sm text-gray-500">Budget</p>
+                <p className="font-medium">{program.formData.budget}€</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <FiUsers className="text-indigo-500" />
+              <div>
+                <p className="text-sm text-gray-500">Voyageurs</p>
+                <p className="font-medium">
+                  {COMPANION_OPTIONS.find(option => option.value === program.formData.companion)?.label || program.formData.companion}
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
+        <main className="max-w-4xl mx-auto px-4 py-8">
+          {/* Liste des activités par catégorie */}
+          <div className="space-y-4 pb-8">
+            {Object.entries(activitiesByCategory).map(([category, activities]) => (
+              <CategorySection
+                key={category}
+                category={category}
+                activities={activities}
+                onActivityClick={setSelectedActivity}
+                onActivityDelete={() => {}}
+              />
+            ))}
+          </div>
+          {/* Modale d'activité */}
+          {selectedActivity && (
+            <ActivityModal
+              activity={selectedActivity}
+              onClose={() => setSelectedActivity(null)}
+            />
+          )}
 
-        {/* Boutons d'action */}
-        <div className="mt-8 flex justify-between">
-          <button
-            onClick={() => router.push('/generate')}
-            className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
-          >
-            Créer un nouveau programme
-          </button>
-          <button
-            onClick={() => handleSaveProgram()}
-            disabled={isSaving}
-            className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isSaving ? 'Sauvegarde en cours...' : 'Sauvegarder mon programme'}
-          </button>
-        </div>
-      </main>
+          {/* Boutons d'action */}
+          <div className="mt-8 flex flex-col gap-4">
+            <button
+              onClick={() => {
+                localStorage.setItem('resumeAddActivities', 'true')
+                router.push('/generate')
+              }}
+              className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100 transition-colors font-medium"
+            >
+              Ajouter des activités
+            </button>
+            <button
+              onClick={() => handleSaveProgram()}
+              disabled={isSaving}
+              className="w-full px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isSaving ? 'Sauvegarde en cours...' : 'Sauvegarder mon programme'}
+            </button>
+          </div>
+        </main>
+      </div>
     </div>
   )
 } 

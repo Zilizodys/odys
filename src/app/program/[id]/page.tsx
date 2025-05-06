@@ -8,10 +8,19 @@ import type { Activity } from '@/types/activity'
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
-type ActivityResponse = Pick<Activity, 'id' | 'title' | 'description' | 'price' | 'address' | 'imageurl' | 'category' | 'city'>
+interface ActivityResponse {
+  id: string
+  title: string
+  description: string
+  price: number
+  address: string
+  imageurl: string
+  category: string
+  city: string
+}
 
-interface ProgramActivity {
-  activities: ActivityResponse[]
+interface ProgramActivityResponse {
+  activity: ActivityResponse
 }
 
 async function getProgram(id: string) {
@@ -33,7 +42,7 @@ async function getProgram(id: string) {
   const { data: programActivities, error: activitiesError } = await supabase
     .from('program_activities')
     .select(`
-      activities (
+      activity:activities (
         id,
         title,
         description,
@@ -45,14 +54,17 @@ async function getProgram(id: string) {
       )
     `)
     .eq('program_id', id)
+    .order('order_index')
 
   if (activitiesError) {
     throw activitiesError
   }
 
+  const activities = programActivities?.map(pa => pa.activity) || []
+
   return {
     ...program,
-    activities: (programActivities as ProgramActivity[])?.map(pa => pa.activities[0] as Activity) || []
+    activities
   }
 }
 

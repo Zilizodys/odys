@@ -40,20 +40,23 @@ const ProgramCard = ({ program, onDelete, onClick }: ProgramCardProps) => {
     setStartX(clientX - offsetX)
   }
 
+  const MAX_SWIPE = -120;
   const handleDragMove = (clientX: number) => {
     if (!isDragging) return
-    const newOffset = clientX - startX
-    if (newOffset < -150) return // Limite le glissement
-    if (newOffset > 0) return // Empêche le glissement vers la droite
+    let newOffset = clientX - startX
+    if (newOffset < MAX_SWIPE) newOffset = MAX_SWIPE // Limite le glissement à la largeur du bouton
+    if (newOffset > 0) newOffset = 0 // Empêche le glissement vers la droite
     setOffsetX(newOffset)
   }
 
   const handleDragEnd = () => {
     setIsDragging(false)
-    if (offsetX < -100) {
-      onDelete(program.id)
+    // Si le swipe dépasse -60px, on laisse la card ouverte sur le bouton
+    if (offsetX < MAX_SWIPE / 2) {
+      setOffsetX(MAX_SWIPE)
+    } else {
+      setOffsetX(0)
     }
-    setOffsetX(0)
   }
 
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -82,6 +85,7 @@ const ProgramCard = ({ program, onDelete, onClick }: ProgramCardProps) => {
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation()
+    setOffsetX(0)
     onDelete(program.id)
   }
 
@@ -131,84 +135,83 @@ const ProgramCard = ({ program, onDelete, onClick }: ProgramCardProps) => {
 
   return (
     <div className="w-full max-w-md mx-auto">
-      <div className="relative rounded-3xl overflow-hidden bg-white shadow">
-        {/* Background rouge pour le swipe delete */}
-        <div className="absolute inset-y-0 right-0 flex items-center justify-center bg-red-500 w-[150px]">
+      {/* Fond rouge swipe to delete, FIXE */}
+      <div className="relative h-[420px] rounded-3xl overflow-hidden shadow-sm">
+        <div className="absolute inset-y-0 right-0 w-[120px] flex items-center justify-center bg-red-500 rounded-r-3xl z-10">
           <button
             onClick={handleDelete}
-            className="text-white w-full h-full flex items-center justify-center"
+            className="text-white w-16 h-16 flex items-center justify-center"
             aria-label="Supprimer le programme"
           >
-            <FiTrash2 size={24} />
+            <FiTrash2 size={32} />
           </button>
         </div>
-
-        {/* Carte principale */}
+        {/* Card swipeable : image + details */}
         <div
           ref={cardRef}
-          style={{ transform: `translateX(${offsetX}px)` }}
-          className="relative bg-white transition-transform cursor-pointer"
+          style={{ transform: `translateX(${offsetX}px)`, transition: isDragging ? 'none' : 'transform 0.2s' }}
+          className="relative w-full h-full z-20 cursor-pointer"
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleDragEnd}
           onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleDragEnd}
           onClick={handleClick}
         >
-          {/* Section image avec titre */}
-          <div className="relative h-[200px]">
-            <ImageWithFallback
-              src={program.coverImage || getDestinationImage(program.destination)}
-              alt={`Photo de ${program.destination}`}
-              width={400}
-              height={200}
-              className="w-full h-full object-cover"
-              priority
+          {/* Image en haut */}
+          <div className="relative w-full h-[180px] rounded-t-3xl overflow-hidden">
+            <div
+              className="absolute inset-0 w-full h-full"
+              style={{
+                backgroundImage: `url('${program.coverImage || getDestinationImage(program.destination)}')`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent">
-              <div className="absolute bottom-6 left-6">
-                <h2 className="font-bold text-white text-3xl mb-3">
-                  {program.title || `Séjour à ${program.destination}`}
-                </h2>
-                <div className="flex items-center gap-2 text-white/90">
-                  <FiMapPin size={20} />
-                  <span className="text-lg">{program.destination}</span>
-                </div>
+            {/* Overlay gradient + nom destination */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 p-6 text-white z-10">
+              <h2 className="font-bold text-white text-3xl drop-shadow mb-1">
+                {program.title || `Séjour à ${program.destination}`}
+              </h2>
+              <div className="flex items-center gap-2 text-white">
+                <FiMapPin size={20} />
+                <span className="text-lg">{program.destination}</span>
               </div>
             </div>
           </div>
-
-          {/* Section informations */}
-          <div className="px-8 pt-16 pb-6 space-y-5">
-            <div className="flex items-center gap-3">
-              <FiClock className="text-indigo-600 shrink-0" size={22} />
+          {/* Détails en dessous */}
+          <div className="bg-white rounded-b-3xl px-8 py-6 space-y-6">
+            <div className="flex items-center gap-4">
+              <FiClock className="text-indigo-600 shrink-0" size={24} />
               <div>
                 <div className="text-gray-500 text-sm">Dates</div>
-                <div className="text-gray-900">Du 19/04/2025 au 20/04/2025</div>
+                <div className="text-gray-900 font-medium">
+                  Du {format(new Date(program.start_date), 'dd/MM/yyyy')} au {format(new Date(program.end_date), 'dd/MM/yyyy')}
+                </div>
               </div>
             </div>
-
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
               <div className="text-indigo-600 text-2xl shrink-0">$</div>
               <div>
                 <div className="text-gray-500 text-sm">Budget</div>
-                <div className="text-gray-900">{program.budget}€</div>
+                <div className="text-gray-900 font-medium">{program.budget}€</div>
               </div>
             </div>
-
             {companion && (
-              <div className="flex items-center gap-3">
-                <FiUsers className="text-indigo-600 shrink-0" size={22} />
+              <div className="flex items-center gap-4">
+                <FiUsers className="text-indigo-600 shrink-0" size={24} />
                 <div>
                   <div className="text-gray-500 text-sm">Voyageurs</div>
-                  <div className="text-gray-900 flex items-center gap-1">
-                    En couple {companion.icon}
+                  <div className="text-gray-900 flex items-center gap-1 font-medium">
+                    {companion.label} {companion.icon}
                   </div>
                 </div>
               </div>
             )}
-
-            <div className="flex items-center gap-2">
-              <span className="text-indigo-600 text-xl">10</span>
+            <div className="flex items-center gap-2 pt-2">
+              <span className="text-indigo-600 text-2xl">{program.activities?.length || 0}</span>
               <span className="text-gray-900">activités sélectionnées</span>
             </div>
           </div>
