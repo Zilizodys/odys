@@ -11,8 +11,82 @@ import { Program } from '@/types/program'
 export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
   const [programs, setPrograms] = useState<Program[]>([])
+  const [destinations, setDestinations] = useState<{ city: string, imageurl: string }[]>([])
   const router = useRouter()
   const supabase = createClientComponentClient()
+
+  // Fonction de normalisation des noms de villes
+  const normalizeCityName = (city: string) => {
+    return city?.toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .trim()
+  }
+
+  // Mapping des images par défaut pour chaque ville
+  const defaultCityImages: { [key: string]: string } = {
+    'paris': '/images/destinations/paris.jpg',
+    'lyon': '/images/destinations/lyon.jpg',
+    'marseille': '/images/destinations/marseille.jpg',
+    'rome': '/images/destinations/rome.jpg',
+    'toulouse': '/images/destinations/toulouse.jpg',
+    'bordeaux': '/images/destinations/bordeaux.jpg',
+    'nice': '/images/destinations/nice.jpg',
+    'lille': '/images/destinations/lille.jpg',
+    'nantes': '/images/destinations/nantes.jpg',
+    'strasbourg': '/images/destinations/strasbourg.jpg',
+    'montpellier': '/images/destinations/montpellier.jpg',
+    'barcelone': '/images/destinations/barcelone.jpg',
+    'madrid': '/images/destinations/madrid.jpg',
+    'lisbonne': '/images/destinations/lisbonne.jpg',
+    'porto': '/images/destinations/porto.jpg',
+    'amsterdam': '/images/destinations/amsterdam.jpg',
+    'berlin': '/images/destinations/berlin.jpg',
+    'munich': '/images/destinations/munich.jpg',
+    'vienne': '/images/destinations/vienne.jpg',
+    'prague': '/images/destinations/prague.jpg',
+    'budapest': '/images/destinations/budapest.jpg',
+    'venise': '/images/destinations/venise.jpg',
+    'florence': '/images/destinations/florence.jpg',
+    'milan': '/images/destinations/milan.jpg',
+    'dubai': '/images/destinations/dubai.jpg',
+    'istanbul': '/images/destinations/istanbul.jpg'
+  }
+
+  useEffect(() => {
+    const fetchDestinations = async () => {
+      console.log('Début du fetch des destinations')
+      
+      // D'abord, vérifions la structure de la table
+      const { data: tableInfo, error: tableError } = await supabase
+        .from('destinations')
+        .select('*')
+        .limit(1)
+      
+      console.log('Structure de la table:', tableInfo)
+      console.log('Erreur table:', tableError)
+
+      // Ensuite, récupérons toutes les destinations
+      const { data, error } = await supabase
+        .from('destinations')
+        .select('city, imageurl')
+      
+      console.log('Erreur complète:', error)
+      console.log('Données brutes des destinations:', data)
+      
+      if (error) {
+        console.error('Erreur lors du chargement des destinations:', error)
+        return
+      }
+      
+      if (data) {
+        console.log('Nombre de destinations trouvées:', data.length)
+        console.log('Exemple de destination:', JSON.stringify(data[0], null, 2))
+        setDestinations(data)
+      }
+    }
+    fetchDestinations()
+  }, [])
 
   useEffect(() => {
     const checkUser = async () => {
@@ -73,6 +147,20 @@ export default function DashboardPage() {
       subscription.unsubscribe()
     }
   }, [router, supabase])
+
+  // Mapping ville → image avec normalisation et fallback
+  const cityImageMap = Object.fromEntries(
+    destinations.map(d => [
+      normalizeCityName(d.city), 
+      d.imageurl || defaultCityImages[normalizeCityName(d.city)] || '/images/activities/Mascot.png'
+    ])
+  )
+
+  // Logs de débogage
+  useEffect(() => {
+    console.log('Destinations:', destinations)
+    console.log('CityImageMap:', cityImageMap)
+  }, [destinations])
 
   const handleDeleteProgram = async (programId: string) => {
     try {
@@ -138,7 +226,13 @@ export default function DashboardPage() {
               {programs.map((program) => (
                 <ProgramCard
                   key={program.id}
-                  program={program}
+                  program={{
+                    ...program,
+                    coverImage:
+                      destinations.find(
+                        d => normalizeCityName(d.city) === normalizeCityName(program.destination)
+                      )?.imageurl || '/images/activities/Mascot.png'
+                  }}
                   onDelete={handleDeleteProgram}
                   onClick={handleProgramClick}
                 />

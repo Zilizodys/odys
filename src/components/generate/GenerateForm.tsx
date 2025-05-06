@@ -594,6 +594,28 @@ export default function GenerateForm() {
     setReady(true)
   }, [])
 
+  // Ajout : pré-remplissage depuis localStorage (clé 'formData')
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const localFormData = localStorage.getItem('formData')
+      if (localFormData) {
+        try {
+          const parsed = JSON.parse(localFormData)
+          if (parsed.destination) {
+            setFormData(prev => ({ ...prev, destination: parsed.destination }))
+            // Forcer la validation si une destination est présente
+            setDestinationValidee(true)
+          }
+        } catch (e) { /* ignore */ }
+      }
+      // Vérifier si la destination doit être validée automatiquement (flag spécifique)
+      if (localStorage.getItem('destinationValidee') === 'true') {
+        setDestinationValidee(true)
+        localStorage.removeItem('destinationValidee')
+      }
+    }
+  }, [])
+
   if (!ready) {
     return null
   }

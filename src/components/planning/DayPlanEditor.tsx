@@ -67,12 +67,14 @@ function DraggableActivityCard({ activity, activityIdx, slotIdx, slot, day, onCh
           {...provided.dragHandleProps}
           style={{
             ...provided.draggableProps.style,
-            width: snapshot.isDragging && cardWidth ? `${cardWidth}px` : '100%',
             minWidth: 0,
             maxWidth: '100%',
-            height: '150px',
             margin: '0',
             boxSizing: 'border-box',
+            paddingLeft: snapshot.isDragging ? '1rem' : undefined,
+            paddingRight: snapshot.isDragging ? '1rem' : undefined,
+            background: snapshot.isDragging ? '#fff' : undefined,
+            borderRadius: snapshot.isDragging ? '1rem' : undefined,
             transform: snapshot.isDragging
               ? `${provided.draggableProps.style?.transform ? provided.draggableProps.style.transform.replace(/scale\([^)]*\)/, '') + ' scale(1.02)' : 'scale(1.02)'}`
               : provided.draggableProps.style?.transform || undefined,
@@ -196,7 +198,7 @@ export default function DayPlanEditor({ day, dayIndex, planning, onPlanningChang
   }
 
   return (
-    <div className="border border-gray-100 rounded-2xl mb-6 bg-white">
+    <div className="border border-gray-100 rounded-2xl mb-8 bg-white">
       <button
         className="w-full flex items-center justify-between px-6 py-4 text-gray-900 focus:outline-none bg-transparent rounded-t-2xl"
         onClick={() => setOpen(o => !o)}
@@ -232,7 +234,7 @@ export default function DayPlanEditor({ day, dayIndex, planning, onPlanningChang
                 <div
                   key={slot.slot}
                   id={`day-${dayIndex}-slot-${slotIdx}`}
-                  className="bg-white border border-gray-200 rounded-xl px-4 py-4 flex flex-col items-center min-h-[120px] transition-colors relative min-h-[180px]"
+                  className="bg-white border border-gray-200 rounded-2xl px-6 py-6 flex flex-col items-stretch transition-colors relative"
                   style={{ boxShadow: 'none' }}
                 >
                   {/* Titre du slot et horaires + bouton + */}
@@ -257,10 +259,15 @@ export default function DayPlanEditor({ day, dayIndex, planning, onPlanningChang
                       <div
                         ref={provided.innerRef}
                         {...provided.droppableProps}
-                        className={`w-full flex flex-col items-stretch gap-4 py-2 px-2 bg-transparent ${
+                        className={`w-full flex flex-col items-stretch gap-3 bg-transparent ${
                           snapshot.isDraggingOver ? 'bg-indigo-50' : ''
                         }`}
                       >
+                        {slot.activities.length === 0 && (
+                          <div className="w-full h-10 flex items-center justify-center border-2 border-dashed border-gray-300 rounded-lg text-xs text-gray-400 select-none pointer-events-none">
+                            Glissez ou ajoutez une activité ici
+                          </div>
+                        )}
                         {slot.activities.map((activity, activityIdx) => (
                           <DraggableActivityCard
                             key={activity.id + '-' + activityIdx}
@@ -313,4 +320,4 @@ export default function DayPlanEditor({ day, dayIndex, planning, onPlanningChang
       )}
     </div>
   )
-} 
+}

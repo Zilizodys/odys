@@ -37,7 +37,23 @@ export function autoAssignActivities(
   startDate: string, // format YYYY-MM-DD
   endDate: string    // format YYYY-MM-DD
 ): ProgramPlanning {
-  // Séparer les activités restaurants/gastronomie et autres
+  // Mapping catégorie → créneaux préférés
+  const CATEGORY_TO_SLOTS: Record<string, TimeSlot[]> = {
+    'vie nocturne': ['soirée'],
+    'nightlife': ['soirée'],
+    'bar': ['soirée'],
+    'club': ['soirée'],
+    'culture': ['matin', 'après-midi'],
+    'musée': ['matin', 'après-midi'],
+    'exposition': ['matin', 'après-midi'],
+    'nature': ['matin', 'après-midi'],
+    'sport': ['matin', 'après-midi'],
+    'shopping': ['après-midi'],
+    'bien-être': ['après-midi'],
+    'détente': ['après-midi'],
+    'romantique': ['soirée', 'après-midi'],
+    'autre': ['après-midi'],
+  }
   const isRestaurant = (a: Activity) => {
     const cat = a.category?.toLowerCase() || ''
     return cat.includes('restaurant') || cat.includes('gastronomie')
@@ -64,30 +80,33 @@ export function autoAssignActivities(
     }
   })
 
-  // Répartition des activités dans les slots
+  // Répartition des activités dans les slots adaptés
   let restoIdx = 0
-  let otherIdx = 0
+  // On garde une trace des activités déjà placées
+  const placedIds = new Set<string>()
+
   for (let day of days) {
     for (let slotIdx = 0; slotIdx < TIME_SLOTS.length; slotIdx++) {
       const slotKey = TIME_SLOTS[slotIdx].key
+      // Repas : restaurant/gastronomie uniquement
       if (slotKey === 'midi' || slotKey === 'dîner') {
-        // Slot repas : restaurant/gastronomie uniquement
         if (restoIdx < restaurantActivities.length) {
           day.activities[slotIdx].activities = [restaurantActivities[restoIdx]]
+          placedIds.add(restaurantActivities[restoIdx].id)
           restoIdx++
         }
       } else {
-        // Autres slots : autres activités (max 2)
-        const activitiesToAdd: Activity[] = []
-        if (otherIdx < otherActivities.length) {
-          activitiesToAdd.push(otherActivities[otherIdx])
-          otherIdx++
-          if (otherIdx < otherActivities.length) {
-            activitiesToAdd.push(otherActivities[otherIdx])
-            otherIdx++
-          }
-        }
-        day.activities[slotIdx].activities = activitiesToAdd
+        // Autres slots : on cherche les activités adaptées à ce créneau
+        const activitiesForSlot = otherActivities.filter(a => {
+          if (placedIds.has(a.id)) return false
+          const cat = a.category?.toLowerCase() || 'autre'
+          const slots = CATEGORY_TO_SLOTS[cat] || ['après-midi']
+          return slots.includes(slotKey as TimeSlot)
+        })
+        // On place max 2 activités par slot
+        const toAdd = activitiesForSlot.slice(0, 2)
+        day.activities[slotIdx].activities = toAdd
+        toAdd.forEach(a => placedIds.add(a.id))
       }
     }
   }

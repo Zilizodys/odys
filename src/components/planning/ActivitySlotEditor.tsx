@@ -38,34 +38,29 @@ export default function ActivitySlotEditor({ activity, slotIndex, onChange, onAd
 
   return (
     <div
-      className="bg-white rounded-lg border border-gray-200 p-3 w-full min-h-[80px] flex flex-col justify-between cursor-pointer transition hover:bg-gray-50"
+      className="w-full flex flex-col gap-2 py-3 px-0 rounded"
       onClick={() => setShowModal(true)}
     >
-      <div>
-        <div className="flex items-center justify-between mb-1">
-          <span className="text-xs px-2 py-0.5 rounded bg-indigo-50 text-indigo-600 font-semibold uppercase tracking-wide">
-            {activity.category}
-          </span>
-          <span className="text-xs font-bold text-indigo-700">
-            {activity.price === 0 ? 'Gratuit' : `${activity.price}€`}
-          </span>
-        </div>
-        <div className="font-bold text-indigo-900 text-base truncate mb-1 group-hover:underline">
-          {activity.title}
-        </div>
-        <div className="text-gray-500 text-xs truncate mb-2">
-          {activity.address}
-        </div>
+      <div className="flex items-center w-full gap-2 mb-0">
+        <span className="text-xs bg-gray-100 text-gray-600 rounded px-2 py-0.5 whitespace-nowrap">{activity.category}</span>
+        {activity.price === 0 ? (
+          <span className="text-xs text-indigo-600 whitespace-nowrap">Gratuit</span>
+        ) : (
+          <span className="text-xs text-gray-500 whitespace-nowrap">{activity.price}€</span>
+        )}
+        <button
+          className="ml-auto text-gray-300 hover:text-red-500 transition-colors"
+          title="Supprimer"
+          onClick={e => {
+            e.stopPropagation()
+            onChange(activity)
+          }}
+        >
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
       </div>
-      <button
-        className="self-end text-xs text-red-500 hover:text-red-700 font-semibold px-2 py-1 rounded transition-colors border border-transparent hover:border-red-200 bg-transparent"
-        onClick={(e) => {
-          e.stopPropagation()
-          onChange(activity)
-        }}
-      >
-        Supprimer
-      </button>
+      <div className="font-medium text-gray-900 w-full mb-0">{activity.title}</div>
+      <div className="text-xs text-gray-400">{activity.address}</div>
       {showModal && (
         <ActivityModal
           activity={activity}

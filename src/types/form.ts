@@ -27,7 +27,13 @@ export const SUGGESTED_DESTINATIONS = [
   { city: 'Paris', country: 'France', icon: '🗼' },
   { city: 'Rome', country: 'Italie', icon: '🏛' },
   { city: 'Barcelone', country: 'Espagne', icon: '🏖' },
-  { city: 'Londres', country: 'Royaume-Uni', icon: '🎡' }
+  { city: 'Londres', country: 'Royaume-Uni', icon: '🎡' },
+  { city: 'New York', country: 'États-Unis', icon: '🗽' },
+  { city: 'Tokyo', country: 'Japon', icon: '🗾' },
+  { city: 'Dubaï', country: 'Émirats Arabes Unis', icon: '🌆' },
+  { city: 'Sydney', country: 'Australie', icon: '🌉' },
+  { city: 'Istanbul', country: 'Turquie', icon: '🕌' },
+  { city: 'Rio de Janeiro', country: 'Brésil', icon: '🌅' },
 ]
 
 // Liste étendue des villes mondiales pour l'autocomplétion

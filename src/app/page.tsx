@@ -163,7 +163,11 @@ const getDestinationImage = (destination: string) => {
 
 // Carrousel horizontal (plusieurs cartes visibles)
 function PopularDestinations() {
-  const destinations = [
+  const [destinationsData, setDestinationsData] = useState<{ city: string, country?: string, imageurl?: string }[]>([])
+  const router = useRouter()
+
+  // Liste des destinations populaires (pour l'ordre et le pays)
+  const popularList = [
     { city: 'Paris', country: 'France' },
     { city: 'Rome', country: 'Italie' },
     { city: 'Londres', country: 'Royaume-Uni' },
@@ -173,6 +177,37 @@ function PopularDestinations() {
     { city: 'Bruxelles', country: 'Belgique' },
     { city: 'Madeira', country: 'Portugal' },
   ]
+
+  useEffect(() => {
+    const fetchDestinations = async () => {
+      const supabase = createClient()
+      const { data, error } = await supabase
+        .from('destinations')
+        .select('city, imageurl')
+      if (!error && data) setDestinationsData(data)
+    }
+    fetchDestinations()
+  }, [])
+
+  const getImageForCity = (city: string) => {
+    // Cherche dans la BDD
+    const found = destinationsData.find(d => d.city.toLowerCase() === city.toLowerCase())
+    return found?.imageurl || 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df'
+  }
+
+  const handleDestinationClick = (destination: string) => {
+    localStorage.setItem('formData', JSON.stringify({
+      destination,
+      startDate: null,
+      endDate: null,
+      companion: null,
+      budget: null,
+      moods: []
+    }))
+    localStorage.setItem('destinationValidee', 'true')
+    router.push('/generate')
+  }
+
   return (
     <section className="mt-8 w-full flex flex-col items-center">
       <div className="flex items-center justify-between mb-4 w-full px-2">
@@ -180,12 +215,16 @@ function PopularDestinations() {
       </div>
       <div className="w-full overflow-x-auto scrollbar-hide no-scrollbar" style={{ WebkitOverflowScrolling: 'touch' }}>
         <div className="flex gap-6 px-2 pb-2 whitespace-nowrap">
-          {destinations.map((dest) => {
-            const img = getDestinationImage(dest.city)
+          {popularList.map((dest) => {
+            const imgUrl = getImageForCity(dest.city)
             return (
-              <div key={dest.city} className="inline-block min-w-[240px] max-w-[280px] bg-white rounded-2xl shadow-sm overflow-hidden flex-shrink-0 align-top">
+              <div
+                key={dest.city}
+                className="inline-block min-w-[240px] max-w-[280px] bg-white rounded-2xl shadow-sm overflow-hidden flex-shrink-0 align-top cursor-pointer hover:shadow-md transition-shadow"
+                onClick={() => handleDestinationClick(dest.city)}
+              >
                 <div className="relative w-full h-48">
-                  <ImageWithFallback src={img.url} alt={img.alt} fill className="object-cover rounded-2xl" />
+                  <ImageWithFallback src={imgUrl} alt={`Vue de ${dest.city}`} fill className="object-cover rounded-2xl" />
                 </div>
                 <div className="p-4 w-full text-left">
                   <div className="font-bold text-xl">{dest.city}</div>
