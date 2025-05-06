@@ -21,6 +21,6 @@ export function changeActivitySlot(day: DayPlan, activityIndex: number, newSlot:
 // Remplacer une activité par une autre dans un slot
 export function replaceActivity(day: DayPlan, activityIndex: number, newActivity: Activity): DayPlan {
   const activities = [...day.activities]
-  activities[activityIndex] = { ...activities[activityIndex], activity: newActivity }
+  activities[activityIndex] = { ...activities[activityIndex], activities: [newActivity] }
   return { ...day, activities }
 } 
