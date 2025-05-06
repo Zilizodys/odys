@@ -5,12 +5,12 @@ import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { fr } from 'date-fns/locale'
 import { differenceInDays } from 'date-fns'
-import DatePicker, { registerLocale } from 'react-datepicker'
-import { FiMapPin, FiSearch, FiX } from 'react-icons/fi'
+import ReactDatePicker, { registerLocale } from 'react-datepicker'
+import { FiMapPin, FiSearch, FiCheckCircle } from 'react-icons/fi'
 import Fuse from 'fuse.js'
 import "react-datepicker/dist/react-datepicker.css"
-import StepWrapper from '../ui/StepWrapper'
-import { createClient } from '@/lib/supabase/client'
+import StepWrapper from '@/components/ui/StepWrapper'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { 
   FormData, 
   INITIAL_FORM_DATA, 
@@ -19,14 +19,39 @@ import {
   BUDGET_OPTIONS,
   SUGGESTED_DESTINATIONS,
   WORLD_CITIES,
-  MoodType
+  MoodType,
+  TravelCompanion
 } from '@/types/form'
+import { Activity } from '@/types/activity'
+import { cache } from '@/lib/cache'
+import { ValidationError } from '@/lib/errors'
+import { API_TO_FRONTEND_CATEGORY } from '@/constants/categories'
+import debounce from 'lodash/debounce'
+import type { Activity as CrewActivity } from '@/types/crew'
+import FormHeader from './FormHeader'
+import FormFooter from './FormFooter'
+import { DayPicker, DateRange } from 'react-day-picker'
+import 'react-day-picker/dist/style.css'
 
 // Enregistrer la localisation française
 registerLocale('fr', fr)
 
+interface CityResponse {
+  city: string
+  country: string 
+  source: string
+  score: number
+}
+
+interface SearchResult {
+  city: string
+  country: string
+  source: string
+  score?: number
+}
+
 // Cache pour les résultats de recherche
-const searchCache: { [key: string]: { city: string; country: string; source: string }[] } = {}
+const searchCache: { [key: string]: SearchResult[] } = {}
 
 // Normaliser le texte (enlever les accents, mettre en minuscule)
 const normalizeText = (text: string) => {
@@ -37,18 +62,43 @@ const normalizeText = (text: string) => {
     .trim()
 }
 
-// Fonction de debounce
-function debounce<T extends (...args: any[]) => any>(
-  func: T,
-  wait: number
-): (...args: Parameters<T>) => void {
-  let timeout: NodeJS.Timeout | null = null
+// Utiliser directement le debounce de lodash
+const debouncedSearch = debounce(async (query: string) => {
+  try {
+    const normalizedQuery = normalizeText(query)
+    
+    // Vérifier le cache
+    if (searchCache[normalizedQuery]) {
+      return searchCache[normalizedQuery]
+    }
 
-  return (...args: Parameters<T>) => {
-    if (timeout) clearTimeout(timeout)
-    timeout = setTimeout(() => func(...args), wait)
+    const response = await fetch(`/api/places/search?q=${encodeURIComponent(query)}`)
+    if (!response.ok) {
+      throw new Error('Erreur lors de la recherche')
+    }
+
+    const data = await response.json()
+    if (!Array.isArray(data)) {
+      throw new Error('Format de réponse invalide')
+    }
+
+    const results: SearchResult[] = data.map((item: unknown) => {
+      const cityResponse = item as CityResponse
+      return {
+        city: cityResponse.city || '',
+        country: cityResponse.country || '',
+        source: cityResponse.source || '',
+        score: typeof cityResponse.score === 'number' ? cityResponse.score : undefined
+      }
+    })
+    
+    searchCache[normalizedQuery] = results
+    return results
+  } catch (error) {
+    console.error('Erreur lors de la recherche:', error)
+    return []
   }
-}
+}, 300)
 
 // Options de configuration pour Fuse.js
 const fuseOptions = {
@@ -81,9 +131,20 @@ const CustomInput = forwardRef<HTMLDivElement, { value?: string; onClick?: () =>
 
 CustomInput.displayName = 'CustomInput'
 
+const FORM_CACHE_KEY = 'generate_form_data'
+const FORM_CACHE_TTL = 30 * 60 * 1000 // 30 minutes
+const ACTIVITIES_CACHE_KEY = 'suggested_activities'
+const ACTIVITIES_CACHE_TTL = 30 * 60 * 1000 // 30 minutes
+
 export default function GenerateForm() {
-  const [formData, setFormData] = useState<FormData>(INITIAL_FORM_DATA)
+  const supabase = createClientComponentClient()
+  const [formData, setFormData] = useState<FormData>(() => {
+    // Récupérer les données du cache au chargement
+    const cachedData = cache.get<FormData>(FORM_CACHE_KEY, { storage: 'local' })
+    return cachedData || INITIAL_FORM_DATA
+  })
   const [currentStep, setCurrentStep] = useState(1)
+  const [ready, setReady] = useState(false)
   const [direction, setDirection] = useState<'left' | 'right'>('right')
   const [isCalendarOpen, setIsCalendarOpen] = useState(false)
   const [suggestions, setSuggestions] = useState<Array<{
@@ -93,11 +154,15 @@ export default function GenerateForm() {
     score?: number
   }>>([])
   const [isLoading, setIsLoading] = useState(false)
+  const [destinationValidee, setDestinationValidee] = useState(false)
   const datePickerRef = useRef<any>(null)
   const router = useRouter()
   const [highlightedIndex, setHighlightedIndex] = useState<number>(-1)
-  const inputRef = useRef<HTMLInputElement>(null)
-  const [error, setError] = useState<string>('')
+  const [inputRef, setInputRef] = useState<HTMLInputElement | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined)
+  const [calendarKey, setCalendarKey] = useState(0)
+  const [forceReset, setForceReset] = useState(false)
 
   // Initialiser Fuse.js avec la liste des villes mondiales
   const fuse = useMemo(() => new Fuse(WORLD_CITIES, fuseOptions), [])
@@ -129,7 +194,6 @@ export default function GenerateForm() {
         }))
 
       // Rechercher dans Supabase avec une recherche plus flexible
-      const supabase = createClient()
       let dbResults: Array<{ city: string; country: string; source: string; score?: number }> = []
       
       if (supabase) {
@@ -178,7 +242,7 @@ export default function GenerateForm() {
     } finally {
       setIsLoading(false)
     }
-  }, [fuse])
+  }, [fuse, supabase])
 
   // Créer une version debounced de la fonction de recherche
   const debouncedFetchSuggestions = useCallback(
@@ -187,9 +251,26 @@ export default function GenerateForm() {
   )
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    updateFormData('destination', value)
-    debouncedFetchSuggestions(value)
+    const { name, value, type } = e.target
+    const newValue = type === 'number' ? Number(value) : value
+    
+    setFormData(prev => {
+      const updated = { ...prev, [name]: newValue }
+      // Sauvegarder dans le cache à chaque modification
+      cache.set(FORM_CACHE_KEY, updated, {
+        storage: 'local',
+        ttl: FORM_CACHE_TTL
+      })
+      return updated
+    })
+    setDestinationValidee(false)
+    if (name === 'destination') {
+      if (value.trim().length >= 2) {
+        debouncedFetchSuggestions(value)
+      } else {
+        setSuggestions([])
+      }
+    }
   }
 
   // Nettoyer le cache périodiquement
@@ -203,29 +284,37 @@ export default function GenerateForm() {
     return () => clearInterval(cacheCleanupInterval)
   }, [])
 
-  const updateFormData = (key: keyof FormData, value: any) => {
-    setFormData(prev => ({ ...prev, [key]: value }))
+  const handleMoodToggle = (mood: MoodType) => {
+    setFormData(prev => {
+      const moods = prev.moods || []
+      const updated = {
+        ...prev,
+        moods: moods.includes(mood)
+          ? moods.filter(m => m !== mood)
+          : [...moods, mood]
+      }
+      cache.set(FORM_CACHE_KEY, updated, {
+        storage: 'local',
+        ttl: FORM_CACHE_TTL
+      })
+      return updated
+    })
   }
 
-  const handleNext = () => {
+  const handleNext = async () => {
+    // Si ce n'est pas la dernière étape, passer simplement à l'étape suivante
     if (currentStep < 5) {
       setDirection('right')
       setCurrentStep(prev => prev + 1)
-    } else {
-      // Sauvegarder les données du formulaire
+      return
+    }
+
+    // À la dernière étape, on sauvegarde les critères et on redirige
+    try {
       localStorage.setItem('formData', JSON.stringify(formData))
-      
-      // Construire l'URL avec tous les paramètres requis
-      const params = new URLSearchParams({
-        destination: formData.destination,
-        startDate: formData.startDate || '',
-        endDate: formData.endDate || '',
-        budget: formData.budget?.toString() || '',
-        companion: formData.companion || '',
-        moods: formData.moods.join(',')
-      })
-      
-      router.push(`/suggestions?${params.toString()}`)
+      router.push('/suggestions')
+    } catch (error) {
+      setError('Erreur lors de la sauvegarde des critères')
     }
   }
 
@@ -246,49 +335,89 @@ export default function GenerateForm() {
   const isNextDisabled = () => {
     switch (currentStep) {
       case 1:
-        return !formData.destination.trim()
+        return !destinationValidee
       case 2:
-        return !formData.startDate || !formData.endDate
+        return !(dateRange && dateRange.from && dateRange.to)
       case 3:
         return !formData.companion
       case 4:
-        return !formData.budget
+        return formData.budget === null || formData.budget === undefined
       case 5:
-        return formData.moods.length === 0
+        return formData.moods?.length === 0
       default:
         return false
     }
   }
 
   const handleDestinationSelect = (destination: string) => {
-    updateFormData('destination', destination)
-    // Passer automatiquement à l'étape suivante
-    setDirection('right')
-    setCurrentStep(prev => prev + 1)
+    setFormData(prev => ({ ...prev, destination }))
+    setSuggestions([])
+    setDestinationValidee(true)
+  }
+
+  const handleDestinationSubmit = () => {
+    if (formData.destination.trim().length > 0) {
+      setDirection('right')
+      setCurrentStep(prev => prev + 1)
+      setDestinationValidee(false)
+    }
+  }
+
+  const handleDateRangeSelect = (range: DateRange | undefined) => {
+    setDateRange(range)
   }
 
   const handleDateSelect = (type: 'start' | 'end', date: Date | null) => {
     if (!date) return
 
-    const dateStr = date.toISOString().split('T')[0]
+    const newFormData = { ...formData }
+    
+    // Formater la date en ISO string et garder seulement la partie date
+    const formatDate = (d: Date) => d.toISOString().split('T')[0]
+    
     if (type === 'start') {
-      updateFormData('startDate', dateStr)
-      // Si la date de fin n'est pas définie ou est antérieure à la nouvelle date de début
-      if (!formData.endDate || new Date(formData.endDate) <= date) {
-        const nextDay = new Date(date)
-        nextDay.setDate(nextDay.getDate() + 1)
-        updateFormData('endDate', nextDay.toISOString().split('T')[0])
+      newFormData.startDate = formatDate(date)
+      // Si la date de fin est avant la nouvelle date de début, on l'ajuste
+      if (newFormData.endDate && new Date(newFormData.endDate) < date) {
+        const adjustedDate = new Date(date.getTime())
+        adjustedDate.setDate(date.getDate() + 1)
+        newFormData.endDate = formatDate(adjustedDate)
       }
     } else {
-      updateFormData('endDate', dateStr)
+      newFormData.endDate = formatDate(date)
+      // Si la date de début n'est pas définie, on la met un jour avant
+      if (!newFormData.startDate) {
+        const adjustedDate = new Date(date.getTime())
+        adjustedDate.setDate(date.getDate() - 1)
+        newFormData.startDate = formatDate(adjustedDate)
+      }
     }
+
+    setFormData(newFormData)
+    // Mise à jour du cache
+    cache.set(FORM_CACHE_KEY, newFormData, { ttl: FORM_CACHE_TTL, storage: 'local' })
   }
+
+  // Reset dateRange à chaque changement d'étape (sauf si on reste sur l'étape 2)
+  useEffect(() => {
+    if (currentStep !== 2) {
+      setDateRange(undefined)
+    }
+  }, [currentStep])
+
+  // Synchronise formData quand la plage est complète
+  useEffect(() => {
+    if (dateRange && dateRange.from && dateRange.to) {
+      updateFormData('startDate', dateRange.from.toISOString().split('T')[0])
+      updateFormData('endDate', dateRange.to.toISOString().split('T')[0])
+    }
+  }, [dateRange])
 
   const handleStartNow = () => {
     const today = new Date()
     const tomorrow = new Date()
     tomorrow.setDate(today.getDate() + 1)
-    
+    setDateRange({ from: today, to: tomorrow })
     updateFormData('startDate', today.toISOString().split('T')[0])
     updateFormData('endDate', tomorrow.toISOString().split('T')[0])
   }
@@ -325,6 +454,8 @@ export default function GenerateForm() {
           updateFormData('destination', selectedCity.city)
           setSuggestions([])
           handleDestinationSelect(selectedCity.city)
+        } else if (formData.destination.trim().length > 0) {
+          setDestinationValidee(true)
         }
         break
       case 'Escape':
@@ -334,161 +465,207 @@ export default function GenerateForm() {
     }
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsLoading(true)
-    setError('')
 
     try {
-      const client = createClient()
-      if (!client) {
-        throw new Error('Impossible de créer le client Supabase')
-      }
-      const { data: { session } } = await client.auth.getSession()
+      // Sauvegarder les données du formulaire
+      localStorage.setItem('formData', JSON.stringify(formData))
 
-      if (!session) {
-        localStorage.setItem('formData', JSON.stringify(formData))
-        router.push('/login')
-        return
+      // Envoyer les données à Crew AI
+      const response = await fetch('/api/crew/suggestions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ formData }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Erreur lors de la communication avec l\'API')
       }
 
-      // Continuer avec la génération du programme...
-    } catch (error: any) {
-      setError(error.message)
+      const data = await response.json()
+
+      if (!data.success) {
+        throw new Error(data.error || 'Erreur lors de la génération des suggestions')
+      }
+
+      // Sauvegarder les activités suggérées
+      localStorage.setItem('savedActivities', JSON.stringify(data.activities))
+
+      // Rediriger vers la page des suggestions
+      router.push(`/suggestions?${new URLSearchParams({
+        destination: formData.destination || '',
+        startDate: formData.startDate || '',
+        endDate: formData.endDate || '',
+        budget: formData.budget?.toString() || '',
+        companion: formData.companion || '',
+        moods: formData.moods?.join(',') || ''
+      })}`)
+    } catch (error) {
+      console.error('Erreur:', error)
+      setError(error instanceof Error ? error.message : 'Une erreur est survenue')
     } finally {
       setIsLoading(false)
     }
   }
 
+  const validateFormData = (data: FormData): { isValid: boolean; errors: string[] } => {
+    const errors: string[] = []
+
+    // Validation de la destination
+    if (!data.destination) {
+      errors.push('Veuillez sélectionner une destination')
+    }
+
+    // Validation des dates
+    if (!data.startDate || !data.endDate) {
+      errors.push('Veuillez sélectionner vos dates de voyage')
+    } else {
+      try {
+        const today = new Date()
+        today.setHours(0, 0, 0, 0)
+        const startDate = new Date(data.startDate)
+        const endDate = new Date(data.endDate)
+
+        // Vérifier que les dates sont valides
+        if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+          errors.push('Les dates sélectionnées sont invalides')
+        } else {
+          if (startDate < today) {
+            errors.push('La date de début doit être dans le futur')
+          }
+          if (endDate < startDate) {
+            errors.push('La date de fin doit être après la date de début')
+          }
+        }
+      } catch (error) {
+        console.error('Erreur lors de la validation des dates:', error)
+        errors.push('Format de date invalide')
+      }
+    }
+
+    // Validation du budget
+    if (!data.budget || data.budget <= 0) {
+      errors.push('Veuillez sélectionner un budget valide')
+    }
+
+    // Validation du type de voyage
+    if (!data.companion) {
+      errors.push('Veuillez sélectionner un type de voyage')
+    }
+
+    // Validation des ambiances
+    if (!data.moods || data.moods.length === 0) {
+      errors.push('Veuillez sélectionner au moins une ambiance')
+    }
+
+    return {
+      isValid: errors.length === 0,
+      errors
+    }
+  }
+
+  const updateFormData = (name: keyof FormData, value: any) => {
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
+
+  useEffect(() => {
+    // Si on vient du résumé pour ajouter des activités, on force l'étape 5
+    if (typeof window !== 'undefined' && localStorage.getItem('resumeAddActivities')) {
+      setCurrentStep(5)
+      localStorage.removeItem('resumeAddActivities')
+    }
+    setReady(true)
+  }, [])
+
+  if (!ready) {
+    return null
+  }
+
   return (
-    <div className="max-w-2xl mx-auto relative min-h-[500px]">
-      {/* Progress bar */}
-      <div className="mb-8 flex justify-center">
-        <div className="w-full max-w-md px-4">
-          <div className="flex justify-between mb-2">
-            {[1, 2, 3, 4, 5].map((step) => (
-              <div
-                key={step}
-                className={`w-8 h-8 rounded-full flex items-center justify-center text-sm ${
-                  step === currentStep
-                    ? 'bg-indigo-600 text-white'
-                    : step < currentStep
-                    ? 'bg-indigo-100'
-                    : 'bg-gray-100'
-                }`}
-              >
-                {step}
-              </div>
-            ))}
-          </div>
-          <div className="h-1 bg-gray-100 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-indigo-600 transition-all duration-300"
-              style={{ width: `${(currentStep - 1) * 25}%` }}
-            />
+    <div className="max-w-2xl mx-auto relative pt-12">
+      <FormHeader
+        currentStep={currentStep}
+        totalSteps={5}
+        onPrevious={handlePrevious}
+      />
+
+      {/* Loading overlay */}
+      {isLoading && (
+        <div className="absolute inset-0 bg-white/80 flex items-center justify-center z-50">
+          <div className="flex flex-col items-center gap-4">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
+            <p className="text-gray-600">Génération des suggestions en cours...</p>
           </div>
         </div>
-      </div>
+      )}
+
+      {/* Error message */}
+      {error && (
+        <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <div className="flex items-start">
+            <div className="flex-shrink-0">
+              <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <h3 className="text-sm font-medium text-red-800">
+                Erreur lors de la génération des suggestions
+              </h3>
+              <div className="mt-2 text-sm text-red-700">
+                <p>{error}</p>
+                {error.includes('Token') && (
+                  <p className="mt-2">
+                    Le service de suggestions n'est pas correctement configuré. Veuillez contacter le support technique.
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Form steps */}
-      <div className="relative overflow-hidden">
+      <div className="relative flex flex-col justify-between min-h-[calc(100vh-120px)] max-w-2xl mx-auto pb-2">
         <AnimatePresence initial={false} mode="wait">
           {currentStep === 1 && (
             <StepWrapper key="step1" title="Où veux-tu partir ?" direction={direction}>
-              <div className="space-y-6">
-                <div className="space-y-4 relative">
-                  <p className="text-sm text-gray-500 text-left mb-1">
-                    Entrez la ville ou le pays de votre choix
-                  </p>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <FiSearch className="h-5 w-5 text-gray-400" />
-                    </div>
-                    <input
-                      ref={inputRef}
-                      type="text"
-                      placeholder="Ex: Paris, Tokyo, New York..."
-                      value={formData.destination}
-                      onChange={handleInputChange}
-                      onKeyDown={handleKeyDown}
-                      className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                    />
-                    {formData.destination && (
-                      <button
-                        onClick={() => {
-                          updateFormData('destination', '')
-                          setSuggestions([])
-                          inputRef.current?.focus()
-                        }}
-                        className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                      >
-                        <FiX className="h-5 w-5 text-gray-400 hover:text-gray-600" />
-                      </button>
-                    )}
+              <div className="space-y-4 pt-2">
+                <p className="text-sm text-gray-500 text-left mb-1">
+                  Entrez la ville ou le pays de votre choix
+                </p>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <FiSearch className="h-5 w-5 text-gray-400" />
                   </div>
-                  
-                  {/* Liste des suggestions améliorée */}
-                  <AnimatePresence>
-                    {suggestions.length > 0 && (
-                      <motion.div
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        className="absolute z-10 w-full bg-white mt-1 rounded-lg shadow-lg border border-gray-200 overflow-hidden"
-                      >
-                        {suggestions.map((item, index) => (
-                          <motion.button
-                            key={index}
-                            className={`w-full text-left px-4 py-3 flex items-center gap-3 transition-colors ${
-                              index === highlightedIndex
-                                ? 'bg-indigo-50'
-                                : 'hover:bg-gray-50'
-                            }`}
-                            onClick={() => {
-                              updateFormData('destination', item.city)
-                              setSuggestions([])
-                              handleDestinationSelect(item.city)
-                            }}
-                            onMouseEnter={() => setHighlightedIndex(index)}
-                            whileHover={{ scale: 1.01 }}
-                            transition={{ duration: 0.1 }}
-                          >
-                            <div className="flex-shrink-0">
-                              <FiMapPin className={`h-5 w-5 ${
-                                index === highlightedIndex
-                                  ? 'text-indigo-600'
-                                  : 'text-gray-400'
-                              }`} />
-                            </div>
-                            <div className="flex-1">
-                              <div className="font-medium text-gray-900">{item.city}</div>
-                              <div className="text-sm text-gray-500 flex items-center justify-between">
-                                <span>{item.country}</span>
-                                {item.source === 'database' && (
-                                  <span className="ml-2 px-2 py-0.5 text-xs bg-indigo-50 text-indigo-600 rounded-full">
-                                    Suggestions disponibles
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                          </motion.button>
-                        ))}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-
-                  {isLoading && (
-                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                      <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-indigo-600"></div>
+                  <input
+                    ref={setInputRef}
+                    type="text"
+                    name="destination"
+                    placeholder="Ex: Paris, Tokyo, New York..."
+                    value={formData.destination}
+                    onChange={handleInputChange}
+                    onKeyDown={handleKeyDown}
+                    className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  />
+                  {destinationValidee && (
+                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                      <FiCheckCircle className="h-5 w-5 text-green-500" />
                     </div>
                   )}
                 </div>
-
-                <div className="space-y-3">
+                <div className="space-y-2">
                   <p className="text-sm font-medium text-gray-700">
                     Destinations populaires
                   </p>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2 gap-2">
                     {SUGGESTED_DESTINATIONS.map((destination) => (
                       <button
                         key={destination.city}
@@ -499,16 +676,16 @@ export default function GenerateForm() {
                             handleDestinationSelect(destination.city)
                           }
                         }}
-                        className={`p-3 rounded-lg border flex items-center space-x-3 transition-colors ${
+                        className={`p-2 rounded-lg border flex items-center space-x-2 transition-colors text-sm ${
                           formData.destination === destination.city
                             ? 'border-indigo-600 bg-indigo-50'
                             : 'border-gray-200 hover:border-indigo-200 hover:bg-gray-50'
                         }`}
                       >
-                        <span className="text-2xl">{destination.icon}</span>
+                        <span className="text-xl">{destination.icon}</span>
                         <div className="text-left">
                           <div className="font-medium">{destination.city}</div>
-                          <div className="text-sm text-gray-500">{destination.country}</div>
+                          <div className="text-xs text-gray-500">{destination.country}</div>
                         </div>
                       </button>
                     ))}
@@ -519,74 +696,51 @@ export default function GenerateForm() {
           )}
 
           {currentStep === 2 && (
-            <StepWrapper key="step2" title="Quand souhaites-tu partir ?" direction={direction}>
-              <div className="space-y-8">
-                <div className="bg-indigo-50 rounded-xl overflow-hidden">
-                  <button
-                    onClick={handleStartNow}
-                    className="w-full flex items-center justify-center gap-3 p-4 text-indigo-600 hover:bg-indigo-100 transition-colors"
-                  >
-                    <span className="text-xl">📅</span>
-                    <span className="font-medium">Partir maintenant</span>
-                  </button>
-                </div>
-
-                <div>
-                  <label className="block text-base font-medium text-gray-900 mb-2">
-                    Dates du voyage
-                  </label>
-                  <div className="bg-white rounded-2xl shadow-lg p-4 mt-2 mb-2">
-                    <DatePicker
-                      ref={datePickerRef}
-                      selected={formData.startDate ? new Date(formData.startDate) : null}
-                      onChange={(dates) => {
-                        const [start, end] = dates as [Date | null, Date | null]
-                        if (start) {
-                          const startStr = start.toISOString().split('T')[0]
-                          updateFormData('startDate', startStr)
-                        }
-                        if (end) {
-                          const endStr = end.toISOString().split('T')[0]
-                          updateFormData('endDate', endStr)
-                        }
-                      }}
-                      startDate={formData.startDate ? new Date(formData.startDate) : null}
-                      endDate={formData.endDate ? new Date(formData.endDate) : null}
-                      minDate={new Date()}
-                      locale="fr"
-                      selectsRange
-                      monthsShown={1}
-                      dateFormat="dd/MM/yyyy"
-                      customInput={<CustomInput value={getFormattedDateRange()} />}
-                      onCalendarOpen={() => setIsCalendarOpen(true)}
-                      onCalendarClose={handleCalendarClose}
-                      calendarContainer={({ children }) => (
-                        <div className="react-datepicker__calendar-container odys-datepicker-container">
-                          {children}
-                          <button
-                            className="datepicker-done-button"
-                            onClick={() => datePickerRef.current?.setOpen(false)}
-                          >
-                            Terminé
-                          </button>
-                        </div>
-                      )}
-                    />
+            <StepWrapper key="step2" title="Quand veux tu partir ?" direction={direction}>
+              <div className="space-y-3 pt-2">
+                <p className="text-sm text-gray-500">
+                  Choisissez les dates de votre voyage. Cela nous aidera à planifier l'itinéraire parfait pour votre séjour.
+                </p>
+                <div className="max-w-md w-full mx-auto">
+                  <div className="bg-indigo-50 rounded-xl overflow-hidden mb-2">
+                    <button
+                      onClick={handleStartNow}
+                      className="w-full flex items-center justify-center gap-2 p-3 text-indigo-600 hover:bg-indigo-100 transition-colors text-base"
+                    >
+                      <span className="text-xl">🚀</span>
+                      <span className="font-medium">Partir maintenant</span>
+                    </button>
                   </div>
+                  <DayPicker
+                    mode="range"
+                    selected={dateRange}
+                    onSelect={handleDateRangeSelect}
+                    disabled={{ before: new Date() }}
+                    showOutsideDays
+                    className="rounded-2xl border border-gray-100 bg-white p-2 shadow-none w-full"
+                    modifiersClassNames={{
+                      selected: 'bg-blue-500 text-white rounded-full',
+                      range_start: 'bg-blue-500 text-white rounded-full',
+                      range_end: 'bg-blue-500 text-white rounded-full',
+                      range_middle: 'bg-blue-100 text-blue-700 rounded-md',
+                      today: 'border border-blue-500',
+                      disabled: 'text-gray-300'
+                    }}
+                    weekStartsOn={1}
+                    locale={fr}
+                  />
                 </div>
-                {calculateDuration(formData) > 0 && (
-                  <p className="text-base text-gray-600 text-center font-medium">
-                    Durée du voyage : {calculateDuration(formData)} jour{calculateDuration(formData) > 1 ? 's' : ''}
-                  </p>
-                )}
               </div>
             </StepWrapper>
           )}
 
           {currentStep === 3 && (
             <StepWrapper key="step3" title="Avec qui voyages-tu ?" direction={direction}>
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2 pt-2">
+                <p className="text-gray-500 mb-1 text-sm">
+                  Sélectionnez le type de voyage qui vous correspond le mieux
+                </p>
+                <div className="grid grid-cols-2 gap-2">
                   {COMPANION_OPTIONS.map((option) => (
                     <button
                       key={option.value}
@@ -597,28 +751,28 @@ export default function GenerateForm() {
                           updateFormData('companion', option.value)
                         }
                       }}
-                      className={`p-4 rounded-lg border-2 flex flex-col items-center ${
+                      className={`p-3 rounded-lg border-2 flex flex-col items-center transition-colors duration-150 text-sm ${
                         formData.companion === option.value
-                          ? 'border-indigo-600 bg-indigo-50'
-                          : 'border-gray-200 hover:border-indigo-200'
+                          ? 'border-blue-500 bg-blue-50'
+                          : 'border-gray-200 hover:border-blue-200'
                       }`}
                     >
-                      <span className="text-2xl mb-2">{option.icon}</span>
+                      <span className="text-xl mb-1">{option.icon}</span>
                       <span className="font-medium">{option.label}</span>
                     </button>
                   ))}
                 </div>
-                <p className="text-sm text-gray-500">
-                  Sélectionnez le type de voyage qui vous correspond le mieux
-                </p>
               </div>
             </StepWrapper>
           )}
 
           {currentStep === 4 && (
-            <StepWrapper key="step4" title="Budget" direction={direction}>
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <StepWrapper key="step4" title="Quel est votre budget ?" direction={direction}>
+              <div className="space-y-2 pt-2">
+                <p className="text-gray-500 mb-1 text-sm">
+                  Choisissez le budget qui correspond à votre voyage
+                </p>
+                <div className="grid grid-cols-2 gap-2">
                   {BUDGET_OPTIONS.map((option) => (
                     <button
                       key={option.value}
@@ -629,13 +783,13 @@ export default function GenerateForm() {
                           updateFormData('budget', option.value)
                         }
                       }}
-                      className={`p-4 rounded-lg border ${
+                      className={`p-3 rounded-lg border text-sm ${
                         formData.budget === option.value
                           ? 'border-indigo-500 bg-indigo-50'
                           : 'border-gray-200 hover:border-indigo-200'
                       }`}
                     >
-                      <div className="text-2xl mb-2">{option.icon}</div>
+                      <div className="text-xl mb-1">{option.icon}</div>
                       <div className="font-medium">{option.label}</div>
                     </button>
                   ))}
@@ -646,7 +800,10 @@ export default function GenerateForm() {
 
           {currentStep === 5 && (
             <StepWrapper key="step5" title="Ambiances souhaitées" direction={direction}>
-              <div className="space-y-4">
+              <div className="space-y-2 pt-2">
+                <p className="text-gray-500 mb-1 text-sm">
+                  Sélectionnez une ou plusieurs ambiances qui correspondent à vos envies pour ce voyage.
+                </p>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   {MOOD_OPTIONS.map((option) => (
                     <button
@@ -675,32 +832,14 @@ export default function GenerateForm() {
           )}
         </AnimatePresence>
       </div>
-
-      {/* Navigation buttons */}
-      <div className="mt-8 flex gap-2">
-        <button
-          onClick={handlePrevious}
-          className={`w-1/2 px-6 py-2 rounded-md ${
-            currentStep === 1
-              ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-              : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
-          }`}
-          disabled={currentStep === 1}
-        >
-          Précédent
-        </button>
-        <button
-          onClick={handleNext}
-          disabled={isNextDisabled()}
-          className={`w-1/2 px-6 py-2 rounded-md ${
-            isNextDisabled()
-              ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-              : 'bg-indigo-600 text-white hover:bg-indigo-700'
-          }`}
-        >
-          {currentStep === 5 ? 'Voir les suggestions' : 'Suivant'}
-        </button>
-      </div>
+      <FormFooter
+        currentStep={currentStep}
+        totalSteps={5}
+        onPrevious={handlePrevious}
+        onNext={currentStep === 1 ? handleDestinationSubmit : handleNext}
+        isNextDisabled={isNextDisabled()}
+        isLoading={isLoading}
+      />
     </div>
   )
 }

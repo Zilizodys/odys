@@ -1,10 +1,37 @@
-export type Category = 
-  | 'culture'
-  | 'gastronomie'
-  | 'sport'
-  | 'vie nocturne'
-  | 'nature'
-  | 'other';
+// Mapping des catégories de l'API vers les catégories frontend
+export const API_TO_FRONTEND_CATEGORY: Record<string, string> = {
+  'museums': 'culture',
+  'architecture': 'culture',
+  'historic': 'culture',
+  'cultural': 'culture',
+  'restaurants': 'gastronomie',
+  'interesting_places': 'culture',
+  'sport': 'sport',
+  'amusements': 'sport',
+  'entertainment': 'vie nocturne',
+  'gardens': 'nature',
+  'natural': 'nature'
+}
+
+// Mapping des ambiances aux catégories
+export const MOOD_TO_CATEGORY: Record<string, string> = {
+  'romantic': 'gastronomie',
+  'cultural': 'culture',
+  'adventure': 'sport',
+  'party': 'vie nocturne',
+  'relaxation': 'nature'
+}
+
+// Liste des catégories disponibles
+export const AVAILABLE_CATEGORIES = [
+  'culture',
+  'gastronomie',
+  'sport',
+  'vie nocturne',
+  'nature'
+] as const
+
+export type Category = typeof AVAILABLE_CATEGORIES[number]
 
 export const DEFAULT_CATEGORY: Category = 'other';
 

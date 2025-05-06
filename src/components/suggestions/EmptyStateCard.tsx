@@ -28,4 +28,4 @@ export default function EmptyStateCard({ categoryLabel, isLastCategory, onNext }
       </button>
     </motion.div>
   )
-} 
+}

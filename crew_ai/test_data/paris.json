@@ -1,0 +1,57 @@
+[
+  {
+    "id": "1",
+    "title": "Visite guidée du Louvre",
+    "description": "Découvrez les chefs-d'œuvre du plus grand musée du monde avec un guide expert.",
+    "category": "culture",
+    "price": 35,
+    "address": "Rue de Rivoli, 75001 Paris",
+    "imageurl": "https://images.unsplash.com/photo-1499856871958-5b9627545d1a",
+    "city": "Paris",
+    "duration": "2h30"
+  },
+  {
+    "id": "2",
+    "title": "Musée d'Orsay",
+    "description": "Explorez la plus grande collection d'art impressionniste au monde.",
+    "category": "culture",
+    "price": 25,
+    "address": "1 Rue de la Légion d'Honneur, 75007 Paris",
+    "imageurl": "https://images.unsplash.com/photo-1583771817952-d97129c5f676",
+    "city": "Paris",
+    "duration": "2h"
+  },
+  {
+    "id": "3",
+    "title": "Dîner croisière sur la Seine",
+    "description": "Savourez un dîner gastronomique tout en admirant les monuments illuminés de Paris.",
+    "category": "romantique",
+    "price": 45,
+    "address": "Port de la Bourdonnais, 75007 Paris",
+    "imageurl": "https://images.unsplash.com/photo-1583771817952-d97129c5f677",
+    "city": "Paris",
+    "duration": "2h30"
+  },
+  {
+    "id": "4",
+    "title": "Centre Pompidou",
+    "description": "Visitez le musée d'art moderne et contemporain dans un bâtiment unique.",
+    "category": "culture",
+    "price": 30,
+    "address": "Place Georges-Pompidou, 75004 Paris",
+    "imageurl": "https://images.unsplash.com/photo-1583771817952-d97129c5f678",
+    "city": "Paris",
+    "duration": "2h"
+  },
+  {
+    "id": "5",
+    "title": "Coucher de soleil au Sacré-Cœur",
+    "description": "Profitez d'une vue panoramique sur Paris au coucher du soleil depuis Montmartre.",
+    "category": "romantique",
+    "price": 20,
+    "address": "35 Rue du Chevalier de la Barre, 75018 Paris",
+    "imageurl": "https://images.unsplash.com/photo-1583771817952-d97129c5f679",
+    "city": "Paris",
+    "duration": "1h30"
+  }
+] 
