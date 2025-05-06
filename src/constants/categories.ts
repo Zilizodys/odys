@@ -19,7 +19,9 @@ export const MOOD_TO_CATEGORY: Record<string, string> = {
   'cultural': 'culture',
   'adventure': 'sport',
   'party': 'vie nocturne',
-  'relaxation': 'nature'
+  'relaxation': 'nature',
+  'nightlife': 'vie nocturne',
+  'entertainment': 'vie nocturne'
 }
 
 // Liste des catégories disponibles

@@ -194,7 +194,7 @@ export default function ActivityModal({ activity, onClose, activities, onNext, o
                     />
                     <button
                       type="button"
-                      className="absolute top-4 right-4 text-white hover:text-gray-200 transition-colors"
+                      className="fixed top-4 right-4 text-white hover:text-gray-200 transition-colors"
                       onClick={onClose}
                     >
                       <FiX size={24} />

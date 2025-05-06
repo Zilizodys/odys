@@ -24,6 +24,25 @@ export default function SuggestionsPage() {
   const [currentCategory, setCurrentCategory] = useState<string>('')
   const [currentIndex, setCurrentIndex] = useState(0)
   const [savedActivities, setSavedActivities] = useState<Activity[]>([])
+  const [categories, setCategories] = useState<string[]>([])
+  const type = searchParams.get('type')
+
+  // Si c'est une suggestion de restaurant, rediriger vers la page dédiée
+  useEffect(() => {
+    console.log('Type de suggestion:', type)
+    if (type === 'restaurant') {
+      console.log('Redirection vers la page des restaurants avec params:', {
+        type,
+        city: searchParams.get('city'),
+        budget: searchParams.get('budget'),
+        program: searchParams.get('program'),
+        day: searchParams.get('day'),
+        slot: searchParams.get('slot')
+      })
+      router.push(`/suggestions/restaurants?${searchParams.toString()}`)
+      return
+    }
+  }, [type, router, searchParams])
 
   // Récupérer les données du formulaire depuis localStorage
   const formData = useMemo(() => {
@@ -32,27 +51,19 @@ export default function SuggestionsPage() {
     return data ? JSON.parse(data) as FormData : null
   }, [])
 
-  // Mapping mood → catégorie d'activité (adapter si besoin)
+  // Mapping mood → catégorie d'activité (doit matcher le mapping du back)
   const moodToCategory: Record<string, string> = {
-    romantic: 'Gastronomie',
-    cultural: 'Culture',
-    adventure: 'Sport',
-    party: 'Vie nocturne',
-    relaxation: 'Nature',
-    shopping: 'Shopping',
-    wellness: 'Bien-être',
-    food: 'Street Food',
-    sport: 'Sports extrêmes',
-    nature: 'Randonnée'
+    romantic: 'romantique',
+    cultural: 'culture',
+    adventure: 'sport',
+    party: 'vie nocturne',
+    relaxation: 'nature',
+    shopping: 'shopping',
+    wellness: 'bien-etre',
+    food: 'gastronomie',
+    sport: 'sport',
+    nature: 'nature'
   }
-
-  // Filtrer les catégories selon les moods choisis
-  const categories = useMemo(() => {
-    if (!formData?.moods) return []
-    return Object.keys(activitiesByCategory).filter(cat =>
-      formData.moods.some(mood => moodToCategory[mood] === cat)
-    )
-  }, [activitiesByCategory, formData])
 
   // Passe à la catégorie suivante
   const goToNextCategory = useCallback(() => {
@@ -76,7 +87,10 @@ export default function SuggestionsPage() {
       }
 
       try {
-        const activities = await getActivitiesByCriteria(formData)
+        const activitiesByCategory = await getActivitiesByCriteria(formData)
+        // Log debug : afficher toutes les catégories présentes dans les activités brutes
+        const allRawCategories = Object.keys(activitiesByCategory)
+        console.log('Catégories présentes dans les activités brutes (avant filtrage):', allRawCategories)
         // Récupérer les activités déjà sélectionnées
         let alreadySelected: Activity[] = []
         if (typeof window !== 'undefined') {
@@ -89,16 +103,25 @@ export default function SuggestionsPage() {
         }
         // Filtrer les activités déjà sélectionnées (par id)
         const alreadySelectedIds = new Set(alreadySelected.map(a => a.id))
+        // Filtrer les activités déjà sélectionnées dans chaque catégorie
         const filteredByCategory: Record<string, Activity[]> = {}
-        for (const [cat, acts] of Object.entries(activities)) {
-          filteredByCategory[cat] = acts.filter(a => !alreadySelectedIds.has(a.id))
-        }
+        Object.entries(activitiesByCategory).forEach(([category, activities]) => {
+          const normCat = category && category.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase()
+          filteredByCategory[normCat] = activities.filter(
+            activity => !alreadySelectedIds.has(activity.id)
+          )
+        })
         setActivitiesByCategory(filteredByCategory)
+        // Définir la liste des catégories à partir des clés qui ont des activités
+        const cats = Object.keys(filteredByCategory).filter(cat => filteredByCategory[cat] && filteredByCategory[cat].length > 0)
+        setCategories(cats)
         // Définir la première catégorie comme catégorie courante
-        const firstCategory = Object.keys(filteredByCategory)[0]
-        if (firstCategory) {
-          setCurrentCategory(firstCategory)
+        if (cats.length > 0) {
+          setCurrentCategory(cats[0])
         }
+        // Log des catégories disponibles
+        console.log('Catégories disponibles (normalisées):', cats)
+        console.log('Contenu complet de activitiesByCategory (après filtrage):', filteredByCategory)
       } catch (err) {
         console.error('Erreur lors de la récupération des activités:', err)
         setError('Erreur lors de la récupération des suggestions')
@@ -106,13 +129,12 @@ export default function SuggestionsPage() {
         setLoading(false)
       }
     }
-
     fetchActivities()
   }, [formData])
 
   // Quand on swipe ou delete, si on a fini la catégorie, on passe à la suivante
   const handleSwipe = useCallback((direction: number | PanInfo) => {
-    const currentActivities = activitiesByCategory[currentCategory] || []
+    const currentActivities = activitiesByCategory[currentCategory.toLowerCase()] || []
     if (typeof direction === 'number') {
       if (direction > 0) {
         // Swipe droite = sauvegarder
@@ -153,7 +175,7 @@ export default function SuggestionsPage() {
   }, [activitiesByCategory, currentCategory, currentIndex, goToNextCategory])
 
   const handleDelete = (id: string) => {
-    const currentActivities = activitiesByCategory[currentCategory] || []
+    const currentActivities = activitiesByCategory[currentCategory.toLowerCase()] || []
     const activity = currentActivities[currentIndex]
     if (activity) {
       setSavedActivities(prev => [...prev, activity])
@@ -196,6 +218,14 @@ export default function SuggestionsPage() {
     return `Week-end ${dest} ${comp}`.trim()
   }
 
+  // Normalisation de la destination choisie
+  const normalizedDest = (formData?.destination || '').normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase()
+  // Filtrage des activités par ville (destination)
+  const currentActivities = (activitiesByCategory[currentCategory] || []).filter(
+    act => act.city && act.city.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase() === normalizedDest
+  )
+  const currentActivity = currentActivities[currentIndex]
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -218,9 +248,6 @@ export default function SuggestionsPage() {
     )
   }
 
-  const currentActivities = activitiesByCategory[currentCategory] || []
-  const currentActivity = currentActivities[currentIndex]
-
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <div className="max-w-md mx-auto px-4 pt-8 pb-2 w-full flex-1">
@@ -232,6 +259,10 @@ export default function SuggestionsPage() {
         <h2 className="text-xl font-bold text-gray-900 mb-2 text-center">
           {getMoodLabel(currentCategory)}
         </h2>
+        {/* Nombre de suggestions restantes */}
+        <div className="text-center text-sm text-gray-500 mb-2">
+          {currentActivities.length - currentIndex} suggestion{currentActivities.length - currentIndex > 1 ? 's' : ''} restante{currentActivities.length - currentIndex > 1 ? 's' : ''} dans cette catégorie
+        </div>
         <ProgressBar
           currentIndex={currentIndex}
           totalItems={currentActivities.length}
@@ -263,6 +294,17 @@ export default function SuggestionsPage() {
             )}
           </AnimatePresence>
         </div>
+        {/* Bouton explicite pour passer à la catégorie suivante */}
+        {currentActivities.length > 0 && currentIndex >= currentActivities.length && (
+          <div className="flex justify-center mt-4">
+            <button
+              onClick={goToNextCategory}
+              className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium"
+            >
+              Passer à la catégorie suivante
+            </button>
+          </div>
+        )}
       </div>
       {/* Boutons fixes en bas de la page */}
       <div className="fixed bottom-20 left-0 right-0 flex justify-center gap-12 z-30 pointer-events-none">

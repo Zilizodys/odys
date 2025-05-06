@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from 'react'
 import { User } from '@supabase/supabase-js'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { FiEdit2, FiCamera } from 'react-icons/fi'
+import { FiEdit2, FiCamera, FiMap, FiList } from 'react-icons/fi'
 import { getSupabaseClient } from '@/lib/supabase/client'
 
 export default function SettingsPage() {
@@ -18,6 +18,7 @@ export default function SettingsPage() {
     country: 'US',
     phoneNumber: ''
   })
+  const [programStats, setProgramStats] = useState({ count: 0, activities: 0 })
   
   const router = useRouter()
   const supabase = getSupabaseClient()
@@ -36,6 +37,23 @@ export default function SettingsPage() {
           country: user?.user_metadata?.country || 'US',
           phoneNumber: user?.user_metadata?.phone_number || ''
         })
+        // Récupérer les stats programmes/activités
+        const { data: programs, error: programsError } = await supabase
+          .from('programs')
+          .select('id')
+          .eq('user_id', user.id)
+        if (programsError) throw programsError
+        const programIds = programs?.map((p: any) => p.id) || []
+        let activitiesCount = 0
+        if (programIds.length > 0) {
+          const { count, error: countError } = await supabase
+            .from('program_activities')
+            .select('id', { count: 'exact', head: true })
+            .in('program_id', programIds)
+          if (countError) throw countError
+          activitiesCount = count || 0
+        }
+        setProgramStats({ count: programIds.length, activities: activitiesCount })
       } catch (error) {
         console.error('Erreur lors de la récupération de l\'utilisateur:', error)
         router.push('/login')
@@ -147,9 +165,9 @@ export default function SettingsPage() {
   return (
     <div className="min-h-screen bg-white pb-32">
       <div className="max-w-xl mx-auto px-4 py-8">
-        <h1 className="text-2xl font-bold mb-6">Add a personal touch</h1>
+        <h1 className="text-2xl font-bold mb-6">Mon profil</h1>
         <p className="text-gray-500 mb-8">
-          To enhance your travel journey, we'd love to know more about you.
+          Personnalise ton expérience et retrouve toutes les infos de ton compte.
         </p>
 
         <div className="relative w-24 h-24 mx-auto mb-8">
@@ -190,6 +208,20 @@ export default function SettingsPage() {
             onChange={handleFileChange}
             className="hidden"
           />
+        </div>
+
+        {/* Stats programmes/activités */}
+        <div className="mb-8 flex justify-center">
+          <div className="bg-white rounded-xl shadow-md px-8 py-5 flex flex-col sm:flex-row items-center gap-6 border border-gray-100">
+            <div className="flex items-center gap-2 text-indigo-600 font-semibold">
+              <FiMap className="w-5 h-5" />
+              <span>{programStats.count} programme{programStats.count > 1 ? 's' : ''} créé{programStats.count > 1 ? 's' : ''}</span>
+            </div>
+            <div className="flex items-center gap-2 text-indigo-600 font-semibold">
+              <FiList className="w-5 h-5" />
+              <span>{programStats.activities} activité{programStats.activities > 1 ? 's' : ''} ajoutée{programStats.activities > 1 ? 's' : ''}</span>
+            </div>
+          </div>
         </div>
 
         <div className="space-y-6">

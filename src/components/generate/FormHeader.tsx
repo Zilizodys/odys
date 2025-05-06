@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { FiArrowLeft } from 'react-icons/fi'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 
 interface FormHeaderProps {
   currentStep: number
@@ -14,6 +15,7 @@ export default function FormHeader({
   totalSteps,
   onPrevious
 }: FormHeaderProps) {
+  const router = useRouter()
   // La barre commence à 1/totalSteps dès la première étape
   const progress = (currentStep / totalSteps) * 100
   const [logoError, setLogoError] = useState(false)
@@ -32,19 +34,24 @@ export default function FormHeader({
         </button>
         {/* Logo centré avec fallback React */}
         <div className="flex-1 flex justify-center">
-          {logoError ? (
-            <span className="text-xl font-bold">Odys.ai</span>
-          ) : (
-            <Image
-              src="/logo.svg"
-              alt="Odys.ai"
-              width={80}
-              height={28}
-              className="object-contain"
-              onError={() => setLogoError(true)}
-              priority
-            />
-          )}
+          <button
+            onClick={() => router.push('/')}
+            className="focus:outline-none"
+          >
+            {logoError ? (
+              <span className="text-xl font-bold">Odys.ai</span>
+            ) : (
+              <Image
+                src="/Odys-logo.svg"
+                alt="Odys.ai"
+                width={80}
+                height={28}
+                className="object-contain"
+                onError={() => setLogoError(true)}
+                priority
+              />
+            )}
+          </button>
         </div>
         {/* Pagination à droite */}
         <div className="w-12 text-right text-lg font-medium flex-shrink-0">

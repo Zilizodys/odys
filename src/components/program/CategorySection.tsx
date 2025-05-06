@@ -8,6 +8,8 @@ interface CategorySectionProps {
   activities: Activity[]
   onActivityClick: NonNullable<SwipeableActivityCardProps['onClick']>
   onActivityDelete: SwipeableActivityCardProps['onDelete']
+  programId?: string
+  programActivities?: { activityId: string; day: number; slot: number }[]
 }
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -22,10 +24,16 @@ export default function CategorySection({
   category, 
   activities, 
   onActivityClick, 
-  onActivityDelete 
+  onActivityDelete,
+  programId,
+  programActivities = []
 }: CategorySectionProps) {
   const [isExpanded, setIsExpanded] = useState(false)
   const categoryLabel = CATEGORY_LABELS[category] || category
+
+  const isActivityInProgram = (activityId: string) => {
+    return programActivities.find(pa => pa.activityId === activityId)
+  }
 
   return (
     <div className="bg-white rounded-xl shadow-sm overflow-hidden">
@@ -51,14 +59,21 @@ export default function CategorySection({
       {isExpanded && (
         <div className="border-t border-gray-100">
           <div className="p-4 space-y-3">
-            {activities.map((activity) => (
-              <SwipeableActivityCard
-                key={activity.id}
-                activity={activity}
-                onDelete={onActivityDelete}
-                onClick={onActivityClick}
-              />
-            ))}
+            {activities.map((activity) => {
+              const programActivity = isActivityInProgram(activity.id)
+              return (
+                <SwipeableActivityCard
+                  key={activity.id}
+                  activity={activity}
+                  onDelete={onActivityDelete}
+                  onClick={onActivityClick}
+                  programId={programId}
+                  isUsedInProgram={!!programActivity}
+                  programDay={programActivity?.day}
+                  programSlot={programActivity?.slot}
+                />
+              )
+            })}
           </div>
         </div>
       )}

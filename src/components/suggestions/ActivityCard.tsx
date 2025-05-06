@@ -82,7 +82,8 @@ export default function ActivityCard({
           </div>
         </div>
 
-        <div className="relative h-64 w-full">
+        {/* Image et overlays */}
+        <div className="relative h-64 w-full overflow-hidden rounded-t-xl">
           <ImageWithFallback
             src={getImageUrl(activity.imageurl)}
             alt={activity.title}

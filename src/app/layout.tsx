@@ -38,9 +38,9 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" />
         <link rel="icon" href="/icon.png" type="image/png" />
       </head>
-      <body suppressHydrationWarning className="min-h-screen flex flex-col">
+      <body suppressHydrationWarning>
         <Header />
-        <main className="flex-1 overflow-y-auto">
+        <main>
           <PageTransition>
             {children}
           </PageTransition>

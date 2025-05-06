@@ -172,7 +172,7 @@ const ProgramCard = ({ program, onDelete, onClick }: ProgramCardProps) => {
             {/* Overlay gradient + nom destination */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-6 text-white z-10">
-              <h2 className="font-bold text-white text-3xl drop-shadow mb-1">
+              <h2 className="font-bold text-white text-2xl drop-shadow mb-1">
                 {program.title || `Séjour à ${program.destination}`}
               </h2>
               <div className="flex items-center gap-2 text-white">

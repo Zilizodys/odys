@@ -239,7 +239,7 @@ export default function SummaryPage() {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-            <h1 className="text-4xl font-bold mb-2">{`Séjour à ${program.formData.destination}`}</h1>
+            <h1 className="text-2xl font-bold mb-2">{`Séjour à ${program.formData.destination}`}</h1>
             <div className="flex items-center gap-2 text-lg">
               <FiMapPin className="text-white" />
               <span>{program.formData.destination}</span>
@@ -301,7 +301,7 @@ export default function SummaryPage() {
             <button
               onClick={() => {
                 localStorage.setItem('resumeAddActivities', 'true')
-                router.push('/generate')
+                router.push('/generate?step=5')
               }}
               className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100 transition-colors font-medium"
             >

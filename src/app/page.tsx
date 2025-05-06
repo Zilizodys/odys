@@ -243,7 +243,7 @@ export default function Home() {
           )}
         </div>
       </div>
-      <LoginModal open={loginOpen} onClose={() => setLoginOpen(false)} />
+      {loginOpen && <LoginModal open={loginOpen} onClose={() => setLoginOpen(false)} />}
     </div>
   )
 }

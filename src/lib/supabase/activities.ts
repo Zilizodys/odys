@@ -8,6 +8,21 @@ export const getActivitiesByCriteria = async (formData: FormData): Promise<Recor
   // Log de debug
   console.log('Recherche d\'activités pour la destination :', formData.destination)
 
+  // Récupérer les activités déjà sélectionnées
+  let savedActivities: Activity[] = []
+  if (typeof window !== 'undefined') {
+    const saved = localStorage.getItem('savedActivities')
+    if (saved) {
+      try {
+        savedActivities = JSON.parse(saved)
+      } catch (error) {
+        console.error('Erreur lors de la lecture des activités sauvegardées:', error)
+      }
+    }
+  }
+  const savedActivityIds = new Set(savedActivities.map(a => a.id))
+  console.log('Activités déjà sélectionnées:', savedActivityIds)
+
   // Récupérer toutes les activités pour la destination (insensible à la casse)
   const { data: activities, error } = await supabase
     .from('activities')
@@ -22,57 +37,115 @@ export const getActivitiesByCriteria = async (formData: FormData): Promise<Recor
 
   console.log('Activités brutes récupérées :', activities)
 
-  // Filtrage JS plus souple sur la ville (includes)
-  const normalizedDest = formData.destination.trim().toLowerCase()
+  // Fonction utilitaire pour normaliser les chaînes (sans accents, minuscules)
+  const normalize = (str: string) =>
+    (str || '').normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase().trim()
+
+  const normalizedDest = normalize(formData.destination)
   const moods = formData.moods || []
   const budget = formData.budget || Infinity
   const isFree = formData.budget === 0
   const companion = formData.companion
   console.log('moods reçus :', moods)
-  // Mapping anglais -> français pour les moods
-  const moodMap: Record<string, string> = {
-    cultural: 'culture',
-    food: 'gastronomie',
-    sport: 'sport',
-    nature: 'nature',
-    romantic: 'romantique',
-    bar: 'bar',
-    restaurant: 'restaurant',
-    art: 'art',
-    shopping: 'shopping',
-    // Ajoute d'autres mappings si besoin
+  // Mapping anglais -> français pour les moods élargi
+  const moodMap: Record<string, string[]> = {
+    cultural: ['culture', 'art', 'musée', 'exposition', 'histoire', 'monument', 'architecture'],
+    food: ['gastronomie', 'restaurant', 'street food', 'cuisine', 'bistrot', 'café'],
+    sport: ['sport', 'sports extrêmes', 'activité physique', 'fitness', 'randonnée'],
+    nature: ['nature', 'randonnée', 'parc', 'jardin', 'plage', 'montagne', 'forêt'],
+    romantic: ['romantique', 'couple', 'gastronomie', 'restaurant'],
+    bar: ['bar', 'vie nocturne', 'pub', 'café'],
+    restaurant: ['restaurant', 'gastronomie', 'bistrot', 'cuisine'],
+    art: ['art', 'exposition', 'musée', 'galerie', 'culture'],
+    shopping: ['shopping', 'boutique', 'marché', 'centre commercial'],
+    party: ['vie nocturne', 'bar', 'club', 'discothèque', 'concert'],
+    wellness: ['bien-être', 'spa', 'détente', 'massage', 'yoga'],
+    relaxation: ['nature', 'détente', 'bien-être', 'spa', 'parc', 'jardin'],
+    nightlife: ['vie nocturne', 'bar', 'club', 'discothèque', 'concert', 'pub', 'café', 'rooftop', 'speakeasy'],
+    entertainment: ['vie nocturne', 'bar', 'club', 'concert', 'spectacle', 'théâtre']
   }
-  const normalizedMoods = moods.map((m: string) => {
+  // On aplatit tous les moods sélectionnés en une seule liste de catégories cibles
+  const normalizedMoods = moods.flatMap((m: string) => {
     const key = m.trim().toLowerCase()
-    return moodMap[key] || key
+    return moodMap[key] || [key]
   })
-  console.log('moods normalisés (après mapping) :', normalizedMoods)
+  console.log('moods normalisés (après mapping élargi) :', normalizedMoods)
+
+  // Log des paramètres de recherche
+  console.log('Paramètres de recherche:', {
+    destination: formData.destination,
+    normalizedDest,
+    moods,
+    normalizedMoods,
+    budget,
+    isFree,
+    companion
+  })
+
+  // Log des activités brutes
+  console.log('Nombre total d\'activités avant filtrage:', activities.length)
 
   const filteredActivities = activities.filter(
     act => {
-      const city = act.city ? act.city.trim().toLowerCase() : ''
-      const matchCity = city === normalizedDest
-      const category = act.category ? act.category.trim().toLowerCase() : ''
-      const matchCategory = normalizedMoods.length === 0 || normalizedMoods.includes(category)
+      const city = normalize(act.city)
+      const matchCity = city.includes(normalizedDest) || normalizedDest.includes(city)
+      
+      const category = act.category ? normalize(act.category) : ''
+      const matchCategory = normalizedMoods.length === 0 || normalizedMoods.some(mood => {
+        const normalizedMood = normalize(mood)
+        const directMatch = category.includes(normalizedMood) || normalizedMood.includes(category)
+        const mappedMatch = Object.entries(moodMap).some(([key, values]) => {
+          if (normalize(key) === normalizedMood) {
+            return values.some(value => normalize(value).includes(category) || category.includes(normalize(value)))
+          }
+          return false
+        })
+        
+        // Log détaillé du processus de matching des catégories
+        console.log('Détails du matching de catégorie:', {
+          activity: act.title,
+          category,
+          mood: normalizedMood,
+          directMatch,
+          mappedMatch,
+          matched: directMatch || mappedMatch
+        })
+        
+        return directMatch || mappedMatch
+      })
+
       const matchBudget = isFree
         ? (typeof act.price === 'number' ? act.price === 0 : false)
         : (typeof act.price === 'number' ? act.price <= budget : true)
       const matchCompanion = !companion || !act.companion || act.companion === companion
-      console.log('Filtrage activité:', { city, matchCity, category, matchCategory, moods: normalizedMoods, price: act.price, matchBudget, companion: act.companion, matchCompanion })
-      return matchCity && matchCategory && matchBudget && matchCompanion
+      const notAlreadySelected = !savedActivityIds.has(act.id)
+
+      // Log détaillé du filtrage
+      console.log('Résultat du filtrage pour:', act.title, {
+        city,
+        matchCity,
+        category,
+        matchCategory,
+        price: act.price,
+        matchBudget,
+        companion: act.companion,
+        matchCompanion,
+        notAlreadySelected,
+        accepted: matchCity && matchCategory && matchBudget && matchCompanion && notAlreadySelected
+      })
+
+      return matchCity && matchCategory && matchBudget && matchCompanion && notAlreadySelected
     }
   )
 
-  console.log('Activités filtrées :', filteredActivities)
-  filteredActivities.forEach(act => {
-    console.log('[DEBUG ACTIVITÉ]', {
-      id: act.id,
-      city: act.city,
-      address: act.address || act.location,
-      category: act.category,
-      title: act.title
-    })
-  })
+  // Log du résultat final
+  console.log('Nombre d\'activités après filtrage:', filteredActivities.length)
+  console.log('Activités retenues:', filteredActivities.map(act => ({
+    id: act.id,
+    title: act.title,
+    category: act.category,
+    city: act.city
+  })))
 
   // Grouper les activités par catégorie
   const activitiesByCategory = filteredActivities.reduce((acc, activity) => {

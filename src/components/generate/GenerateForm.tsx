@@ -138,12 +138,27 @@ const ACTIVITIES_CACHE_TTL = 30 * 60 * 1000 // 30 minutes
 
 export default function GenerateForm() {
   const supabase = createClientComponentClient()
+  const router = useRouter()
+  const getStepFromUrl = () => {
+    if (typeof window !== 'undefined') {
+      const searchParams = new URLSearchParams(window.location.search)
+      const step = parseInt(searchParams.get('step') || '1', 10)
+      return Math.min(Math.max(step, 1), 5)
+    }
+    return 1
+  }
   const [formData, setFormData] = useState<FormData>(() => {
     // Récupérer les données du cache au chargement
     const cachedData = cache.get<FormData>(FORM_CACHE_KEY, { storage: 'local' })
     return cachedData || INITIAL_FORM_DATA
   })
-  const [currentStep, setCurrentStep] = useState(1)
+  const [currentStep, setCurrentStep] = useState<number>(() => {
+    if (typeof window !== 'undefined' && localStorage.getItem('resumeAddActivities')) {
+      localStorage.removeItem('resumeAddActivities')
+      return 5
+    }
+    return getStepFromUrl()
+  })
   const [ready, setReady] = useState(false)
   const [direction, setDirection] = useState<'left' | 'right'>('right')
   const [isCalendarOpen, setIsCalendarOpen] = useState(false)
@@ -156,7 +171,6 @@ export default function GenerateForm() {
   const [isLoading, setIsLoading] = useState(false)
   const [destinationValidee, setDestinationValidee] = useState(false)
   const datePickerRef = useRef<any>(null)
-  const router = useRouter()
   const [highlightedIndex, setHighlightedIndex] = useState<number>(-1)
   const [inputRef, setInputRef] = useState<HTMLInputElement | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -576,11 +590,7 @@ export default function GenerateForm() {
   }
 
   useEffect(() => {
-    // Si on vient du résumé pour ajouter des activités, on force l'étape 5
-    if (typeof window !== 'undefined' && localStorage.getItem('resumeAddActivities')) {
-      setCurrentStep(5)
-      localStorage.removeItem('resumeAddActivities')
-    }
+    // On ne force plus setCurrentStep(5) ici, car c'est géré à l'init
     setReady(true)
   }, [])
 
@@ -659,6 +669,21 @@ export default function GenerateForm() {
                     <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                       <FiCheckCircle className="h-5 w-5 text-green-500" />
                     </div>
+                  )}
+                  {/* Suggestions d'autocomplétion */}
+                  {suggestions.length > 0 && !destinationValidee && (
+                    <ul className="absolute z-20 left-0 right-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-auto">
+                      {suggestions.slice(0, 8).map((sugg, idx) => (
+                        <li
+                          key={sugg.city + sugg.country}
+                          className={`px-4 py-2 cursor-pointer flex items-center gap-2 hover:bg-indigo-50 ${highlightedIndex === idx ? 'bg-indigo-100' : ''}`}
+                          onMouseDown={() => handleDestinationSelect(sugg.city)}
+                        >
+                          <span className="font-medium">{sugg.city}</span>
+                          <span className="text-xs text-gray-500">{sugg.country}</span>
+                        </li>
+                      ))}
+                    </ul>
                   )}
                 </div>
                 <div className="space-y-2">

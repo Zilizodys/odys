@@ -1,15 +1,28 @@
 import { motion, PanInfo, useAnimation } from 'framer-motion'
 import { Activity } from '@/types/activity'
-import { FiMapPin, FiClock, FiDollarSign, FiTrash2 } from 'react-icons/fi'
+import { FiMapPin, FiClock, FiDollarSign, FiTrash2, FiLink } from 'react-icons/fi'
 import { useState, useRef } from 'react'
+import Link from 'next/link'
 
 export interface SwipeableActivityCardProps {
   activity: Activity
   onDelete: (id: string) => void
   onClick?: (activity: Activity) => void
+  programId?: string
+  isUsedInProgram?: boolean
+  programDay?: number
+  programSlot?: number
 }
 
-export default function SwipeableActivityCard({ activity, onDelete, onClick }: SwipeableActivityCardProps) {
+export default function SwipeableActivityCard({ 
+  activity, 
+  onDelete, 
+  onClick,
+  programId,
+  isUsedInProgram,
+  programDay,
+  programSlot 
+}: SwipeableActivityCardProps) {
   const controls = useAnimation()
   const [isOpen, setIsOpen] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
@@ -64,14 +77,14 @@ export default function SwipeableActivityCard({ activity, onDelete, onClick }: S
   return (
     <div className="relative">
       <div 
-        className="absolute right-0 top-0 bottom-0 w-[100px] bg-red-500 flex items-center justify-center cursor-pointer rounded-lg"
+        className="absolute right-0 top-0 bottom-0 w-[100px] h-full bg-red-500 flex items-center justify-center cursor-pointer rounded-r-xl"
         onClick={handleDeleteClick}
       >
         <FiTrash2 className="w-6 h-6 text-white" />
       </div>
       
       <motion.div
-        className="relative bg-white rounded-lg shadow-sm overflow-hidden z-10 border border-gray-100 cursor-pointer"
+        className="relative bg-white rounded-xl overflow-hidden z-10 border border-gray-100 cursor-pointer transition-transform hover:scale-[1.02]"
         animate={controls}
         drag={isDragging ? "x" : false}
         dragConstraints={{ left: isOpen ? -100 : 0, right: 0 }}
@@ -82,19 +95,36 @@ export default function SwipeableActivityCard({ activity, onDelete, onClick }: S
         onTouchMove={handleTouchMove}
         onClick={handleClick}
       >
-        <div className="p-4">
-          <h3 className="font-semibold text-gray-900 mb-2">{activity.title}</h3>
-          <p className="text-gray-600 text-sm mb-3">{activity.description}</p>
-          
-          <div className="flex items-center gap-4 text-sm text-gray-500">
-            <div className="flex items-center gap-1">
-              <FiMapPin className="w-4 h-4" />
-              <span>{activity.address}</span>
-            </div>
-            <div className="flex items-center gap-1">
+        <div className="p-5 flex flex-col gap-2">
+          <div className="flex justify-between items-start">
+            <h3 className="text-xs font-semibold text-gray-900 mb-1 truncate">{activity.title}</h3>
+            {isUsedInProgram && programId && (
+              <div 
+                className="flex items-center gap-1 px-2 py-1 bg-indigo-100 text-indigo-700 text-xs rounded-full"
+              >
+                <FiLink className="w-3 h-3" />
+                <span>Jour {programDay}</span>
+              </div>
+            )}
+          </div>
+          <p className="text-gray-600 text-sm mb-2 line-clamp-2">{activity.description}</p>
+          <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
+            {activity.address && (
+              <span className="flex items-center gap-1">
+                <FiMapPin className="w-4 h-4" />
+                <span className="truncate max-w-[160px] md:max-w-[220px]">{activity.address}</span>
+              </span>
+            )}
+            {activity.duration && (
+              <span className="flex items-center gap-1">
+                <FiClock className="w-4 h-4" />
+                <span>{activity.duration}</span>
+              </span>
+            )}
+            <span className="flex items-center gap-1">
               <FiDollarSign className="w-4 h-4" />
-              <span>{activity.price}€</span>
-            </div>
+              <span>{activity.price === 0 ? 'Gratuit' : `${activity.price}€`}</span>
+            </span>
           </div>
         </div>
       </motion.div>

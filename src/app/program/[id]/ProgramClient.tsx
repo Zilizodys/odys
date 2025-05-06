@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Activity } from '@/types/activity'
 import { FiMapPin, FiClock, FiDollarSign, FiUsers, FiArrowLeft, FiPlus } from 'react-icons/fi'
@@ -11,6 +11,8 @@ import Link from 'next/link'
 import SwipeableActivityCard from '@/components/program/SwipeableActivityCard'
 import { createClient } from '@/lib/supabase/client'
 import CategorySection from '@/components/program/CategorySection'
+import { autoAssignActivities, ProgramPlanning, DayPlan } from '@/lib/planning/autoAssign'
+import ProgramPlanningEditor from '@/components/planning/ProgramPlanningEditor'
 
 interface Program {
   id: string
@@ -49,6 +51,24 @@ function groupActivitiesByCategory(activities: Activity[]): GroupedActivities {
   }, {})
 }
 
+function getProgramActivities(planning: ProgramPlanning): { activityId: string; day: number; slot: number }[] {
+  const programActivities: { activityId: string; day: number; slot: number }[] = []
+  
+  planning.days.forEach((day, dayIndex) => {
+    day.activities.forEach((scheduledActivity, slotIndex) => {
+      scheduledActivity.activities.forEach(activity => {
+        programActivities.push({
+          activityId: activity.id,
+          day: dayIndex + 1,
+          slot: slotIndex + 1
+        })
+      })
+    })
+  })
+  
+  return programActivities
+}
+
 const CATEGORY_LABELS: Record<string, string> = {
   'culture': 'Culture',
   'gastronomie': 'Gastronomie',
@@ -81,6 +101,51 @@ export default function ProgramClient({ initialProgram }: { initialProgram: Prog
   const [program, setProgram] = useState<Program>(initialProgram)
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [view, setView] = useState<'planning' | 'activities'>('planning')
+
+  // Effet pour gérer le défilement vers l'ancre
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    
+    const hash = window.location.hash
+    if (hash) {
+      const element = document.querySelector(hash)
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      }
+    }
+  }, [])
+
+  // Générer le planning à partir des activités et des dates
+  const [planning, setPlanning] = useState<ProgramPlanning>(() =>
+    autoAssignActivities(
+      program.activities,
+      program.start_date,
+      program.end_date
+    )
+  )
+
+  // Ajout : synchronisation du restaurant sélectionné
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const selectedRestaurantStr = localStorage.getItem('selectedRestaurant')
+    if (!selectedRestaurantStr) return
+
+    try {
+      const { restaurant, day, slot } = JSON.parse(selectedRestaurantStr)
+      // On clone le planning
+      const newPlanning = { ...planning }
+      if (newPlanning.days[day] && newPlanning.days[day].activities[slot]) {
+        newPlanning.days[day].activities[slot] = {
+          ...newPlanning.days[day].activities[slot],
+          activities: [restaurant]
+        }
+        setPlanning(newPlanning)
+      }
+    } catch (e) {
+      console.error('Erreur lors de la synchronisation du restaurant:', e)
+    }
+  }, [planning])
 
   const handleDeleteActivity = async (activityId: string) => {
     try {
@@ -112,12 +177,8 @@ export default function ProgramClient({ initialProgram }: { initialProgram: Prog
     }
   }
 
-  const groupedActivities = groupActivitiesByCategory(
-    program.activities.map(activity => ({
-      ...activity,
-      category: activity.category || 'other'
-    }))
-  )
+  const groupedActivities = groupActivitiesByCategory(program.activities)
+  const programActivities = getProgramActivities(planning)
 
   if (isLoading) {
     return (
@@ -136,7 +197,7 @@ export default function ProgramClient({ initialProgram }: { initialProgram: Prog
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24">
+    <div className="bg-gray-50 pb-24">
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <Link href="/dashboard" className="inline-flex items-center text-indigo-600 hover:text-indigo-700">
@@ -155,7 +216,7 @@ export default function ProgramClient({ initialProgram }: { initialProgram: Prog
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-            <h1 className="text-4xl font-bold mb-2">{program.title || `Séjour à ${program.destination}`}</h1>
+            <h1 className="text-2xl font-bold mb-2">{program.title || `Séjour à ${program.destination}`}</h1>
             <div className="flex items-center gap-2 text-lg">
               <FiMapPin className="text-white" />
               <span>{program.destination}</span>
@@ -193,17 +254,54 @@ export default function ProgramClient({ initialProgram }: { initialProgram: Prog
           </div>
         </div>
 
-        <div className="space-y-4 pb-8">
-          {Object.entries(groupedActivities).map(([category, activities]) => (
-            <CategorySection
-              key={category}
-              category={category}
-              activities={activities}
-              onActivityClick={setSelectedActivity}
-              onActivityDelete={handleDeleteActivity}
-            />
-          ))}
+        <div className="mb-8">
+          <div className="grid grid-cols-2 rounded-lg border border-gray-200 bg-white overflow-hidden">
+            <button
+              onClick={() => setView('planning')}
+              className={`px-4 py-3 text-sm font-medium transition-colors ${
+                view === 'planning'
+                  ? 'bg-indigo-600 text-white'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+              }`}
+            >
+              Planning
+            </button>
+            <button
+              onClick={() => setView('activities')}
+              className={`px-4 py-3 text-sm font-medium transition-colors ${
+                view === 'activities'
+                  ? 'bg-indigo-600 text-white'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+              }`}
+            >
+              Liste des activités
+            </button>
+          </div>
         </div>
+
+        {view === 'planning' ? (
+          <ProgramPlanningEditor 
+            planning={planning} 
+            onChange={setPlanning}
+            city={program.destination}
+            programId={program.id}
+            budget={program.budget}
+          />
+        ) : (
+          <div className="space-y-4 pb-8">
+            {Object.entries(groupedActivities).map(([category, activities]) => (
+              <CategorySection
+                key={category}
+                category={category}
+                activities={activities}
+                onActivityClick={setSelectedActivity}
+                onActivityDelete={handleDeleteActivity}
+                programId={program.id}
+                programActivities={programActivities}
+              />
+            ))}
+          </div>
+        )}
 
         {selectedActivity && (
           <ActivityModal
