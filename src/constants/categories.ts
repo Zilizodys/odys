@@ -24,11 +24,12 @@ export const MOOD_TO_CATEGORY: Record<string, string> = {
 
 // Liste des catégories disponibles
 export const AVAILABLE_CATEGORIES = [
+  'sport',
+  'nature',
   'culture',
   'gastronomie',
-  'sport',
   'vie nocturne',
-  'nature'
+  'other'
 ] as const
 
 export type Category = typeof AVAILABLE_CATEGORIES[number]
