@@ -2,8 +2,7 @@ const { createClient } = require('@supabase/supabase-js');
 const fetch = require('node-fetch');
 
 // Remplace ces valeurs par tes vraies clés
-const supabase = createClient('https://awpplalldxideqwgzjgf.supabase.co', 'REMOVED_SUPABASE_KEY ');
-const GOOGLE_API_KEY = 'REMOVED_GOOGLE_API_KEY';
+const supabase = createClient('https://awpplalldxideqwgzjgf.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF3cHBsYWxsZHhpZGVxd2d6amdmIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NDUzNTM5MiwiZXhwIjoyMDYwMTExMzkyfQ.dhz57vk4naNczrg8XpTcg77G2qib9_R_Y8cew-0WOm8');
 
 async function getPhotoReference(city) {
   const url = `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${encodeURIComponent(city)}&inputtype=textquery&fields=photos&key=${GOOGLE_API_KEY}`;

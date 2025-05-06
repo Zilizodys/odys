@@ -45,7 +45,7 @@ app.add_middleware(
 )
 
 SUPABASE_URL = "https://awpplalldxideqwgzjgf.supabase.co"
-SUPABASE_KEY = "REMOVED_SUPABASE_KEY "
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF3cHBsYWxsZHhpZGVxd2d6amdmIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NDUzNTM5MiwiZXhwIjoyMDYwMTExMzkyfQ.dhz57vk4naNczrg8XpTcg77G2qib9_R_Y8cew-0WOm8"
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 class Activity(BaseModel):
