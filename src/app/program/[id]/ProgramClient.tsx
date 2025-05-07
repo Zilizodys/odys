@@ -188,6 +188,7 @@ export default function ProgramClient({ initialProgram }: { initialProgram: Prog
   const [showStickyCTA, setShowStickyCTA] = useState(false)
   const [hasReachedBottom, setHasReachedBottom] = useState(false)
   const lastScrollY = useRef(0)
+  const [isSaving, setIsSaving] = useState(false)
 
   // Masquer le header global sur la page programme
   useEffect(() => {
@@ -229,8 +230,10 @@ export default function ProgramClient({ initialProgram }: { initialProgram: Prog
       const newPlanning = { ...planning }
       if (newPlanning.days[day] && newPlanning.days[day].activities[slot]) {
         newPlanning.days[day].activities[slot] = {
-          ...newPlanning.days[slot],
-          activities: [restaurant]
+          ...newPlanning.days[day].activities[slot],
+          activities: [restaurant],
+          slot: newPlanning.days[day].activities[slot].slot,
+          order: newPlanning.days[day].activities[slot].order
         }
         setPlanning(newPlanning)
       }
@@ -295,6 +298,35 @@ export default function ProgramClient({ initialProgram }: { initialProgram: Prog
 
   const groupedActivities = groupActivitiesByCategory(program.activities)
   const programActivities = getProgramActivities(planning)
+
+  // Fonction de sauvegarde du programme
+  const handleSaveProgram = async () => {
+    setIsSaving(true)
+    try {
+      const supabase = createClient()
+      // Met à jour les infos du programme
+      const { error: programError } = await supabase
+        .from('programs')
+        .update({
+          start_date: program.start_date,
+          end_date: program.end_date,
+          budget: program.budget,
+          companion: program.companion,
+        })
+        .eq('id', program.id)
+      if (programError) throw programError
+      // Met à jour le planning (exemple simplifié, à adapter selon ta structure)
+      // Ici, on suppose que tu veux mettre à jour les activités du programme
+      // (à adapter si tu as une table de jointure ou une logique différente)
+      // ...
+      // Redirige vers le dashboard après succès
+      router.push('/dashboard')
+    } catch (e) {
+      alert('Erreur lors de la sauvegarde du programme')
+    } finally {
+      setIsSaving(false)
+    }
+  }
 
   if (isLoading) {
     return (
@@ -545,22 +577,24 @@ export default function ProgramClient({ initialProgram }: { initialProgram: Prog
       >
         {showStickyCTA && (
           <button
-            className="pointer-events-auto w-full max-w-md mx-4 px-8 py-4 rounded-2xl bg-indigo-600 text-white font-semibold text-lg shadow-xl hover:bg-indigo-700 transition-colors"
+            className="pointer-events-auto w-full max-w-md mx-4 px-8 py-4 rounded-2xl bg-indigo-600 text-white font-semibold text-lg shadow-xl hover:bg-indigo-700 transition-colors disabled:opacity-60"
             style={{ boxShadow: '0 8px 32px rgba(80, 80, 180, 0.18)', marginBottom: 16 }}
-            onClick={() => {/* TODO: implémenter la logique de sauvegarde */}}
+            onClick={handleSaveProgram}
+            disabled={isSaving}
           >
-            Sauvegarder les changements
+            {isSaving ? 'Sauvegarde en cours...' : 'Sauvegarder les changements'}
           </button>
         )}
       </motion.div>
       {/* Bouton dans le flux du contenu, toujours visible en bas de page */}
       <div className="w-full flex justify-center mt-12 mb-8">
         <button
-          className="w-full max-w-md mx-4 px-8 py-4 rounded-2xl bg-indigo-600 text-white font-semibold text-lg shadow-xl hover:bg-indigo-700 transition-colors"
+          className="w-full max-w-md mx-4 px-8 py-4 rounded-2xl bg-indigo-600 text-white font-semibold text-lg shadow-xl hover:bg-indigo-700 transition-colors disabled:opacity-60"
           style={{ boxShadow: '0 8px 32px rgba(80, 80, 180, 0.18)' }}
-          onClick={() => {/* TODO: implémenter la logique de sauvegarde */}}
+          onClick={handleSaveProgram}
+          disabled={isSaving}
         >
-          Sauvegarder les changements
+          {isSaving ? 'Sauvegarde en cours...' : 'Sauvegarder les changements'}
         </button>
       </div>
     </div>
