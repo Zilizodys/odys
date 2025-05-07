@@ -32,6 +32,7 @@ interface Program {
   companion: string
   cover_image?: string | null
   moods?: string[]
+  coverImage?: string | null
 }
 
 interface ProgramActivityRow {
@@ -288,8 +289,8 @@ export default function ProgramClient({ initialProgram }: { initialProgram: Prog
       {/* Cover full width, collée en haut */}
       <div className="relative w-full h-[390px] sm:h-[510px]">
         <Image
-          src={getDestinationImage(program.destination).url}
-          alt={getDestinationImage(program.destination).alt}
+          src={program.coverImage || (program as any).cover_image || getDestinationImage(program.destination).url}
+          alt={program.title || getDestinationImage(program.destination).alt}
           fill
           sizes="100vw"
           style={{ objectFit: 'cover' }}

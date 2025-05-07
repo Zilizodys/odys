@@ -226,13 +226,7 @@ export default function DashboardPage() {
               {programs.map((program) => (
                 <ProgramCard
                   key={program.id}
-                  program={{
-                    ...program,
-                    coverImage:
-                      destinations.find(
-                        d => normalizeCityName(d.city) === normalizeCityName(program.destination)
-                      )?.imageurl || '/images/activities/Mascot.png'
-                  }}
+                  program={program}
                   onDelete={handleDeleteProgram}
                   onClick={handleProgramClick}
                 />

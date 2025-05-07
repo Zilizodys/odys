@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { FiMapPin, FiClock, FiDollarSign, FiUsers, FiTrash2, FiShare2 } from 'react-icons/fi'
 import { Activity } from '@/types/activity'
-import { COMPANION_OPTIONS } from '@/types/form'
+import { COMPANION_OPTIONS, BUDGET_OPTIONS } from '@/types/form'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import ImageWithFallback from '@/components/ui/ImageWithFallback'
@@ -152,8 +152,18 @@ const ProgramCard = ({ program, onDelete, onClick }: ProgramCardProps) => {
 
   const companion = COMPANION_OPTIONS.find(option => option.value === program.companion)
 
+  // Calcul du label de budget
+  const budgetOption = BUDGET_OPTIONS.find(option => option.value === program.budget)
+  // Calcul du budget estimé
+  const estimatedBudget = program.activities?.reduce((sum, activity) => sum + (activity.price || 0), 0) || 0
+
   const formatDate = (date: Date) => {
     return format(new Date(date), 'dd MMM yyyy', { locale: fr })
+  }
+
+  // Ajout d'une fonction utilitaire pour la cover
+  const getProgramCoverImage = (program: Program) => {
+    return program.coverImage || (program as any).cover_image || getDestinationImage(program.destination)
   }
 
   return (
@@ -194,7 +204,7 @@ const ProgramCard = ({ program, onDelete, onClick }: ProgramCardProps) => {
             <div
               className="absolute inset-0 w-full h-full"
               style={{
-                backgroundImage: `url('${program.coverImage || getDestinationImage(program.destination)}')`,
+                backgroundImage: `url('${getProgramCoverImage(program)}')`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
               }}
@@ -226,7 +236,12 @@ const ProgramCard = ({ program, onDelete, onClick }: ProgramCardProps) => {
               <div className="text-indigo-600 text-2xl shrink-0">$</div>
               <div>
                 <div className="text-gray-500 text-sm">Budget</div>
-                <div className="text-gray-900 font-medium">{program.budget}€</div>
+                <div className="text-gray-900 font-medium">
+                  {budgetOption ? `${budgetOption.label}` : `${program.budget}€`}
+                  {estimatedBudget > 0 && (
+                    <span className="text-gray-500 text-sm"> (estimé : {estimatedBudget}€)</span>
+                  )}
+                </div>
               </div>
             </div>
             {companion && (
