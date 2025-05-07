@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { FiMapPin, FiClock, FiDollarSign, FiUsers, FiTrash2 } from 'react-icons/fi'
+import { FiMapPin, FiClock, FiDollarSign, FiUsers, FiTrash2, FiShare2 } from 'react-icons/fi'
 import { Activity } from '@/types/activity'
 import { COMPANION_OPTIONS } from '@/types/form'
 import Image from 'next/image'
@@ -89,6 +89,29 @@ const ProgramCard = ({ program, onDelete, onClick }: ProgramCardProps) => {
     onDelete(program.id)
   }
 
+  const handleShare = async (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setOffsetX(0)
+
+    const shareData = {
+      title: program.title || `Séjour à ${program.destination}`,
+      text: `Découvrez mon séjour à ${program.destination} du ${format(new Date(program.start_date), 'dd/MM/yyyy')} au ${format(new Date(program.end_date), 'dd/MM/yyyy')}`,
+      url: window.location.href
+    }
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData)
+      } else {
+        // Fallback pour les navigateurs qui ne supportent pas l'API Web Share
+        await navigator.clipboard.writeText(shareData.text)
+        alert('Lien copié dans le presse-papier !')
+      }
+    } catch (error) {
+      console.error('Erreur lors du partage:', error)
+    }
+  }
+
   useEffect(() => {
     const handleGlobalMouseUp = () => {
       if (isDragging) {
@@ -135,15 +158,22 @@ const ProgramCard = ({ program, onDelete, onClick }: ProgramCardProps) => {
 
   return (
     <div className="w-full max-w-md mx-auto">
-      {/* Fond rouge swipe to delete, FIXE */}
-      <div className="relative h-[420px] rounded-3xl overflow-hidden shadow-sm">
-        <div className="absolute inset-y-0 right-0 w-[120px] flex items-center justify-center bg-red-500 rounded-r-3xl z-10">
+      {/* Fond swipe to delete, FIXE */}
+      <div className="relative h-[500px] rounded-3xl overflow-hidden shadow-sm">
+        <div className="absolute inset-y-0 right-0 w-[120px] flex flex-col items-center justify-center gap-4 bg-gray-50 rounded-r-3xl z-10">
+          <button
+            onClick={handleShare}
+            className="w-12 h-12 flex items-center justify-center rounded-full bg-white shadow hover:bg-indigo-50 border border-gray-200 transition-colors"
+            aria-label="Partager le programme"
+          >
+            <FiShare2 size={24} className="text-indigo-400" />
+          </button>
           <button
             onClick={handleDelete}
-            className="text-white w-16 h-16 flex items-center justify-center"
+            className="w-12 h-12 flex items-center justify-center rounded-full bg-white shadow hover:bg-red-50 border border-gray-200 transition-colors"
             aria-label="Supprimer le programme"
           >
-            <FiTrash2 size={32} />
+            <FiTrash2 size={24} className="text-red-400" />
           </button>
         </div>
         {/* Card swipeable : image + details */}
@@ -160,7 +190,7 @@ const ProgramCard = ({ program, onDelete, onClick }: ProgramCardProps) => {
           onClick={handleClick}
         >
           {/* Image en haut */}
-          <div className="relative w-full h-[180px] rounded-t-3xl overflow-hidden">
+          <div className="relative w-full h-[240px] rounded-t-3xl overflow-hidden">
             <div
               className="absolute inset-0 w-full h-full"
               style={{
@@ -182,7 +212,7 @@ const ProgramCard = ({ program, onDelete, onClick }: ProgramCardProps) => {
             </div>
           </div>
           {/* Détails en dessous */}
-          <div className="bg-white rounded-b-3xl px-8 py-6 space-y-6">
+          <div className="bg-white rounded-b-3xl px-8 py-5 space-y-5">
             <div className="flex items-center gap-4">
               <FiClock className="text-indigo-600 shrink-0" size={24} />
               <div>
