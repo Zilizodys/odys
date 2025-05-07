@@ -4,19 +4,47 @@ import { useEffect, useState, useRef } from 'react'
 import { User } from '@supabase/supabase-js'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { FiEdit2, FiCamera, FiMap, FiList } from 'react-icons/fi'
+import { FiEdit2, FiCamera, FiMap, FiList, FiBell, FiLock, FiDownload, FiGlobe, FiHeart } from 'react-icons/fi'
 import { getSupabaseClient } from '@/lib/supabase/client'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Tab } from '@headlessui/react'
+
+interface TravelPreferences {
+  preferredDestinations: string[]
+  averageBudget: number
+  travelStyle: string[]
+  interests: string[]
+}
+
+interface NotificationPreferences {
+  emailNotifications: boolean
+  pushNotifications: boolean
+  marketingEmails: boolean
+}
 
 export default function SettingsPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [user, setUser] = useState<User | null>(null)
   const [isUploading, setIsUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const [activeTab, setActiveTab] = useState(0)
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
-    country: 'US',
-    phoneNumber: ''
+    country: 'FR',
+    phoneNumber: '',
+    bio: ''
+  })
+  const [travelPreferences, setTravelPreferences] = useState<TravelPreferences>({
+    preferredDestinations: [],
+    averageBudget: 1000,
+    travelStyle: [],
+    interests: []
+  })
+  const [notificationPreferences, setNotificationPreferences] = useState<NotificationPreferences>({
+    emailNotifications: true,
+    pushNotifications: true,
+    marketingEmails: false
   })
   const [programStats, setProgramStats] = useState({ count: 0, activities: 0 })
   
@@ -34,10 +62,33 @@ export default function SettingsPage() {
         setFormData({
           fullName: user?.user_metadata?.full_name || '',
           email: user?.email || '',
-          country: user?.user_metadata?.country || 'US',
-          phoneNumber: user?.user_metadata?.phone_number || ''
+          country: user?.user_metadata?.country || 'FR',
+          phoneNumber: user?.user_metadata?.phone_number || '',
+          bio: user?.user_metadata?.bio || ''
         })
-        // Récupérer les stats programmes/activités
+
+        // Récupérer les préférences de voyage
+        const { data: preferences } = await supabase
+          .from('user_preferences')
+          .select('*')
+          .eq('user_id', user.id)
+          .single()
+
+        if (preferences) {
+          setTravelPreferences(preferences.travel_preferences || {
+            preferredDestinations: [],
+            averageBudget: 1000,
+            travelStyle: [],
+            interests: []
+          })
+          setNotificationPreferences(preferences.notification_preferences || {
+            emailNotifications: true,
+            pushNotifications: true,
+            marketingEmails: false
+          })
+        }
+
+        // Récupérer les stats
         const { data: programs, error: programsError } = await supabase
           .from('programs')
           .select('id')
@@ -65,7 +116,7 @@ export default function SettingsPage() {
     getUser()
   }, [router, supabase])
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
@@ -89,25 +140,28 @@ export default function SettingsPage() {
         throw new Error('Please upload an image file')
       }
       
-      if (file.size > 2 * 1024 * 1024) { // 2MB limit for base64
+      if (file.size > 2 * 1024 * 1024) { // 2MB limit
         throw new Error('Image size should be less than 2MB')
       }
 
-      // Convert to base64
-      const reader = new FileReader()
-      const base64Promise = new Promise((resolve, reject) => {
-        reader.onload = () => resolve(reader.result)
-        reader.onerror = () => reject(new Error('Failed to read file'))
-        reader.readAsDataURL(file)
-      })
+      // Upload to Supabase Storage
+      const fileExt = file.name.split('.').pop()
+      const fileName = `${user.id}-${Math.random()}.${fileExt}`
+      const { error: uploadError, data } = await supabase.storage
+        .from('avatars')
+        .upload(fileName, file)
 
-      const base64String = await base64Promise
+      if (uploadError) throw uploadError
 
-      // Update user metadata with base64 image
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(fileName)
+
+      // Update user metadata
       const { error: updateError } = await supabase.auth.updateUser({
         data: { 
-          avatar_url: base64String,
-          avatar_type: file.type
+          avatar_url: publicUrl
         }
       })
 
@@ -118,8 +172,7 @@ export default function SettingsPage() {
         ...prev,
         user_metadata: { 
           ...prev.user_metadata, 
-          avatar_url: base64String,
-          avatar_type: file.type
+          avatar_url: publicUrl
         }
       } : null)
 
@@ -139,11 +192,24 @@ export default function SettingsPage() {
         data: {
           full_name: formData.fullName,
           country: formData.country,
-          phone_number: formData.phoneNumber
+          phone_number: formData.phoneNumber,
+          bio: formData.bio
         }
       })
 
       if (error) throw error
+
+      // Update preferences
+      const { error: preferencesError } = await supabase
+        .from('user_preferences')
+        .upsert({
+          user_id: user?.id,
+          travel_preferences: travelPreferences,
+          notification_preferences: notificationPreferences
+        })
+
+      if (preferencesError) throw preferencesError
+
       router.push('/dashboard')
     } catch (error) {
       console.error('Erreur lors de la mise à jour du profil:', error)
@@ -163,137 +229,378 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white pb-32">
-      <div className="max-w-xl mx-auto px-4 py-8">
-        <h1 className="text-2xl font-bold mb-6">Mon profil</h1>
-        <p className="text-gray-500 mb-8">
-          Personnalise ton expérience et retrouve toutes les infos de ton compte.
-        </p>
-
-        <div className="relative w-24 h-24 mx-auto mb-8">
-          <div 
-            onClick={handleAvatarClick}
-            className="relative w-24 h-24 rounded-full bg-gray-100 cursor-pointer overflow-hidden group"
-          >
-            {user.user_metadata?.avatar_url ? (
-              <Image
-                src={user.user_metadata.avatar_url}
-                alt="Photo de profil"
-                fill
-                className="object-cover group-hover:opacity-75 transition-opacity"
-                unoptimized={user.user_metadata.avatar_url.startsWith('data:')}
+    <div className="min-h-screen bg-gray-50 pb-32">
+      {/* Header avec photo de profil et stats */}
+      <div className="bg-white shadow-sm">
+        <div className="max-w-4xl mx-auto px-4 py-8">
+          <div className="flex flex-col md:flex-row items-center gap-8">
+            <div className="relative w-32 h-32">
+              <div 
+                onClick={handleAvatarClick}
+                className="relative w-32 h-32 rounded-full bg-gray-100 cursor-pointer overflow-hidden group"
+              >
+                {user.user_metadata?.avatar_url ? (
+                  <Image
+                    src={user.user_metadata.avatar_url}
+                    alt="Photo de profil"
+                    fill
+                    className="object-cover group-hover:opacity-75 transition-opacity"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center group-hover:bg-gray-200 transition-colors">
+                    <FiCamera className="w-12 h-12 text-gray-400" />
+                  </div>
+                )}
+                {isUploading && (
+                  <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+                  </div>
+                )}
+              </div>
+              <button 
+                onClick={handleAvatarClick}
+                className="absolute bottom-0 right-0 bg-white rounded-full p-2 shadow-lg border border-gray-200"
+                aria-label="Modifier la photo"
+              >
+                <FiEdit2 className="w-4 h-4 text-gray-600" />
+              </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="hidden"
               />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center group-hover:bg-gray-200 transition-colors">
-                <FiCamera className="w-8 h-8 text-gray-400" />
-              </div>
-            )}
-            {isUploading && (
-              <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
-              </div>
-            )}
-          </div>
-          <button 
-            onClick={handleAvatarClick}
-            className="absolute bottom-0 right-0 bg-white rounded-full p-2 shadow-lg border border-gray-200"
-            aria-label="Modifier la photo"
-          >
-            <FiEdit2 className="w-4 h-4 text-gray-600" />
-          </button>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="hidden"
-          />
-        </div>
-
-        {/* Stats programmes/activités */}
-        <div className="mb-8 flex justify-center">
-          <div className="bg-white rounded-xl shadow-md px-8 py-5 flex flex-col sm:flex-row items-center gap-6 border border-gray-100">
-            <div className="flex items-center gap-2 text-indigo-600 font-semibold">
-              <FiMap className="w-5 h-5" />
-              <span>{programStats.count} programme{programStats.count > 1 ? 's' : ''} créé{programStats.count > 1 ? 's' : ''}</span>
             </div>
-            <div className="flex items-center gap-2 text-indigo-600 font-semibold">
-              <FiList className="w-5 h-5" />
-              <span>{programStats.activities} activité{programStats.activities > 1 ? 's' : ''} ajoutée{programStats.activities > 1 ? 's' : ''}</span>
+            <div className="flex-1 text-center md:text-left">
+              <h1 className="text-2xl font-bold mb-2">{formData.fullName || 'Mon profil'}</h1>
+              <p className="text-gray-500 mb-4">{formData.bio || 'Ajouter une bio...'}</p>
+              <div className="flex flex-wrap justify-center md:justify-start gap-4">
+                <div className="flex items-center gap-2 text-indigo-600 font-semibold">
+                  <FiMap className="w-5 h-5" />
+                  <span>{programStats.count} programme{programStats.count > 1 ? 's' : ''}</span>
+                </div>
+                <div className="flex items-center gap-2 text-indigo-600 font-semibold">
+                  <FiList className="w-5 h-5" />
+                  <span>{programStats.activities} activité{programStats.activities > 1 ? 's' : ''}</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <div className="space-y-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Full Name
-            </label>
-            <input
-              type="text"
-              name="fullName"
-              value={formData.fullName}
-              onChange={handleInputChange}
-              className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-              placeholder="Andrew Ainsley"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email
-            </label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-gray-50"
-              placeholder="andrew.ainsley@yourdomain.com"
-              disabled
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Country
-            </label>
-            <select
-              name="country"
-              value={formData.country}
-              onChange={handleInputChange}
-              className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+      {/* Contenu principal */}
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <Tab.Group selectedIndex={activeTab} onChange={setActiveTab}>
+          <Tab.List className="flex space-x-1 rounded-xl bg-white p-1 shadow-sm mb-8">
+            <Tab
+              className={({ selected }) =>
+                `w-full rounded-lg py-2.5 text-sm font-medium leading-5
+                ${selected
+                  ? 'bg-indigo-600 text-white shadow'
+                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                }`
+              }
             >
-              <option value="US">United States America</option>
-              <option value="FR">France</option>
-              <option value="GB">United Kingdom</option>
-              <option value="DE">Germany</option>
-              <option value="IT">Italy</option>
-              <option value="ES">Spain</option>
-            </select>
-          </div>
+              <div className="flex items-center justify-center gap-2">
+                <FiGlobe className="w-4 h-4" />
+                <span>Profil</span>
+              </div>
+            </Tab>
+            <Tab
+              className={({ selected }) =>
+                `w-full rounded-lg py-2.5 text-sm font-medium leading-5
+                ${selected
+                  ? 'bg-indigo-600 text-white shadow'
+                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                }`
+              }
+            >
+              <div className="flex items-center justify-center gap-2">
+                <FiHeart className="w-4 h-4" />
+                <span>Préférences</span>
+              </div>
+            </Tab>
+            <Tab
+              className={({ selected }) =>
+                `w-full rounded-lg py-2.5 text-sm font-medium leading-5
+                ${selected
+                  ? 'bg-indigo-600 text-white shadow'
+                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                }`
+              }
+            >
+              <div className="flex items-center justify-center gap-2">
+                <FiBell className="w-4 h-4" />
+                <span>Notifications</span>
+              </div>
+            </Tab>
+            <Tab
+              className={({ selected }) =>
+                `w-full rounded-lg py-2.5 text-sm font-medium leading-5
+                ${selected
+                  ? 'bg-indigo-600 text-white shadow'
+                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                }`
+              }
+            >
+              <div className="flex items-center justify-center gap-2">
+                <FiLock className="w-4 h-4" />
+                <span>Sécurité</span>
+              </div>
+            </Tab>
+          </Tab.List>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Phone Number
-            </label>
-            <input
-              type="tel"
-              name="phoneNumber"
-              value={formData.phoneNumber}
-              onChange={handleInputChange}
-              className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-              placeholder="+1 234 567 890"
-            />
-          </div>
+          <Tab.Panels>
+            {/* Panel Profil */}
+            <Tab.Panel>
+              <div className="bg-white rounded-xl shadow-sm p-6 space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Nom complet
+                  </label>
+                  <input
+                    type="text"
+                    name="fullName"
+                    value={formData.fullName}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    placeholder="Votre nom"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Bio
+                  </label>
+                  <textarea
+                    name="bio"
+                    value={formData.bio}
+                    onChange={handleInputChange}
+                    rows={3}
+                    className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    placeholder="Parlez-nous de vous..."
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-gray-50"
+                    disabled
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Pays
+                  </label>
+                  <select
+                    name="country"
+                    value={formData.country}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  >
+                    <option value="FR">France</option>
+                    <option value="BE">Belgique</option>
+                    <option value="CH">Suisse</option>
+                    <option value="CA">Canada</option>
+                    <option value="LU">Luxembourg</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Téléphone
+                  </label>
+                  <input
+                    type="tel"
+                    name="phoneNumber"
+                    value={formData.phoneNumber}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    placeholder="+33 6 12 34 56 78"
+                  />
+                </div>
+              </div>
+            </Tab.Panel>
+
+            {/* Panel Préférences */}
+            <Tab.Panel>
+              <div className="bg-white rounded-xl shadow-sm p-6 space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Budget moyen par voyage
+                  </label>
+                  <input
+                    type="range"
+                    min="500"
+                    max="5000"
+                    step="100"
+                    value={travelPreferences.averageBudget}
+                    onChange={(e) => setTravelPreferences(prev => ({
+                      ...prev,
+                      averageBudget: parseInt(e.target.value)
+                    }))}
+                    className="w-full"
+                  />
+                  <div className="text-right text-sm text-gray-500">
+                    {travelPreferences.averageBudget}€
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Style de voyage
+                  </label>
+                  <div className="grid grid-cols-2 gap-4">
+                    {['Culture', 'Gastronomie', 'Nature', 'Sport', 'Shopping', 'Détente'].map((style) => (
+                      <label key={style} className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          checked={travelPreferences.travelStyle.includes(style.toLowerCase())}
+                          onChange={(e) => {
+                            const newStyle = style.toLowerCase()
+                            setTravelPreferences(prev => ({
+                              ...prev,
+                              travelStyle: e.target.checked
+                                ? [...prev.travelStyle, newStyle]
+                                : prev.travelStyle.filter(s => s !== newStyle)
+                            }))
+                          }}
+                          className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                        />
+                        <span className="text-sm text-gray-700">{style}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </Tab.Panel>
+
+            {/* Panel Notifications */}
+            <Tab.Panel>
+              <div className="bg-white rounded-xl shadow-sm p-6 space-y-6">
+                <div className="space-y-4">
+                  <label className="flex items-center justify-between">
+                    <div>
+                      <span className="text-sm font-medium text-gray-700">Notifications par email</span>
+                      <p className="text-sm text-gray-500">Recevoir des mises à jour sur vos voyages</p>
+                    </div>
+                    <input
+                      type="checkbox"
+                      checked={notificationPreferences.emailNotifications}
+                      onChange={(e) => setNotificationPreferences(prev => ({
+                        ...prev,
+                        emailNotifications: e.target.checked
+                      }))}
+                      className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                    />
+                  </label>
+
+                  <label className="flex items-center justify-between">
+                    <div>
+                      <span className="text-sm font-medium text-gray-700">Notifications push</span>
+                      <p className="text-sm text-gray-500">Recevoir des alertes sur votre appareil</p>
+                    </div>
+                    <input
+                      type="checkbox"
+                      checked={notificationPreferences.pushNotifications}
+                      onChange={(e) => setNotificationPreferences(prev => ({
+                        ...prev,
+                        pushNotifications: e.target.checked
+                      }))}
+                      className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                    />
+                  </label>
+
+                  <label className="flex items-center justify-between">
+                    <div>
+                      <span className="text-sm font-medium text-gray-700">Emails marketing</span>
+                      <p className="text-sm text-gray-500">Recevoir des offres et promotions</p>
+                    </div>
+                    <input
+                      type="checkbox"
+                      checked={notificationPreferences.marketingEmails}
+                      onChange={(e) => setNotificationPreferences(prev => ({
+                        ...prev,
+                        marketingEmails: e.target.checked
+                      }))}
+                      className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                    />
+                  </label>
+                </div>
+              </div>
+            </Tab.Panel>
+
+            {/* Panel Sécurité */}
+            <Tab.Panel>
+              <div className="bg-white rounded-xl shadow-sm p-6 space-y-6">
+                <div>
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Changer le mot de passe</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Mot de passe actuel
+                      </label>
+                      <input
+                        type="password"
+                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Nouveau mot de passe
+                      </label>
+                      <input
+                        type="password"
+                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Confirmer le nouveau mot de passe
+                      </label>
+                      <input
+                        type="password"
+                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-6 border-t border-gray-200">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Export des données</h3>
+                  <p className="text-sm text-gray-500 mb-4">
+                    Téléchargez une copie de toutes vos données personnelles et vos voyages.
+                  </p>
+                  <button
+                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-indigo-600 hover:text-indigo-700"
+                  >
+                    <FiDownload className="w-4 h-4" />
+                    Télécharger mes données
+                  </button>
+                </div>
+              </div>
+            </Tab.Panel>
+          </Tab.Panels>
+        </Tab.Group>
+
+        <div className="mt-8 flex justify-end">
+          <button
+            onClick={handleSubmit}
+            className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+          >
+            Enregistrer les modifications
+          </button>
         </div>
-
-        <button
-          onClick={handleSubmit}
-          className="w-full mt-8 bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 transition-colors"
-        >
-          Continue
-        </button>
       </div>
     </div>
   )
