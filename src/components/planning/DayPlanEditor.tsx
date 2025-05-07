@@ -223,9 +223,17 @@ export default function DayPlanEditor({ day, dayIndex, planning, onPlanningChang
     setIsLoadingActivities(true)
     try {
       const slot = day.activities[slotIndex]
+      let moods: MoodType[] = []
+      if (slot.slot === 'midi' || slot.slot === 'dîner') {
+        moods = ['food', 'restaurant'] as MoodType[]
+      } else if (slot.slot === 'soirée') {
+        moods = ['nightlife', 'bar', 'club', 'vie nocturne'] as MoodType[]
+      } else {
+        moods = ['culture', 'sport', 'nature', 'shopping', 'wellness', 'adventure', 'cultural', 'romantic'] as MoodType[]
+      }
       const formData: FormData = {
         destination: city,
-        moods: slot.slot === 'midi' || slot.slot === 'dîner' ? ['food' as MoodType] : [],
+        moods,
         budget: budget ?? null,
         companion: null,
         startDate: null,
@@ -274,6 +282,8 @@ export default function DayPlanEditor({ day, dayIndex, planning, onPlanningChang
     const slot = day.activities[slotIdx]
     const slotType = slot.slot
     const idsInSlot = slot.activities.map(a => a.id)
+    // Récupérer tous les IDs d'activités déjà sélectionnées dans la journée
+    const allSelectedIds = day.activities.flatMap(slot => slot.activities.map(a => a.id))
     const formData: FormData = {
       destination: activity.city,
       moods: [activity.category as MoodType],
@@ -293,8 +303,8 @@ export default function DayPlanEditor({ day, dayIndex, planning, onPlanningChang
         if (suggestion.category !== activity.category) return false
         // Budget
         if (suggestion.price > activity.price) return false
-        // Pas déjà dans le slot
-        if (idsInSlot.includes(suggestion.id)) return false
+        // Pas déjà sélectionnée dans la journée
+        if (allSelectedIds.includes(suggestion.id)) return false
         // Horaire/type
         const cat = suggestion.category.toLowerCase()
         if (slotType === 'midi' || slotType === 'dîner') {
@@ -363,6 +373,9 @@ export default function DayPlanEditor({ day, dayIndex, planning, onPlanningChang
                     <div className="flex flex-col">
                       <span className="text-base font-semibold text-indigo-700 leading-tight tracking-wide flex items-center gap-2">
                         {slotMeta?.label}
+                        <span className="ml-1 px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 text-xs font-bold">
+                          {slot.activities.length}
+                        </span>
                       </span>
                       <span className="text-xs text-gray-400 mt-0.5">{slotMeta?.hours}</span>
                     </div>
@@ -390,7 +403,7 @@ export default function DayPlanEditor({ day, dayIndex, planning, onPlanningChang
                             {slot.activities.length === 0 && (
                               <button
                                 type="button"
-                                onClick={() => handleAddActivity(numericSlotIdx)}
+                                onClick={e => { e.stopPropagation(); handleAddActivity(numericSlotIdx) }}
                                 className="w-full h-14 flex items-center justify-center border-2 border-dashed border-indigo-400 rounded-lg text-base text-indigo-500 bg-indigo-50/60 hover:bg-indigo-100 transition-colors gap-2 focus:outline-none focus:ring-2 focus:ring-indigo-300"
                                 style={{ cursor: 'pointer' }}
                               >
@@ -496,6 +509,14 @@ export default function DayPlanEditor({ day, dayIndex, planning, onPlanningChang
           }
         }}
         slotType={selectedSlotIdx !== null && day.activities[selectedSlotIdx] ? TIME_SLOTS.find(s => s.key === day.activities[selectedSlotIdx].slot)?.label || '' : ''}
+      />
+
+      <ActivitySelectionModal
+        isOpen={selectingSlot !== null}
+        onClose={() => setSelectingSlot(null)}
+        activities={availableActivities}
+        onSelect={handleSelectActivity}
+        slotType={selectingSlot !== null ? (TIME_SLOTS.find(s => s.key === day.activities[selectingSlot].slot)?.label || '') : ''}
       />
     </div>
   )
