@@ -9,8 +9,9 @@ export const getActivitiesByCriteria = async (formData: FormData): Promise<Recor
   console.log('Recherche d\'activités pour la destination :', formData.destination)
 
   // Récupérer les activités déjà sélectionnées
-  let savedActivities: Activity[] = []
+  let savedActivityIds = new Set<string>()
   if (typeof window !== 'undefined') {
+    let savedActivities: Activity[] = []
     const saved = localStorage.getItem('savedActivities')
     if (saved) {
       try {
@@ -19,9 +20,9 @@ export const getActivitiesByCriteria = async (formData: FormData): Promise<Recor
         console.error('Erreur lors de la lecture des activités sauvegardées:', error)
       }
     }
+    savedActivityIds = new Set(savedActivities.map(a => a.id))
+    console.log('Activités déjà sélectionnées:', savedActivityIds)
   }
-  const savedActivityIds = new Set(savedActivities.map(a => a.id))
-  console.log('Activités déjà sélectionnées:', savedActivityIds)
 
   // Récupérer toutes les activités pour la destination (insensible à la casse)
   const { data: activities, error } = await supabase

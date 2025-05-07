@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import type { Suggestion, SuggestionCategory } from '@/types/suggestion'
 import { MOCK_SUGGESTIONS } from '@/types/suggestion'
 import Image from 'next/image'
+import { FiX, FiCheck } from 'react-icons/fi'
 
 const CATEGORIES: SuggestionCategory[] = [
   'Vie nocturne',
@@ -25,6 +26,7 @@ export default function SuggestionsList({ onSave, onSkip }: SuggestionsListProps
   const [direction, setDirection] = useState(0)
   const [currentSuggestionIndex, setCurrentSuggestionIndex] = useState(0)
   const [imageError, setImageError] = useState(false)
+  const [swipeAnim, setSwipeAnim] = useState<'left' | 'right' | null>(null)
 
   const currentCategory = CATEGORIES[currentCategoryIndex]
   const currentSuggestions = MOCK_SUGGESTIONS.filter(s => s.category === currentCategory)
@@ -62,16 +64,24 @@ export default function SuggestionsList({ onSave, onSkip }: SuggestionsListProps
     }
   }
 
+  const handleSwipeBtn = (dir: 'left' | 'right') => {
+    setSwipeAnim(dir)
+    setTimeout(() => {
+      setSwipeAnim(null)
+      handleSwipe(dir === 'right' ? 1 : -1)
+    }, 350)
+  }
+
   return (
     <div className="flex flex-col h-full">
       <div className="flex-1">
         <AnimatePresence mode="wait">
           <motion.div
-            key={currentCategory}
+            key={currentCategory + '-' + currentSuggestionIndex}
             initial={{ opacity: 0, x: direction > 0 ? 100 : -100 }}
-            animate={{ opacity: 1, x: 0 }}
+            animate={{ opacity: 1, x: swipeAnim === 'right' ? 500 : swipeAnim === 'left' ? -500 : 0, rotate: swipeAnim === 'right' ? 15 : swipeAnim === 'left' ? -15 : 0 }}
             exit={{ opacity: 0, x: direction > 0 ? -100 : 100 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: swipeAnim ? 0.35 : 0.3 }}
             className="h-full"
           >
             <div className="p-4">
@@ -116,14 +126,31 @@ export default function SuggestionsList({ onSave, onSkip }: SuggestionsListProps
         </AnimatePresence>
       </div>
 
-      <div className="p-4 flex justify-center">
+      <div className="p-4 flex justify-center gap-8">
         <button
-          onClick={handleNext}
-          className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors"
+          onClick={() => handleSwipeBtn('left')}
+          className="w-20 h-20 rounded-full bg-red-500 flex items-center justify-center text-white text-4xl shadow-lg hover:bg-red-600 transition-colors border-none focus:outline-none btn-fill"
+          aria-label="Refuser la suggestion"
         >
-          Voir la catégorie suivante
+          <FiX size={38} />
+        </button>
+        <button
+          onClick={() => handleSwipeBtn('right')}
+          className="w-20 h-20 rounded-full bg-green-500 flex items-center justify-center text-white text-4xl shadow-lg hover:bg-green-600 transition-colors border-none focus:outline-none btn-fill"
+          aria-label="Accepter la suggestion"
+        >
+          <FiCheck size={38} />
         </button>
       </div>
     </div>
   )
-} 
+}
+
+<style jsx global>{`
+  .btn-fill {
+    background-color: inherit !important;
+    color: white !important;
+    border: none !important;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  }
+`}</style> 

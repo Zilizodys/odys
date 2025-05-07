@@ -8,6 +8,7 @@ import { FiEdit2, FiCamera, FiMap, FiList, FiBell, FiLock, FiDownload, FiGlobe, 
 import { getSupabaseClient } from '@/lib/supabase/client'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Tab } from '@headlessui/react'
+import clsx from 'clsx'
 
 interface TravelPreferences {
   preferredDestinations: string[]
@@ -216,6 +217,11 @@ export default function SettingsPage() {
     }
   }
 
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    router.push('/login');
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -293,64 +299,28 @@ export default function SettingsPage() {
       {/* Contenu principal */}
       <div className="max-w-4xl mx-auto px-4 py-8">
         <Tab.Group selectedIndex={activeTab} onChange={setActiveTab}>
-          <Tab.List className="flex space-x-1 rounded-xl bg-white p-1 shadow-sm mb-8">
-            <Tab
-              className={({ selected }) =>
-                `w-full rounded-lg py-2.5 text-sm font-medium leading-5
-                ${selected
-                  ? 'bg-indigo-600 text-white shadow'
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                }`
-              }
-            >
-              <div className="flex items-center justify-center gap-2">
-                <FiGlobe className="w-4 h-4" />
-                <span>Profil</span>
-              </div>
-            </Tab>
-            <Tab
-              className={({ selected }) =>
-                `w-full rounded-lg py-2.5 text-sm font-medium leading-5
-                ${selected
-                  ? 'bg-indigo-600 text-white shadow'
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                }`
-              }
-            >
-              <div className="flex items-center justify-center gap-2">
-                <FiHeart className="w-4 h-4" />
-                <span>Préférences</span>
-              </div>
-            </Tab>
-            <Tab
-              className={({ selected }) =>
-                `w-full rounded-lg py-2.5 text-sm font-medium leading-5
-                ${selected
-                  ? 'bg-indigo-600 text-white shadow'
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                }`
-              }
-            >
-              <div className="flex items-center justify-center gap-2">
-                <FiBell className="w-4 h-4" />
-                <span>Notifications</span>
-              </div>
-            </Tab>
-            <Tab
-              className={({ selected }) =>
-                `w-full rounded-lg py-2.5 text-sm font-medium leading-5
-                ${selected
-                  ? 'bg-indigo-600 text-white shadow'
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                }`
-              }
-            >
-              <div className="flex items-center justify-center gap-2">
-                <FiLock className="w-4 h-4" />
-                <span>Sécurité</span>
-              </div>
-            </Tab>
-          </Tab.List>
+          <div className="relative">
+            <Tab.List className="flex space-x-1 rounded-xl bg-white p-1 shadow-sm mb-8 relative overflow-x-auto scrollbar-none" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
+              {['Profil', 'Préférences', 'Notifications', 'Sécurité'].map((label, idx) => (
+                <Tab key={label}
+                  className={({ selected }) =>
+                    clsx(
+                      'w-full flex items-center justify-center gap-2 rounded-lg py-2.5 px-4 text-sm font-medium leading-5 transition-all duration-200 relative',
+                      selected
+                        ? 'bg-indigo-600 text-white shadow focus:outline-none'
+                        : 'text-gray-600 hover:bg-indigo-50 hover:text-indigo-700 cursor-pointer'
+                    )
+                  }
+                >
+                  {idx === 0 && <FiGlobe className="w-4 h-4" />}
+                  {idx === 1 && <FiHeart className="w-4 h-4" />}
+                  {idx === 2 && <FiBell className="w-4 h-4" />}
+                  {idx === 3 && <FiLock className="w-4 h-4" />}
+                  <span>{label}</span>
+                </Tab>
+              ))}
+            </Tab.List>
+          </div>
 
           <Tab.Panels>
             {/* Panel Profil */}
@@ -593,12 +563,18 @@ export default function SettingsPage() {
           </Tab.Panels>
         </Tab.Group>
 
-        <div className="mt-8 flex justify-end">
+        <div className="mt-8 flex flex-col gap-4">
           <button
             onClick={handleSubmit}
-            className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+            className="w-full px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-base font-semibold"
           >
             Enregistrer les modifications
+          </button>
+          <button
+            onClick={handleLogout}
+            className="w-full px-6 py-3 bg-white border border-red-200 text-red-600 rounded-lg hover:bg-red-50 transition-colors text-base font-semibold"
+          >
+            Se déconnecter
           </button>
         </div>
       </div>

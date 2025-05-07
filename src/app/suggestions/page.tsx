@@ -26,6 +26,9 @@ export default function SuggestionsPage() {
   const [savedActivities, setSavedActivities] = useState<Activity[]>([])
   const [categories, setCategories] = useState<string[]>([])
   const type = searchParams.get('type')
+  const [swipeState, setSwipeState] = useState<{ id: string; direction: 'left' | 'right' } | null>(null)
+  const [pendingSwipe, setPendingSwipe] = useState<null | { id: string, direction: 'left' | 'right' }>(null)
+  const [pendingActivity, setPendingActivity] = useState<Activity | null>(null)
 
   // Si c'est une suggestion de restaurant, rediriger vers la page dédiée
   useEffect(() => {
@@ -226,6 +229,23 @@ export default function SuggestionsPage() {
   )
   const currentActivity = currentActivities[currentIndex]
 
+  useEffect(() => {
+    document.body.setAttribute('data-suggestions-page', 'true');
+    return () => document.body.removeAttribute('data-suggestions-page');
+  }, []);
+
+  // Remplace handleSwipe(-1) et handleSwipe(1) par une fonction qui anime puis switche
+  const handleSwipeBtn = (dir: 'left' | 'right') => {
+    if (!currentActivity) return;
+    setPendingSwipe({ id: currentActivity.id, direction: dir });
+    setPendingActivity(currentActivity);
+    setTimeout(() => {
+      setPendingSwipe(null);
+      setPendingActivity(null);
+      handleSwipe(dir === 'right' ? 1 : -1);
+    }, 350);
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -269,18 +289,26 @@ export default function SuggestionsPage() {
         />
         <div className="mt-8 min-h-[350px] flex items-center justify-center">
           <AnimatePresence mode="wait">
-            {currentActivity ? (
+            {(pendingActivity || currentActivity) ? (
               <motion.div
-                key={currentActivity.id}
+                key={(pendingActivity || currentActivity).id + (pendingSwipe ? '-' + pendingSwipe.direction : '')}
                 initial={{ opacity: 0, x: 100 }}
-                animate={{ opacity: 1, x: 0 }}
+                animate={{
+                  x: pendingSwipe && pendingSwipe.id === (pendingActivity || currentActivity).id
+                    ? pendingSwipe.direction === 'right' ? 500 : -500
+                    : 0,
+                  rotate: pendingSwipe && pendingSwipe.id === (pendingActivity || currentActivity).id
+                    ? pendingSwipe.direction === 'right' ? 15 : -15
+                    : 0,
+                  opacity: 1
+                }}
                 exit={{ opacity: 0, x: -100 }}
-                transition={{ duration: 0.3 }}
+                transition={{ duration: pendingSwipe ? 0.35 : 0.3 }}
                 onPanEnd={(_, info) => handleSwipe(info)}
                 className="relative w-full"
               >
                 <ActivityCard
-                  activity={currentActivity}
+                  activity={pendingActivity || currentActivity}
                   onDelete={handleDelete}
                   onSwipe={handleSwipe}
                 />
@@ -310,16 +338,18 @@ export default function SuggestionsPage() {
       <div className="fixed bottom-20 left-0 right-0 flex justify-center gap-12 z-30 pointer-events-none">
         <div className="flex gap-12 pointer-events-auto">
           <button
-            onClick={() => handleSwipe(-1)}
-            className="flex items-center justify-center w-20 h-20 rounded-full bg-white shadow-lg hover:bg-red-50 transition-colors border-2 border-red-500"
+            onClick={() => handleSwipeBtn('left')}
+            className="flex items-center justify-center w-20 h-20 rounded-full bg-red-500 text-white text-4xl shadow-lg hover:bg-red-600 transition-colors border-none focus:outline-none"
+            aria-label="Refuser la suggestion"
           >
-            <svg className="w-10 h-10 text-red-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+            <svg className="w-10 h-10" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
           </button>
           <button
-            onClick={() => handleSwipe(1)}
-            className="flex items-center justify-center w-20 h-20 rounded-full bg-white shadow-lg hover:bg-green-50 transition-colors border-2 border-green-500"
+            onClick={() => handleSwipeBtn('right')}
+            className="flex items-center justify-center w-20 h-20 rounded-full bg-green-500 text-white text-4xl shadow-lg hover:bg-green-600 transition-colors border-none focus:outline-none"
+            aria-label="Accepter la suggestion"
           >
-            <svg className="w-10 h-10 text-green-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+            <svg className="w-10 h-10" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
           </button>
         </div>
       </div>

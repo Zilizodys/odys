@@ -7,6 +7,7 @@ import Image from 'next/image'
 import { Activity } from '@/types/activity'
 import ProgramCard, { ProgramCardProps } from '@/components/ProgramCard'
 import { Program } from '@/types/program'
+import { motion, AnimatePresence } from 'framer-motion'
 
 export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
@@ -228,25 +229,32 @@ export default function DashboardPage() {
         ) : (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-              {programs.map((program) => {
-                // Chercher l'image de la destination dans la table destinations
-                const destinationImage = destinations.find(
-                  d => normalizeCityName(d.city) === normalizeCityName(program.destination)
-                )?.imageurl
-                // On injecte coverImage si absent ou vide
-                const programWithCover = {
-                  ...program,
-                  coverImage: program.coverImage || (program as any).cover_image || destinationImage || '/images/activities/Mascot.png'
-                }
-                return (
-                  <ProgramCard
-                    key={program.id}
-                    program={programWithCover}
-                    onDelete={handleDeleteProgram}
-                    onClick={handleProgramClick}
-                  />
-                )
-              })}
+              <AnimatePresence>
+                {programs.map((program, i) => {
+                  const destinationImage = destinations.find(
+                    d => normalizeCityName(d.city) === normalizeCityName(program.destination)
+                  )?.imageurl
+                  const programWithCover = {
+                    ...program,
+                    coverImage: program.coverImage || (program as any).cover_image || destinationImage || '/images/activities/Mascot.png'
+                  }
+                  return (
+                    <motion.div
+                      key={program.id}
+                      initial={{ opacity: 0, y: 40 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 40 }}
+                      transition={{ delay: i * 0.15, duration: 0.5, type: 'spring', stiffness: 60 }}
+                    >
+                      <ProgramCard
+                        program={programWithCover}
+                        onDelete={handleDeleteProgram}
+                        onClick={handleProgramClick}
+                      />
+                    </motion.div>
+                  )
+                })}
+              </AnimatePresence>
             </div>
             <div className="flex justify-center mt-12">
               <button
