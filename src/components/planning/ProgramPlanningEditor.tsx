@@ -1,6 +1,7 @@
 import { ProgramPlanning, DayPlan } from '@/lib/planning/autoAssign'
 import DayPlanEditor from '@/components/planning/DayPlanEditor'
 import { DragDropContext, DropResult } from 'react-beautiful-dnd'
+import { useState } from 'react'
 
 interface ProgramPlanningEditorProps {
   planning: ProgramPlanning
@@ -11,9 +12,16 @@ interface ProgramPlanningEditorProps {
 }
 
 export default function ProgramPlanningEditor({ planning, onChange, city, programId, budget }: ProgramPlanningEditorProps) {
+  // Initialiser avec le premier slot du premier jour ouvert
+  const [openSlotsByDay, setOpenSlotsByDay] = useState<{ [dayIdx: number]: number[] }>({ 0: [0] })
+
   // Nouvelle fonction pour gérer le drag & drop inter-journées
   const handleDragEnd = (result: DropResult) => {
-    if (!result.destination) return;
+    if (!result.destination) {
+      // Fermer tous les slots à la fin du drag
+      setOpenSlotsByDay({})
+      return;
+    }
 
     const { source, destination } = result;
 
@@ -61,6 +69,15 @@ export default function ProgramPlanningEditor({ planning, onChange, city, progra
     toSlot.activities.splice(destination.index, 0, movedActivity);
 
     onChange(newPlanning);
+    // Garder ouverts le slot d'origine et le slot d'arrivée après le drop
+    setOpenSlotsByDay(prev => {
+      const newOpen = { ...prev }
+      // Ouvre le slot d'origine
+      newOpen[from.dayIdx] = Array.from(new Set([...(newOpen[from.dayIdx] || []), from.slotIdx]))
+      // Ouvre le slot d'arrivée
+      newOpen[to.dayIdx] = Array.from(new Set([...(newOpen[to.dayIdx] || []), to.slotIdx]))
+      return newOpen
+    })
   };
 
   // Fonction pour mettre à jour un jour spécifique du planning
@@ -70,12 +87,37 @@ export default function ProgramPlanningEditor({ planning, onChange, city, progra
     onChange(newPlanning);
   };
 
+  // Ouvre tous les slots de tous les jours
+  const openAllSlots = () => {
+    const allOpen: { [dayIdx: number]: number[] } = {};
+    planning.days.forEach((day, dayIdx) => {
+      allOpen[dayIdx] = day.activities.map((_, idx) => idx)
+    })
+    setOpenSlotsByDay(allOpen)
+  }
+
+  // Toggle un slot d'un jour
+  const handleToggleSlot = (dayIdx: number, slotIdx: number) => {
+    setOpenSlotsByDay(prev => {
+      const current = prev[dayIdx] || []
+      return {
+        ...prev,
+        [dayIdx]: current.includes(slotIdx)
+          ? current.filter(i => i !== slotIdx)
+          : [...current, slotIdx]
+      }
+    })
+  }
+
   return (
-    <DragDropContext onDragEnd={handleDragEnd}>
+    <DragDropContext
+      onDragStart={openAllSlots}
+      onDragEnd={handleDragEnd}
+    >
       <div className="space-y-8">
         {(planning.days || []).map((day, dayIdx) => (
           <DayPlanEditor
-            key={day.date}
+            key={dayIdx}
             day={day}
             dayIndex={dayIdx}
             planning={planning}
@@ -83,6 +125,8 @@ export default function ProgramPlanningEditor({ planning, onChange, city, progra
             city={city}
             programId={programId}
             budget={budget}
+            openSlots={openSlotsByDay[dayIdx] || []}
+            onToggleSlot={slotIdx => handleToggleSlot(dayIdx, slotIdx)}
           />
         ))}
       </div>

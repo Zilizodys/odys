@@ -255,7 +255,7 @@ export default function Home() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-white pb-24 flex flex-col">
+    <div className="bg-white pb-24 flex flex-col">
       <div className="flex-1 flex flex-col items-center justify-start pt-10 px-4">
         <img src="/images/Mascot.png" alt="Mascotte Odys" className="w-24 h-24 mb-4" />
         <p className="text-xl font-semibold text-center mb-8">Quelques questions<br />pour te proposer un programme sur-mesure</p>

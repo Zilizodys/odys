@@ -173,6 +173,12 @@ export default function ProgramClient({ initialProgram }: { initialProgram: Prog
   const [isLoading, setIsLoading] = useState(false)
   const [view, setView] = useState<'planning' | 'activities'>('planning')
 
+  // Masquer le header global sur la page programme
+  useEffect(() => {
+    document.body.setAttribute('data-program-page', 'true');
+    return () => document.body.removeAttribute('data-program-page');
+  }, []);
+
   // Effet pour gérer le défilement vers l'ancre
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -268,55 +274,67 @@ export default function ProgramClient({ initialProgram }: { initialProgram: Prog
 
   return (
     <div className="bg-gray-50 pb-24">
-      <div className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <Link href="/dashboard" className="inline-flex items-center text-indigo-600 hover:text-indigo-700">
-            <FiArrowLeft className="mr-2" />
-            Retour au tableau de bord
-          </Link>
-        </div>
-
-        <ParallaxCover src={getDestinationImage(program.destination).url} alt={getDestinationImage(program.destination).alt}>
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-          <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-            <h1 className="text-2xl font-bold mb-2">{program.title || `Séjour à ${program.destination}`}</h1>
-            <div className="flex items-center gap-2 text-lg">
-              <FiMapPin className="text-white" />
-              <span>{program.destination}</span>
-            </div>
-          </div>
-        </ParallaxCover>
-
-        <div className="bg-white rounded-xl p-6 shadow-sm mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="flex items-center gap-2">
-              <FiClock className="text-indigo-500" />
-              <div>
-                <p className="text-sm text-gray-500">Dates</p>
-                <p className="font-medium">
-                  Du {new Date(program.start_date).toLocaleDateString('fr-FR')} au {new Date(program.end_date).toLocaleDateString('fr-FR')}
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <FiDollarSign className="text-indigo-500" />
-              <div>
-                <p className="text-sm text-gray-500">Budget</p>
-                <p className="font-medium">{program.budget}€</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <FiUsers className="text-indigo-500" />
-              <div>
-                <p className="text-sm text-gray-500">Voyageurs</p>
-                <p className="font-medium">
-                  {COMPANION_OPTIONS.find(option => option.value === program.companion)?.label || program.companion}
-                </p>
-              </div>
-            </div>
+      {/* Cover full width, collée en haut */}
+      <div className="relative w-full h-[390px] sm:h-[510px]">
+        <Image
+          src={getDestinationImage(program.destination).url}
+          alt={getDestinationImage(program.destination).alt}
+          fill
+          sizes="100vw"
+          style={{ objectFit: 'cover' }}
+          priority
+        />
+        {/* Overlay sombre pour lisibilité */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+        {/* Bouton retour en haut à gauche */}
+        <button
+          onClick={() => router.push('/dashboard')}
+          className="absolute top-4 left-4 z-20 bg-white/80 hover:bg-white text-black rounded-full p-2 shadow-md backdrop-blur"
+          aria-label="Retour au tableau de bord"
+        >
+          <FiArrowLeft className="w-6 h-6" />
+        </button>
+        {/* Titre et destination en bas de l'image */}
+        <div className="absolute bottom-0 left-0 right-0 p-6 pb-4 z-10">
+          <h1 className="text-2xl font-bold text-white mb-2 drop-shadow">{program.title || `Séjour à ${program.destination}`}</h1>
+          <div className="flex items-center gap-2 text-lg text-white drop-shadow">
+            <FiMapPin />
+            <span>{program.destination}</span>
           </div>
         </div>
-
+      </div>
+      {/* Section infos séjour full width, sans padding latéral */}
+      <div className="bg-white w-full p-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="flex items-center gap-2">
+            <FiClock className="text-indigo-500" />
+            <div>
+              <p className="text-sm text-gray-500">Dates</p>
+              <p className="font-medium">
+                Du {new Date(program.start_date).toLocaleDateString('fr-FR')} au {new Date(program.end_date).toLocaleDateString('fr-FR')}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <FiDollarSign className="text-indigo-500" />
+            <div>
+              <p className="text-sm text-gray-500">Budget</p>
+              <p className="font-medium">{program.budget}€</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <FiUsers className="text-indigo-500" />
+            <div>
+              <p className="text-sm text-gray-500">Voyageurs</p>
+              <p className="font-medium">
+                {COMPANION_OPTIONS.find(option => option.value === program.companion)?.label || program.companion}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* Contenu principal avec padding latéral */}
+      <div className="w-full px-4 py-8 -mt-8">
         <div className="mb-8">
           <div className="grid grid-cols-2 rounded-lg border border-gray-200 bg-white overflow-hidden">
             <button

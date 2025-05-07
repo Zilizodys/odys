@@ -280,3 +280,7 @@ main {
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
+
+body[data-program-page='true'] header, body[data-program-page='true'] .Header {
+  display: none !important;
+}

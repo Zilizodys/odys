@@ -2,7 +2,7 @@ import { useState, useRef, useLayoutEffect } from 'react'
 import { DayPlan, ScheduledActivity, TimeSlot, TIME_SLOTS } from '@/lib/planning/autoAssign'
 import ActivitySlotEditor from '@/components/planning/ActivitySlotEditor'
 import { ChevronDown, ChevronUp, Plus } from 'lucide-react'
-import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd'
+import { Droppable, Draggable, DropResult } from 'react-beautiful-dnd'
 import { Activity } from '@/types/activity'
 import { getActivitiesByCriteria } from '@/lib/supabase/activities'
 import { useRouter } from 'next/navigation'
@@ -17,6 +17,8 @@ interface DayPlanEditorProps {
   city: string
   programId: string
   budget?: number
+  openSlots: number[]
+  onToggleSlot: (slotIdx: number) => void
 }
 
 function isRestaurant(activity: Activity): boolean {
@@ -119,7 +121,7 @@ function DraggableActivityCard({ activity, activityIdx, slotIdx, slot, day, onCh
   );
 }
 
-export default function DayPlanEditor({ day, dayIndex, planning, onPlanningChange, city, programId, budget }: DayPlanEditorProps) {
+export default function DayPlanEditor({ day, dayIndex, planning, onPlanningChange, city, programId, budget, openSlots, onToggleSlot }: DayPlanEditorProps) {
   const [open, setOpen] = useState(dayIndex === 0)
   const [warning, setWarning] = useState<string | null>(null)
   const [selectingSlot, setSelectingSlot] = useState<number | null>(null)
@@ -277,97 +279,95 @@ export default function DayPlanEditor({ day, dayIndex, planning, onPlanningChang
         <div className="p-6 space-y-6">
           {warning && <div className="text-red-600 text-sm mb-2">{warning}</div>}
           <div className="flex flex-col gap-6">
-            <DragDropContext
-              onDragStart={() => setIsDragging(true)}
-              onDragEnd={(result) => {
-                setIsDragging(false)
-                // Si tu as déjà une fonction handleDragEnd, appelle-la ici
-              }}
-            >
-              {day.activities.map((slot, slotIdx) => {
-                const slotMeta = TIME_SLOTS.find(s => s.key === slot.slot)
-                const numericSlotIdx = Number(slotIdx)
-                return (
-                  <div
-                    key={slot.slot}
-                    id={`day-${dayIndex}-slot-${numericSlotIdx}`}
-                    className="bg-white border border-gray-200 rounded-2xl px-6 py-6 flex flex-col items-stretch transition-colors relative"
-                    style={{ boxShadow: 'none' }}
-                  >
-                    {/* Titre du slot et horaires + bouton + */}
-                    <div className="w-full flex flex-row items-center mb-2 justify-between">
-                      <div className="flex flex-col">
-                        <span className="text-base font-semibold text-indigo-700 leading-tight tracking-wide">{slotMeta?.label}</span>
-                        <span className="text-xs text-gray-400 mt-0.5">{slotMeta?.hours}</span>
-                      </div>
-                      {/* Bouton + pour ajouter une activité */}
-                      <button
-                        className="ml-2 p-1 rounded-full bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-100 transition-colors"
-                        title="Ajouter une activité"
-                        onClick={() => handleAddActivity(numericSlotIdx)}
-                        type="button"
-                        disabled={isLoadingActivities}
-                      >
-                        <Plus size={18} />
-                      </button>
+            {day.activities.map((slot, slotIdx) => {
+              const slotMeta = TIME_SLOTS.find(s => s.key === slot.slot)
+              const numericSlotIdx = Number(slotIdx)
+              const isSlotOpen = openSlots.includes(numericSlotIdx)
+              return (
+                <div
+                  key={slot.slot}
+                  id={`day-${dayIndex}-slot-${numericSlotIdx}`}
+                  className="bg-white border border-gray-200 rounded-2xl px-6 py-4 flex flex-col items-stretch transition-colors relative"
+                  style={{ boxShadow: 'none' }}
+                >
+                  {/* Header du slot */}
+                  <div className="w-full flex flex-row items-center mb-2 justify-between select-none">
+                    <div className="flex flex-col">
+                      <span className="text-base font-semibold text-indigo-700 leading-tight tracking-wide flex items-center gap-2">
+                        {slotMeta?.label}
+                      </span>
+                      <span className="text-xs text-gray-400 mt-0.5">{slotMeta?.hours}</span>
                     </div>
-                    {/* Activités du slot avec Drag & Drop */}
-                    <Droppable droppableId={`day-${dayIndex}-slot-${numericSlotIdx}`} direction="vertical" type="activity">
-                      {(provided, snapshot) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.droppableProps}
-                          className={`w-full flex flex-col items-stretch gap-3 bg-transparent ${
-                            snapshot.isDraggingOver ? 'bg-indigo-50' : ''
-                          }`}
-                        >
-                          {slot.activities.length === 0 && (
-                            <button
-                              type="button"
-                              onClick={() => handleAddActivity(numericSlotIdx)}
-                              className="w-full h-14 flex items-center justify-center border-2 border-dashed border-indigo-400 rounded-lg text-base text-indigo-500 bg-indigo-50/60 hover:bg-indigo-100 transition-colors gap-2 focus:outline-none focus:ring-2 focus:ring-indigo-300"
-                              style={{ cursor: 'pointer' }}
-                            >
-                              <svg width="22" height="22" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" strokeWidth="2" d="M12 5v14m7-7H5"/></svg>
-                              <span>Ajouter ou glisser une activité ici</span>
-                            </button>
-                          )}
-                          {slot.activities.map((activity, activityIdx) => (
-                            <DraggableActivityCard
-                              key={`activity-${activity.id}-slot-${numericSlotIdx}`}
-                              activity={activity}
-                              activityIdx={activityIdx}
-                              slotIdx={numericSlotIdx}
-                              slot={slot}
-                              day={day}
-                              onChange={(newDay) => onPlanningChange(newDay, dayIndex)}
-                              onAddRestaurant={handleAddRestaurant}
-                              onAddActivity={() => handleAddActivity(numericSlotIdx)}
-                              city={city}
-                              programId={programId}
-                              dayIndex={dayIndex}
-                              budget={budget}
-                              onDelete={() => {
-                                if (isDragging) return
-                                console.log('Suppression exécutée dans DayPlanEditor', { activity, activityIdx, slotIdx: numericSlotIdx });
-                                const newActivities = [...slot.activities];
-                                newActivities.splice(activityIdx, 1);
-                                const newDay = { ...day, activities: [...day.activities] };
-                                newDay.activities[numericSlotIdx] = { ...slot, activities: newActivities };
-                                onPlanningChange(newDay, dayIndex);
-                              }}
-                              draggableId={`activity-${activity.id}-slot-${numericSlotIdx}`}
-                              isDragging={isDragging}
-                            />
-                          ))}
-                          {provided.placeholder}
-                        </div>
-                      )}
-                    </Droppable>
+                    {/* Chevron à droite pour ouvrir/fermer le slot */}
+                    <button
+                      type="button"
+                      className="ml-2 p-1 rounded-full bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-100 transition-colors"
+                      title={isSlotOpen ? 'Replier le créneau' : 'Déplier le créneau'}
+                      onClick={e => { e.stopPropagation(); onToggleSlot(numericSlotIdx); }}
+                    >
+                      {isSlotOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                    </button>
                   </div>
-                )
-              })}
-            </DragDropContext>
+                  {/* Droppable toujours monté, contenu conditionnel */}
+                  <Droppable droppableId={`day-${dayIndex}-slot-${numericSlotIdx}`} direction="vertical" type="activity">
+                    {(provided, snapshot) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.droppableProps}
+                        className={`w-full flex flex-col items-stretch gap-3 bg-transparent ${snapshot.isDraggingOver ? 'bg-indigo-50' : ''}`}
+                      >
+                        {isSlotOpen ? (
+                          <>
+                            {slot.activities.length === 0 && (
+                              <button
+                                type="button"
+                                onClick={() => handleAddActivity(numericSlotIdx)}
+                                className="w-full h-14 flex items-center justify-center border-2 border-dashed border-indigo-400 rounded-lg text-base text-indigo-500 bg-indigo-50/60 hover:bg-indigo-100 transition-colors gap-2 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                                style={{ cursor: 'pointer' }}
+                              >
+                                <svg width="22" height="22" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" strokeWidth="2" d="M12 5v14m7-7H5"/></svg>
+                                <span>Ajouter ou glisser une activité ici</span>
+                              </button>
+                            )}
+                            {slot.activities.map((activity, activityIdx) => (
+                              <DraggableActivityCard
+                                key={`activity-${activity.id}-day-${dayIndex}-slot-${numericSlotIdx}`}
+                                activity={activity}
+                                activityIdx={activityIdx}
+                                slotIdx={numericSlotIdx}
+                                slot={slot}
+                                day={day}
+                                onChange={(newDay) => onPlanningChange(newDay, dayIndex)}
+                                onAddRestaurant={handleAddRestaurant}
+                                onAddActivity={() => handleAddActivity(numericSlotIdx)}
+                                city={city}
+                                programId={programId}
+                                dayIndex={dayIndex}
+                                budget={budget}
+                                onDelete={() => {
+                                  if (isDragging) return
+                                  console.log('Suppression exécutée dans DayPlanEditor', { activity, activityIdx, slotIdx: numericSlotIdx });
+                                  const newActivities = [...slot.activities];
+                                  newActivities.splice(activityIdx, 1);
+                                  const newDay = { ...day, activities: [...day.activities] };
+                                  newDay.activities[numericSlotIdx] = { ...slot, activities: newActivities };
+                                  onPlanningChange(newDay, dayIndex);
+                                }}
+                                draggableId={`activity-${activity.id}-day-${dayIndex}-slot-${numericSlotIdx}`}
+                                isDragging={isDragging}
+                              />
+                            ))}
+                            {provided.placeholder}
+                          </>
+                        ) : (
+                          <div className="min-h-[40px]">{provided.placeholder}</div>
+                        )}
+                      </div>
+                    )}
+                  </Droppable>
+                </div>
+              )
+            })}
           </div>
         </div>
       )}

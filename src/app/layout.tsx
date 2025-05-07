@@ -1,9 +1,9 @@
 import './globals.css'
 import { Inter } from 'next/font/google'
 import Link from "next/link";
-import Header from '@/components/ui/Header';
 import type { Metadata } from 'next'
 import PageTransition from '@/components/transitions/PageTransition'
+import NavigationWrapper from '@/components/layout/NavigationWrapper'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -41,12 +41,13 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
       </head>
       <body suppressHydrationWarning>
-        <Header />
-        <main>
-          <PageTransition>
-            {children}
-          </PageTransition>
-        </main>
+        <NavigationWrapper>
+          <main>
+            <PageTransition>
+              {children}
+            </PageTransition>
+          </main>
+        </NavigationWrapper>
         
         <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
           {/*
