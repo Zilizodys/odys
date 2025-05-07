@@ -3,11 +3,13 @@ import { DayPlan, ScheduledActivity, TimeSlot, TIME_SLOTS } from '@/lib/planning
 import ActivitySlotEditor from '@/components/planning/ActivitySlotEditor'
 import { ChevronDown, ChevronUp, Plus } from 'lucide-react'
 import { Droppable, Draggable, DropResult } from 'react-beautiful-dnd'
-import { Activity } from '@/types/activity'
+import { Activity, getActivityImageUrl } from '@/types/activity'
 import { getActivitiesByCriteria } from '@/lib/supabase/activities'
 import { useRouter } from 'next/navigation'
 import ActivitySelectionModal from './ActivitySelectionModal'
 import { FormData, MoodType } from '@/types/form'
+import SuggestionCarouselModal from './SuggestionCarouselModal'
+import { Suggestion, SuggestionCategory } from '@/types/suggestion'
 
 interface DayPlanEditorProps {
   day: DayPlan
@@ -53,9 +55,10 @@ interface DraggableActivityCardProps {
   onDelete: () => void;
   draggableId: string;
   isDragging: boolean;
+  onActivityClick?: (activity: Activity, slotIdx: number) => void;
 }
 
-function DraggableActivityCard({ activity, activityIdx, slotIdx, slot, day, onChange, onAddRestaurant, onAddActivity, city, programId, dayIndex, budget, onDelete, draggableId, isDragging }: DraggableActivityCardProps) {
+function DraggableActivityCard({ activity, activityIdx, slotIdx, slot, day, onChange, onAddRestaurant, onAddActivity, city, programId, dayIndex, budget, onDelete, draggableId, isDragging, onActivityClick }: DraggableActivityCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [cardWidth, setCardWidth] = useState<number | null>(null);
 
@@ -105,20 +108,28 @@ function DraggableActivityCard({ activity, activityIdx, slotIdx, slot, day, onCh
             programId={programId}
             dayIndex={dayIndex}
             budget={budget}
-            onDelete={() => {
-              if (isDragging) return
-              console.log('Suppression exécutée dans DayPlanEditor', { activity, activityIdx, slotIdx });
-              const newActivities = [...slot.activities];
-              newActivities.splice(activityIdx, 1);
-              const newDay = { ...day, activities: [...day.activities] };
-              newDay.activities[slotIdx] = { ...slot, activities: newActivities };
-              onChange(newDay);
-            }}
+            onDelete={onDelete}
+            onActivityClick={onActivityClick ? () => onActivityClick(activity, slotIdx) : undefined}
           />
         </div>
       )}
     </Draggable>
   );
+}
+
+// Fonction de conversion d'Activity vers Suggestion
+function activityToSuggestion(activity: Activity): Suggestion {
+  return {
+    id: activity.id,
+    title: activity.title,
+    description: activity.description,
+    category: activity.category as SuggestionCategory,
+    duration: activity.duration || '2h',
+    price: activity.price,
+    image: getActivityImageUrl(activity.imageurl),
+    location: activity.address,
+    price_estimate: activity.price
+  }
 }
 
 export default function DayPlanEditor({ day, dayIndex, planning, onPlanningChange, city, programId, budget, openSlots, onToggleSlot }: DayPlanEditorProps) {
@@ -131,6 +142,10 @@ export default function DayPlanEditor({ day, dayIndex, planning, onPlanningChang
   const [availableActivities, setAvailableActivities] = useState<Activity[]>([])
   const [isLoadingActivities, setIsLoadingActivities] = useState(false)
   const router = useRouter()
+  const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null)
+  const [selectedActivityIdx, setSelectedActivityIdx] = useState<number | null>(null)
+  const [suggestionsForCategory, setSuggestionsForCategory] = useState<Activity[]>([])
+  const [selectedSlotIdx, setSelectedSlotIdx] = useState<number | null>(null)
 
   // Récupère tous les restaurants déjà sélectionnés dans la journée
   const getAvailableRestaurants = (): Activity[] => {
@@ -248,6 +263,56 @@ export default function DayPlanEditor({ day, dayIndex, planning, onPlanningChang
     setSelectingSlot(null)
   }
 
+  // Handler pour le clic sur une activité
+  const handleActivityClick = async (activity: Activity, slotIdx: number) => {
+    setSelectedActivity(activity)
+    setSelectedSlotIdx(slotIdx)
+    // Trouver l'index de l'activité dans le slot
+    const idx = day.activities[slotIdx]?.activities.findIndex(a => a.id === activity.id)
+    setSelectedActivityIdx(idx)
+    // Charger toutes les suggestions de la même ville et catégorie
+    const slot = day.activities[slotIdx]
+    const slotType = slot.slot
+    const idsInSlot = slot.activities.map(a => a.id)
+    const formData: FormData = {
+      destination: activity.city,
+      moods: [activity.category as MoodType],
+      budget: budget ?? null,
+      companion: null,
+      startDate: null,
+      endDate: null
+    }
+    try {
+      const activitiesByCategory = await getActivitiesByCriteria(formData)
+      let suggestions = Object.values(activitiesByCategory).flat()
+      // Filtrage avancé
+      suggestions = suggestions.filter(suggestion => {
+        // Ville
+        if (suggestion.city !== activity.city) return false
+        // Catégorie
+        if (suggestion.category !== activity.category) return false
+        // Budget
+        if (suggestion.price > activity.price) return false
+        // Pas déjà dans le slot
+        if (idsInSlot.includes(suggestion.id)) return false
+        // Horaire/type
+        const cat = suggestion.category.toLowerCase()
+        if (slotType === 'midi' || slotType === 'dîner') {
+          if (!cat.includes('restaurant') && !cat.includes('gastronomie')) return false
+        } else if (slotType === 'soirée') {
+          if (!cat.includes('nightlife') && !cat.includes('bar') && !cat.includes('club') && !cat.includes('vie nocturne')) return false
+        } else {
+          // Pour les autres slots, on exclut restaurants et nightlife
+          if (cat.includes('restaurant') || cat.includes('gastronomie') || cat.includes('nightlife') || cat.includes('bar') || cat.includes('club') || cat.includes('vie nocturne')) return false
+        }
+        return true
+      })
+      setSuggestionsForCategory(suggestions)
+    } catch (e) {
+      setSuggestionsForCategory([])
+    }
+  }
+
   return (
     <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden">
       <button
@@ -355,6 +420,7 @@ export default function DayPlanEditor({ day, dayIndex, planning, onPlanningChang
                                 }}
                                 draggableId={`activity-${activity.id}-day-${dayIndex}-slot-${numericSlotIdx}`}
                                 isDragging={isDragging}
+                                onActivityClick={handleActivityClick}
                               />
                             ))}
                             {provided.placeholder}
@@ -372,12 +438,60 @@ export default function DayPlanEditor({ day, dayIndex, planning, onPlanningChang
         </div>
       )}
 
-      <ActivitySelectionModal
-        isOpen={selectingSlot !== null}
-        onClose={() => setSelectingSlot(null)}
-        activities={availableActivities}
-        onSelect={handleSelectActivity}
-        slotType={selectingSlot !== null && day.activities[selectingSlot] ? TIME_SLOTS.find(s => s.key === day.activities[selectingSlot].slot)?.label || '' : ''}
+      <SuggestionCarouselModal
+        isOpen={selectedActivity !== null}
+        onClose={() => { setSelectedActivity(null); setSuggestionsForCategory([]); setSelectedSlotIdx(null); setSelectedActivityIdx(null); }}
+        suggestions={suggestionsForCategory.map(activityToSuggestion)}
+        onSelect={(suggestion) => {
+          if (selectedSlotIdx !== null && selectedActivityIdx !== null) {
+            // Remplacer uniquement l'activité sélectionnée dans le slot
+            const newActivities = [...day.activities]
+            const slot = { ...newActivities[selectedSlotIdx] }
+            const activitiesCopy = [...slot.activities]
+            const newActivity = availableActivities.find(a => a.id === suggestion.id) || suggestionsForCategory.find(a => a.id === suggestion.id)!
+            activitiesCopy[selectedActivityIdx] = newActivity
+            slot.activities = activitiesCopy
+            newActivities[selectedSlotIdx] = slot
+
+            // Vérifier si la suggestion était déjà présente ailleurs dans la journée
+            let replaced = false
+            for (let i = 0; i < newActivities.length; i++) {
+              if (i === selectedSlotIdx) continue
+              const idxInOther = newActivities[i].activities.findIndex(a => a.id === suggestion.id)
+              if (idxInOther !== -1) {
+                // Trouver une suggestion alternative pour ce slot
+                const slotType = newActivities[i].slot
+                const idsInSlot = newActivities[i].activities.map(a => a.id)
+                // On prend la première suggestion qui respecte les critères et n'est pas déjà dans le slot
+                const alternatives = suggestionsForCategory.filter(sugg =>
+                  sugg.city === newActivities[i].activities[idxInOther].city &&
+                  sugg.category === newActivities[i].activities[idxInOther].category &&
+                  sugg.price <= newActivities[i].activities[idxInOther].price &&
+                  !idsInSlot.includes(sugg.id) &&
+                  sugg.id !== suggestion.id &&
+                  (
+                    (slotType === 'midi' || slotType === 'dîner') ? (sugg.category.toLowerCase().includes('restaurant') || sugg.category.toLowerCase().includes('gastronomie')) :
+                    (slotType === 'soirée') ? (sugg.category.toLowerCase().includes('nightlife') || sugg.category.toLowerCase().includes('bar') || sugg.category.toLowerCase().includes('club') || sugg.category.toLowerCase().includes('vie nocturne')) :
+                    (!sugg.category.toLowerCase().includes('restaurant') && !sugg.category.toLowerCase().includes('gastronomie') && !sugg.category.toLowerCase().includes('nightlife') && !sugg.category.toLowerCase().includes('bar') && !sugg.category.toLowerCase().includes('club') && !sugg.category.toLowerCase().includes('vie nocturne'))
+                  )
+                )
+                if (alternatives.length > 0) {
+                  newActivities[i].activities[idxInOther] = alternatives[0]
+                } else {
+                  // Sinon, on retire simplement l'activité
+                  newActivities[i].activities.splice(idxInOther, 1)
+                }
+                replaced = true
+              }
+            }
+            onPlanningChange({ ...day, activities: newActivities }, dayIndex)
+            setSelectedActivity(null)
+            setSuggestionsForCategory([])
+            setSelectedSlotIdx(null)
+            setSelectedActivityIdx(null)
+          }
+        }}
+        slotType={selectedSlotIdx !== null && day.activities[selectedSlotIdx] ? TIME_SLOTS.find(s => s.key === day.activities[selectedSlotIdx].slot)?.label || '' : ''}
       />
     </div>
   )

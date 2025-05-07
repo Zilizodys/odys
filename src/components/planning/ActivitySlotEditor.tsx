@@ -16,11 +16,12 @@ interface ActivitySlotEditorProps {
   city?: string
   budget?: number
   onDelete?: () => void
+  onActivityClick?: (activity: Activity) => void
 }
 
 const isMealSlot = (slot: TimeSlot) => slot === 'midi' || slot === 'dîner'
 
-export default function ActivitySlotEditor({ activity, slotIndex, onChange, onAddRestaurant, onAddActivity, dayIndex, programId, city, budget, onDelete }: ActivitySlotEditorProps) {
+export default function ActivitySlotEditor({ activity, slotIndex, onChange, onAddRestaurant, onAddActivity, dayIndex, programId, city, budget, onDelete, onActivityClick }: ActivitySlotEditorProps) {
   const router = useRouter()
   const [showModal, setShowModal] = useState(false)
 
@@ -40,7 +41,13 @@ export default function ActivitySlotEditor({ activity, slotIndex, onChange, onAd
   return (
     <div
       className="w-full flex flex-col gap-2 py-3 px-0 rounded"
-      onClick={() => setShowModal(true)}
+      onClick={() => {
+        if (onActivityClick) {
+          onActivityClick(activity)
+        } else {
+          setShowModal(true)
+        }
+      }}
     >
       <div className="flex items-center w-full gap-2 mb-0">
         <span className="text-xs bg-gray-100 text-gray-600 rounded px-2 py-0.5 whitespace-nowrap">{activity.category}</span>
