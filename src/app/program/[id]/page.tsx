@@ -62,9 +62,22 @@ async function getProgram(id: string) {
 
   const activities = programActivities?.map(pa => pa.activity) || []
 
+  // Enrichir le programme avec coverImage depuis destinations si absent
+  let coverImage = program.coverImage || program.cover_image
+  if (!coverImage) {
+    // Chercher l'image dans la table destinations
+    const { data: destData } = await supabase
+      .from('destinations')
+      .select('city, imageurl')
+      .eq('city', program.destination)
+      .single()
+    coverImage = destData?.imageurl || '/images/activities/Mascot.png'
+  }
+
   return {
     ...program,
-    activities
+    activities,
+    coverImage
   }
 }
 
