@@ -15,11 +15,12 @@ interface ActivitySlotEditorProps {
   programId?: string
   city?: string
   budget?: number
+  onDelete?: () => void
 }
 
 const isMealSlot = (slot: TimeSlot) => slot === 'midi' || slot === 'dîner'
 
-export default function ActivitySlotEditor({ activity, slotIndex, onChange, onAddRestaurant, onAddActivity, dayIndex, programId, city, budget }: ActivitySlotEditorProps) {
+export default function ActivitySlotEditor({ activity, slotIndex, onChange, onAddRestaurant, onAddActivity, dayIndex, programId, city, budget, onDelete }: ActivitySlotEditorProps) {
   const router = useRouter()
   const [showModal, setShowModal] = useState(false)
 
@@ -53,7 +54,8 @@ export default function ActivitySlotEditor({ activity, slotIndex, onChange, onAd
           title="Supprimer"
           onClick={e => {
             e.stopPropagation()
-            onChange(activity)
+            console.log('Suppression demandée depuis ActivitySlotEditor')
+            if (onDelete) onDelete()
           }}
         >
           <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/></svg>

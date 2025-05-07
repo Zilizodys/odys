@@ -52,21 +52,24 @@ function groupActivitiesByCategory(activities: Activity[]): GroupedActivities {
 }
 
 function getProgramActivities(planning: ProgramPlanning): { activityId: string; day: number; slot: number }[] {
-  const programActivities: { activityId: string; day: number; slot: number }[] = []
-  
+  const programActivities: { activityId: string; day: number; slot: number }[] = [];
+  if (!planning || !Array.isArray(planning.days)) return programActivities;
   planning.days.forEach((day, dayIndex) => {
+    if (!day.activities || !Array.isArray(day.activities)) return;
     day.activities.forEach((scheduledActivity, slotIndex) => {
+      if (!scheduledActivity.activities || !Array.isArray(scheduledActivity.activities)) return;
       scheduledActivity.activities.forEach(activity => {
-        programActivities.push({
-          activityId: activity.id,
-          day: dayIndex + 1,
-          slot: slotIndex + 1
-        })
-      })
-    })
-  })
-  
-  return programActivities
+        if (activity && activity.id) {
+          programActivities.push({
+            activityId: activity.id,
+            day: dayIndex + 1,
+            slot: slotIndex + 1
+          });
+        }
+      });
+    });
+  });
+  return programActivities;
 }
 
 const CATEGORY_LABELS: Record<string, string> = {

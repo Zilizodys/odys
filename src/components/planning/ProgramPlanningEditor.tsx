@@ -63,16 +63,23 @@ export default function ProgramPlanningEditor({ planning, onChange, city, progra
     onChange(newPlanning);
   };
 
+  // Fonction pour mettre à jour un jour spécifique du planning
+  const handleDayChange = (newDay: DayPlan, dayIndex: number) => {
+    const newPlanning = { ...planning, days: [...planning.days] };
+    newPlanning.days[dayIndex] = newDay;
+    onChange(newPlanning);
+  };
+
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
       <div className="space-y-8">
-        {planning.days.map((day, dayIdx) => (
+        {(planning.days || []).map((day, dayIdx) => (
           <DayPlanEditor
             key={day.date}
             day={day}
             dayIndex={dayIdx}
             planning={planning}
-            onPlanningChange={onChange}
+            onPlanningChange={handleDayChange}
             city={city}
             programId={programId}
             budget={budget}
