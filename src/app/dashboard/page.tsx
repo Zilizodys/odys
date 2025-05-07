@@ -182,6 +182,11 @@ export default function DashboardPage() {
     router.push(`/program/${programId}`)
   }
 
+  useEffect(() => {
+    document.body.setAttribute('data-dashboard-page', 'true');
+    return () => document.body.removeAttribute('data-dashboard-page');
+  }, []);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -223,14 +228,25 @@ export default function DashboardPage() {
         ) : (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-              {programs.map((program) => (
-                <ProgramCard
-                  key={program.id}
-                  program={program}
-                  onDelete={handleDeleteProgram}
-                  onClick={handleProgramClick}
-                />
-              ))}
+              {programs.map((program) => {
+                // Chercher l'image de la destination dans la table destinations
+                const destinationImage = destinations.find(
+                  d => normalizeCityName(d.city) === normalizeCityName(program.destination)
+                )?.imageurl
+                // On injecte coverImage si absent ou vide
+                const programWithCover = {
+                  ...program,
+                  coverImage: program.coverImage || (program as any).cover_image || destinationImage || '/images/activities/Mascot.png'
+                }
+                return (
+                  <ProgramCard
+                    key={program.id}
+                    program={programWithCover}
+                    onDelete={handleDeleteProgram}
+                    onClick={handleProgramClick}
+                  />
+                )
+              })}
             </div>
             <div className="flex justify-center mt-12">
               <button

@@ -284,3 +284,7 @@ main {
 body[data-program-page='true'] header, body[data-program-page='true'] .Header {
   display: none !important;
 }
+
+body[data-dashboard-page='true'] header, body[data-dashboard-page='true'] .Header {
+  display: none !important;
+}
