@@ -13,6 +13,9 @@ import { createClient } from '@/lib/supabase/client'
 import CategorySection from '@/components/program/CategorySection'
 import { autoAssignActivities, ProgramPlanning, DayPlan } from '@/lib/planning/autoAssign'
 import ProgramPlanningEditor from '@/components/planning/ProgramPlanningEditor'
+import { Pencil } from 'lucide-react'
+import { Dialog } from '@headlessui/react'
+import { motion, AnimatePresence } from 'framer-motion'
 
 interface Program {
   id: string
@@ -166,12 +169,20 @@ function ParallaxCover({ src, alt, children }: { src: string, alt: string, child
   );
 }
 
+const BUDGET_OPTIONS = [
+  { value: 0, label: 'Gratuit' },
+  { value: 1, label: 'Petit budget' },
+  { value: 2, label: 'Modéré' },
+  { value: 3, label: 'Luxe' },
+]
+
 export default function ProgramClient({ initialProgram }: { initialProgram: Program }) {
   const router = useRouter()
   const [program, setProgram] = useState<Program>(initialProgram)
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [view, setView] = useState<'planning' | 'activities'>('planning')
+  const [showEditModal, setShowEditModal] = useState(false)
 
   // Masquer le header global sur la page programme
   useEffect(() => {
@@ -304,7 +315,14 @@ export default function ProgramClient({ initialProgram }: { initialProgram: Prog
         </div>
       </div>
       {/* Section infos séjour full width, sans padding latéral */}
-      <div className="bg-white w-full p-6 mb-8">
+      <div className="relative bg-white w-full px-6 py-6 flex flex-col gap-4 border-b border-gray-100">
+        <button
+          className="absolute top-4 right-4 text-indigo-500 hover:text-indigo-700 transition-colors p-2 rounded-full"
+          title="Éditer les infos du séjour"
+          onClick={() => setShowEditModal(true)}
+        >
+          <Pencil size={20} />
+        </button>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="flex items-center gap-2">
             <FiClock className="text-indigo-500" />
@@ -392,6 +410,102 @@ export default function ProgramClient({ initialProgram }: { initialProgram: Prog
           />
         )}
       </div>
+      {/* Modale d'édition (à implémenter) */}
+      {showEditModal && (
+        <AnimatePresence>
+          <div className="fixed inset-0 z-[200] flex items-end justify-center w-screen">
+            {/* Overlay */}
+            <div className="absolute inset-0 bg-black/40" onClick={() => setShowEditModal(false)} />
+            {/* Bottom sheet animée */}
+            <motion.div
+              initial={{ y: '100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '100%' }}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+              className="relative w-full max-w-md mx-auto bg-white rounded-t-3xl shadow-2xl p-8 z-10 mx-4"
+            >
+              {/* Drag handle */}
+              <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-4 mt-1" />
+              <h2 className="text-lg font-bold mb-4 text-center">Éditer les infos du séjour</h2>
+              <form
+                onSubmit={e => {
+                  e.preventDefault()
+                  const form = e.target as HTMLFormElement
+                  const start_date = (form.elements.namedItem('start_date') as HTMLInputElement).value
+                  const end_date = (form.elements.namedItem('end_date') as HTMLInputElement).value
+                  const budget = Number((form.elements.namedItem('budget') as HTMLSelectElement).value)
+                  const companion = (form.elements.namedItem('companion') as HTMLSelectElement).value
+                  setProgram(prev => ({ ...prev, start_date, end_date, budget, companion }))
+                  setShowEditModal(false)
+                }}
+                className="flex flex-col gap-4"
+              >
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Dates</label>
+                  <div className="flex flex-col sm:flex-row gap-2 w-full">
+                    <input
+                      type="date"
+                      name="start_date"
+                      defaultValue={program.start_date}
+                      className="border rounded-lg px-3 py-2 w-full"
+                      required
+                    />
+                    <span className="self-center text-gray-400 hidden sm:inline">→</span>
+                    <input
+                      type="date"
+                      name="end_date"
+                      defaultValue={program.end_date}
+                      className="border rounded-lg px-3 py-2 w-full"
+                      required
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Budget</label>
+                  <select
+                    name="budget"
+                    defaultValue={program.budget}
+                    className="border rounded-lg px-3 py-2 w-full"
+                    required
+                  >
+                    {BUDGET_OPTIONS.map(option => (
+                      <option key={option.value} value={option.value}>{option.label}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Voyageurs</label>
+                  <select
+                    name="companion"
+                    defaultValue={program.companion}
+                    className="border rounded-lg px-3 py-2 w-full"
+                    required
+                  >
+                    {COMPANION_OPTIONS.map(option => (
+                      <option key={option.value} value={option.value}>{option.label}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex flex-row gap-2 mt-6 w-full">
+                  <button
+                    type="button"
+                    className="w-1/2 px-4 py-3 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 text-base font-medium"
+                    onClick={() => setShowEditModal(false)}
+                  >
+                    Annuler
+                  </button>
+                  <button
+                    type="submit"
+                    className="w-1/2 px-4 py-3 rounded-lg bg-indigo-600 text-white font-semibold hover:bg-indigo-700 text-base font-medium"
+                  >
+                    Enregistrer
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </div>
+        </AnimatePresence>
+      )}
     </div>
   )
 } 
