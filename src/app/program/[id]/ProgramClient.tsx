@@ -16,6 +16,7 @@ import ProgramPlanningEditor from '@/components/planning/ProgramPlanningEditor'
 import { Pencil } from 'lucide-react'
 import { Dialog } from '@headlessui/react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useMotionValue, useAnimation } from 'framer-motion'
 
 interface Program {
   id: string
@@ -184,6 +185,9 @@ export default function ProgramClient({ initialProgram }: { initialProgram: Prog
   const [isLoading, setIsLoading] = useState(false)
   const [view, setView] = useState<'planning' | 'activities'>('planning')
   const [showEditModal, setShowEditModal] = useState(false)
+  const [showStickyCTA, setShowStickyCTA] = useState(false)
+  const [hasReachedBottom, setHasReachedBottom] = useState(false)
+  const lastScrollY = useRef(0)
 
   // Masquer le header global sur la page programme
   useEffect(() => {
@@ -225,7 +229,7 @@ export default function ProgramClient({ initialProgram }: { initialProgram: Prog
       const newPlanning = { ...planning }
       if (newPlanning.days[day] && newPlanning.days[day].activities[slot]) {
         newPlanning.days[day].activities[slot] = {
-          ...newPlanning.days[day].activities[slot],
+          ...newPlanning.days[slot],
           activities: [restaurant]
         }
         setPlanning(newPlanning)
@@ -234,6 +238,30 @@ export default function ProgramClient({ initialProgram }: { initialProgram: Prog
       console.error('Erreur lors de la synchronisation du restaurant:', e)
     }
   }, [planning])
+
+  // Gestion de la visibilité du bouton sticky selon le scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY
+      const atBottom = (window.innerHeight + currentScrollY) >= (document.body.scrollHeight - 24)
+      if (atBottom && !hasReachedBottom) {
+        setHasReachedBottom(true)
+        setShowStickyCTA(false)
+        return
+      } else if (!atBottom && hasReachedBottom) {
+        setHasReachedBottom(false)
+      }
+      // Sticky visible si on n'est pas en bas, qu'on scrolle vers le haut, et qu'on n'est pas tout en haut
+      if (!atBottom && currentScrollY < lastScrollY.current && currentScrollY > 200) {
+        setShowStickyCTA(true)
+      } else if (!atBottom) {
+        setShowStickyCTA(false)
+      }
+      lastScrollY.current = currentScrollY
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [hasReachedBottom])
 
   const handleDeleteActivity = async (activityId: string) => {
     try {
@@ -507,6 +535,34 @@ export default function ProgramClient({ initialProgram }: { initialProgram: Prog
           </div>
         </AnimatePresence>
       )}
+      {/* Sticky CTA animé uniquement si on remonte et pas tout en bas */}
+      <motion.div
+        initial={{ y: 120, opacity: 0 }}
+        animate={showStickyCTA ? { y: 0, opacity: 1 } : { y: 120, opacity: 0 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+        className="fixed left-0 right-0 z-50 flex justify-center pointer-events-none"
+        style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 84px)' }}
+      >
+        {showStickyCTA && (
+          <button
+            className="pointer-events-auto w-full max-w-md mx-4 px-8 py-4 rounded-2xl bg-indigo-600 text-white font-semibold text-lg shadow-xl hover:bg-indigo-700 transition-colors"
+            style={{ boxShadow: '0 8px 32px rgba(80, 80, 180, 0.18)', marginBottom: 16 }}
+            onClick={() => {/* TODO: implémenter la logique de sauvegarde */}}
+          >
+            Sauvegarder les changements
+          </button>
+        )}
+      </motion.div>
+      {/* Bouton dans le flux du contenu, toujours visible en bas de page */}
+      <div className="w-full flex justify-center mt-12 mb-8">
+        <button
+          className="w-full max-w-md mx-4 px-8 py-4 rounded-2xl bg-indigo-600 text-white font-semibold text-lg shadow-xl hover:bg-indigo-700 transition-colors"
+          style={{ boxShadow: '0 8px 32px rgba(80, 80, 180, 0.18)' }}
+          onClick={() => {/* TODO: implémenter la logique de sauvegarde */}}
+        >
+          Sauvegarder les changements
+        </button>
+      </div>
     </div>
   )
 } 
