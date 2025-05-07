@@ -352,11 +352,14 @@ export default function DayPlanEditor({ day, dayIndex, planning, onPlanningChang
                 <div
                   key={slot.slot}
                   id={`day-${dayIndex}-slot-${numericSlotIdx}`}
-                  className="bg-white border border-gray-200 rounded-2xl px-6 py-4 flex flex-col items-stretch transition-colors relative"
+                  className="bg-white border border-gray-200 rounded-2xl px-6 py-4 flex flex-col items-stretch transition-colors relative cursor-pointer group"
                   style={{ boxShadow: 'none' }}
+                  onClick={() => onToggleSlot(numericSlotIdx)}
                 >
                   {/* Header du slot */}
-                  <div className="w-full flex flex-row items-center mb-2 justify-between select-none">
+                  <div
+                    className="w-full flex flex-row items-center mb-2 justify-between select-none group"
+                  >
                     <div className="flex flex-col">
                       <span className="text-base font-semibold text-indigo-700 leading-tight tracking-wide flex items-center gap-2">
                         {slotMeta?.label}
@@ -366,9 +369,10 @@ export default function DayPlanEditor({ day, dayIndex, planning, onPlanningChang
                     {/* Chevron à droite pour ouvrir/fermer le slot */}
                     <button
                       type="button"
-                      className="ml-2 p-1 rounded-full bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-100 transition-colors"
+                      className="ml-2 p-1 rounded-full bg-indigo-50 group-hover:bg-indigo-100 text-indigo-700 border border-indigo-100 transition-colors"
                       title={isSlotOpen ? 'Replier le créneau' : 'Déplier le créneau'}
                       onClick={e => { e.stopPropagation(); onToggleSlot(numericSlotIdx); }}
+                      tabIndex={-1}
                     >
                       {isSlotOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
                     </button>
