@@ -225,11 +225,11 @@ export default function DayPlanEditor({ day, dayIndex, planning, onPlanningChang
       const slot = day.activities[slotIndex]
       let moods: MoodType[] = []
       if (slot.slot === 'midi' || slot.slot === 'dîner') {
-        moods = ['food', 'restaurant'] as MoodType[]
+        moods = ['food'] as MoodType[]
       } else if (slot.slot === 'soirée') {
-        moods = ['nightlife', 'bar', 'club', 'vie nocturne'] as MoodType[]
+        moods = ['party'] as MoodType[]
       } else {
-        moods = ['culture', 'sport', 'nature', 'shopping', 'wellness', 'adventure', 'cultural', 'romantic'] as MoodType[]
+        moods = ['cultural', 'sport', 'nature', 'shopping', 'wellness', 'adventure', 'romantic'] as MoodType[]
       }
       const formData: FormData = {
         destination: city,
