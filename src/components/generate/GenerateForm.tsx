@@ -136,6 +136,17 @@ const FORM_CACHE_TTL = 30 * 60 * 1000 // 30 minutes
 const ACTIVITIES_CACHE_KEY = 'suggested_activities'
 const ACTIVITIES_CACHE_TTL = 30 * 60 * 1000 // 30 minutes
 
+// Ajout d'un skeleton loader pour les suggestions de villes
+function SuggestionsSkeleton() {
+  return (
+    <div className="space-y-2 mt-2">
+      {[...Array(4)].map((_, i) => (
+        <div key={i} className="h-10 bg-gray-100 rounded-lg animate-pulse" />
+      ))}
+    </div>
+  );
+}
+
 export default function GenerateForm() {
   const supabase = createClientComponentClient()
   const router = useRouter()
@@ -616,6 +627,215 @@ export default function GenerateForm() {
     }
   }, [])
 
+  // Préchargement des suggestions populaires dès le montage
+  useEffect(() => {
+    setSuggestions(SUGGESTED_DESTINATIONS.map(dest => ({
+      city: dest.city,
+      country: dest.country,
+      source: 'popular',
+      score: 1
+    })));
+  }, []);
+
+  // Mémorisation des étapes pour éviter les re-rendus inutiles
+  const Step1 = useMemo(() => (
+    <StepWrapper key="step1" title="Où veux-tu partir ?" direction={direction}>
+      <div className="space-y-4 pt-2">
+        <p className="text-sm text-gray-500 text-left mb-1">
+          Entrez la ville ou le pays de votre choix
+        </p>
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <FiSearch className="h-5 w-5 text-gray-400" />
+          </div>
+          <input
+            ref={setInputRef}
+            type="text"
+            name="destination"
+            placeholder="Ex: Paris, Tokyo, New York..."
+            value={formData.destination}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+            className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          />
+          {destinationValidee && (
+            <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+              <FiCheckCircle className="h-5 w-5 text-green-500" />
+            </div>
+          )}
+          {/* Suggestions d'autocomplétion */}
+          {isLoading ? <SuggestionsSkeleton /> : null}
+        </div>
+        <div className="space-y-2">
+          <p className="text-sm font-medium text-gray-700">
+            Destinations populaires
+          </p>
+          <div className="grid grid-cols-2 gap-2">
+            {SUGGESTED_DESTINATIONS.map((destination) => (
+              <button
+                key={destination.city}
+                onClick={() => {
+                  if (formData.destination === destination.city) {
+                    updateFormData('destination', '')
+                  } else {
+                    handleDestinationSelect(destination.city)
+                  }
+                }}
+                className={`p-2 rounded-lg border flex items-center space-x-2 transition-colors text-sm ${
+                  formData.destination === destination.city
+                    ? 'border-indigo-600 bg-indigo-50'
+                    : 'border-gray-200 hover:border-indigo-200 hover:bg-gray-50'
+                }`}
+              >
+                <span className="text-xl">{destination.icon}</span>
+                <div className="text-left">
+                  <div className="font-medium">{destination.city}</div>
+                  <div className="text-xs text-gray-500">{destination.country}</div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </StepWrapper>
+  ), [formData.destination, suggestions, direction, isLoading, destinationValidee]);
+
+  const Step2 = useMemo(() => (
+    <StepWrapper key="step2" title="Quand veux tu partir ?" direction={direction}>
+      <div className="space-y-3 pt-2">
+        <p className="text-sm text-gray-500">
+          Choisissez les dates de votre voyage. Cela nous aidera à planifier l'itinéraire parfait pour votre séjour.
+        </p>
+        <div className="max-w-md w-full mx-auto">
+          <div className="bg-indigo-50 rounded-xl overflow-hidden mb-2">
+            <button
+              onClick={handleStartNow}
+              className="w-full flex items-center justify-center gap-2 p-3 text-indigo-600 hover:bg-indigo-100 transition-colors text-base"
+            >
+              <span className="text-xl">🚀</span>
+              <span className="font-medium">Partir maintenant</span>
+            </button>
+          </div>
+          <DayPicker
+            mode="range"
+            selected={dateRange}
+            onSelect={handleDateRangeSelect}
+            disabled={{ before: new Date() }}
+            showOutsideDays
+            className="rounded-2xl border border-gray-100 bg-white p-2 shadow-none w-full"
+            modifiersClassNames={{
+              selected: 'bg-blue-500 text-white rounded-full',
+              range_start: 'bg-blue-500 text-white rounded-full',
+              range_end: 'bg-blue-500 text-white rounded-full',
+              range_middle: 'bg-blue-100 text-blue-700 rounded-md',
+              today: 'border border-blue-500',
+              disabled: 'text-gray-300'
+            }}
+            weekStartsOn={1}
+            locale={fr}
+          />
+        </div>
+      </div>
+    </StepWrapper>
+  ), [direction, dateRange]);
+
+  const Step3 = useMemo(() => (
+    <StepWrapper key="step3" title="Avec qui voyages-tu ?" direction={direction}>
+      <div className="space-y-2 pt-2">
+        <p className="text-gray-500 mb-1 text-sm">
+          Sélectionnez le type de voyage qui vous correspond le mieux
+        </p>
+        <div className="grid grid-cols-2 gap-2">
+          {COMPANION_OPTIONS.map((option) => (
+            <button
+              key={option.value}
+              onClick={() => {
+                if (formData.companion === option.value) {
+                  updateFormData('companion', null)
+                } else {
+                  updateFormData('companion', option.value)
+                }
+              }}
+              className={`p-3 rounded-lg border-2 flex flex-col items-center transition-colors duration-150 text-sm ${
+                formData.companion === option.value
+                  ? 'border-blue-500 bg-blue-50'
+                  : 'border-gray-200 hover:border-blue-200'
+              }`}
+            >
+              <span className="text-xl mb-1">{option.icon}</span>
+              <span className="font-medium">{option.label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+    </StepWrapper>
+  ), [direction, formData.companion]);
+
+  const Step4 = useMemo(() => (
+    <StepWrapper key="step4" title="Quel est votre budget ?" direction={direction}>
+      <div className="space-y-2 pt-2">
+        <p className="text-gray-500 mb-1 text-sm">
+          Choisissez le budget qui correspond à votre voyage
+        </p>
+        <div className="grid grid-cols-2 gap-2">
+          {BUDGET_OPTIONS.map((option) => (
+            <button
+              key={option.value}
+              onClick={() => {
+                if (formData.budget === option.value) {
+                  updateFormData('budget', null)
+                } else {
+                  updateFormData('budget', option.value)
+                }
+              }}
+              className={`p-3 rounded-lg border text-sm ${
+                formData.budget === option.value
+                  ? 'border-indigo-500 bg-indigo-50'
+                  : 'border-gray-200 hover:border-indigo-200'
+              }`}
+            >
+              <div className="text-xl mb-1">{option.icon}</div>
+              <div className="font-medium">{option.label}</div>
+            </button>
+          ))}
+        </div>
+      </div>
+    </StepWrapper>
+  ), [direction, formData.budget]);
+
+  const Step5 = useMemo(() => (
+    <StepWrapper key="step5" title="Ambiances souhaitées" direction={direction}>
+      <div className="space-y-2 pt-2">
+        <p className="text-gray-500 mb-1 text-sm">
+          Sélectionnez une ou plusieurs ambiances qui correspondent à vos envies pour ce voyage.
+        </p>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          {MOOD_OPTIONS.map((option) => (
+            <button
+              key={option.value}
+              onClick={() => {
+                const moodValue = option.value as MoodType;
+                updateFormData('moods', 
+                  formData.moods.includes(moodValue)
+                    ? formData.moods.filter(mood => mood !== moodValue)
+                    : [...formData.moods, moodValue]
+                )
+              }}
+              className={`p-4 rounded-lg border-2 flex flex-col items-center ${
+                formData.moods.includes(option.value as MoodType)
+                  ? 'border-indigo-600 bg-indigo-50'
+                  : 'border-gray-200 hover:border-indigo-200'
+              }`}
+            >
+              <span className="text-2xl mb-2">{option.icon}</span>
+              <span className="font-medium">{option.label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+    </StepWrapper>
+  ), [direction, formData.moods]);
+
   if (!ready) {
     return null
   }
@@ -667,216 +887,11 @@ export default function GenerateForm() {
       {/* Form steps */}
       <div className="relative flex flex-col justify-between min-h-[calc(100vh-120px)] max-w-2xl mx-auto pb-2">
         <AnimatePresence initial={false} mode="wait">
-          {currentStep === 1 && (
-            <StepWrapper key="step1" title="Où veux-tu partir ?" direction={direction}>
-              <div className="space-y-4 pt-2">
-                <p className="text-sm text-gray-500 text-left mb-1">
-                  Entrez la ville ou le pays de votre choix
-                </p>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <FiSearch className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <input
-                    ref={setInputRef}
-                    type="text"
-                    name="destination"
-                    placeholder="Ex: Paris, Tokyo, New York..."
-                    value={formData.destination}
-                    onChange={handleInputChange}
-                    onKeyDown={handleKeyDown}
-                    className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                  />
-                  {destinationValidee && (
-                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                      <FiCheckCircle className="h-5 w-5 text-green-500" />
-                    </div>
-                  )}
-                  {/* Suggestions d'autocomplétion */}
-                  {suggestions.length > 0 && !destinationValidee && (
-                    <ul className="absolute z-20 left-0 right-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-auto">
-                      {suggestions.slice(0, 8).map((sugg, idx) => (
-                        <li
-                          key={sugg.city + sugg.country}
-                          className={`px-4 py-2 cursor-pointer flex items-center gap-2 hover:bg-indigo-50 ${highlightedIndex === idx ? 'bg-indigo-100' : ''}`}
-                          onMouseDown={() => handleDestinationSelect(sugg.city)}
-                        >
-                          <span className="font-medium">{sugg.city}</span>
-                          <span className="text-xs text-gray-500">{sugg.country}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-                <div className="space-y-2">
-                  <p className="text-sm font-medium text-gray-700">
-                    Destinations populaires
-                  </p>
-                  <div className="grid grid-cols-2 gap-2">
-                    {SUGGESTED_DESTINATIONS.map((destination) => (
-                      <button
-                        key={destination.city}
-                        onClick={() => {
-                          if (formData.destination === destination.city) {
-                            updateFormData('destination', '')
-                          } else {
-                            handleDestinationSelect(destination.city)
-                          }
-                        }}
-                        className={`p-2 rounded-lg border flex items-center space-x-2 transition-colors text-sm ${
-                          formData.destination === destination.city
-                            ? 'border-indigo-600 bg-indigo-50'
-                            : 'border-gray-200 hover:border-indigo-200 hover:bg-gray-50'
-                        }`}
-                      >
-                        <span className="text-xl">{destination.icon}</span>
-                        <div className="text-left">
-                          <div className="font-medium">{destination.city}</div>
-                          <div className="text-xs text-gray-500">{destination.country}</div>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </StepWrapper>
-          )}
-
-          {currentStep === 2 && (
-            <StepWrapper key="step2" title="Quand veux tu partir ?" direction={direction}>
-              <div className="space-y-3 pt-2">
-                <p className="text-sm text-gray-500">
-                  Choisissez les dates de votre voyage. Cela nous aidera à planifier l'itinéraire parfait pour votre séjour.
-                </p>
-                <div className="max-w-md w-full mx-auto">
-                  <div className="bg-indigo-50 rounded-xl overflow-hidden mb-2">
-                    <button
-                      onClick={handleStartNow}
-                      className="w-full flex items-center justify-center gap-2 p-3 text-indigo-600 hover:bg-indigo-100 transition-colors text-base"
-                    >
-                      <span className="text-xl">🚀</span>
-                      <span className="font-medium">Partir maintenant</span>
-                    </button>
-                  </div>
-                  <DayPicker
-                    mode="range"
-                    selected={dateRange}
-                    onSelect={handleDateRangeSelect}
-                    disabled={{ before: new Date() }}
-                    showOutsideDays
-                    className="rounded-2xl border border-gray-100 bg-white p-2 shadow-none w-full"
-                    modifiersClassNames={{
-                      selected: 'bg-blue-500 text-white rounded-full',
-                      range_start: 'bg-blue-500 text-white rounded-full',
-                      range_end: 'bg-blue-500 text-white rounded-full',
-                      range_middle: 'bg-blue-100 text-blue-700 rounded-md',
-                      today: 'border border-blue-500',
-                      disabled: 'text-gray-300'
-                    }}
-                    weekStartsOn={1}
-                    locale={fr}
-                  />
-                </div>
-              </div>
-            </StepWrapper>
-          )}
-
-          {currentStep === 3 && (
-            <StepWrapper key="step3" title="Avec qui voyages-tu ?" direction={direction}>
-              <div className="space-y-2 pt-2">
-                <p className="text-gray-500 mb-1 text-sm">
-                  Sélectionnez le type de voyage qui vous correspond le mieux
-                </p>
-                <div className="grid grid-cols-2 gap-2">
-                  {COMPANION_OPTIONS.map((option) => (
-                    <button
-                      key={option.value}
-                      onClick={() => {
-                        if (formData.companion === option.value) {
-                          updateFormData('companion', null)
-                        } else {
-                          updateFormData('companion', option.value)
-                        }
-                      }}
-                      className={`p-3 rounded-lg border-2 flex flex-col items-center transition-colors duration-150 text-sm ${
-                        formData.companion === option.value
-                          ? 'border-blue-500 bg-blue-50'
-                          : 'border-gray-200 hover:border-blue-200'
-                      }`}
-                    >
-                      <span className="text-xl mb-1">{option.icon}</span>
-                      <span className="font-medium">{option.label}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </StepWrapper>
-          )}
-
-          {currentStep === 4 && (
-            <StepWrapper key="step4" title="Quel est votre budget ?" direction={direction}>
-              <div className="space-y-2 pt-2">
-                <p className="text-gray-500 mb-1 text-sm">
-                  Choisissez le budget qui correspond à votre voyage
-                </p>
-                <div className="grid grid-cols-2 gap-2">
-                  {BUDGET_OPTIONS.map((option) => (
-                    <button
-                      key={option.value}
-                      onClick={() => {
-                        if (formData.budget === option.value) {
-                          updateFormData('budget', null)
-                        } else {
-                          updateFormData('budget', option.value)
-                        }
-                      }}
-                      className={`p-3 rounded-lg border text-sm ${
-                        formData.budget === option.value
-                          ? 'border-indigo-500 bg-indigo-50'
-                          : 'border-gray-200 hover:border-indigo-200'
-                      }`}
-                    >
-                      <div className="text-xl mb-1">{option.icon}</div>
-                      <div className="font-medium">{option.label}</div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </StepWrapper>
-          )}
-
-          {currentStep === 5 && (
-            <StepWrapper key="step5" title="Ambiances souhaitées" direction={direction}>
-              <div className="space-y-2 pt-2">
-                <p className="text-gray-500 mb-1 text-sm">
-                  Sélectionnez une ou plusieurs ambiances qui correspondent à vos envies pour ce voyage.
-                </p>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {MOOD_OPTIONS.map((option) => (
-                    <button
-                      key={option.value}
-                      onClick={() => {
-                        const moodValue = option.value as MoodType;
-                        updateFormData('moods', 
-                          formData.moods.includes(moodValue)
-                            ? formData.moods.filter(mood => mood !== moodValue)
-                            : [...formData.moods, moodValue]
-                        )
-                      }}
-                      className={`p-4 rounded-lg border-2 flex flex-col items-center ${
-                        formData.moods.includes(option.value as MoodType)
-                          ? 'border-indigo-600 bg-indigo-50'
-                          : 'border-gray-200 hover:border-indigo-200'
-                      }`}
-                    >
-                      <span className="text-2xl mb-2">{option.icon}</span>
-                      <span className="font-medium">{option.label}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </StepWrapper>
-          )}
+          {currentStep === 1 && Step1}
+          {currentStep === 2 && Step2}
+          {currentStep === 3 && Step3}
+          {currentStep === 4 && Step4}
+          {currentStep === 5 && Step5}
         </AnimatePresence>
       </div>
       <FormFooter

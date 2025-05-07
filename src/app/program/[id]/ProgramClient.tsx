@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { Activity } from '@/types/activity'
 import { FiMapPin, FiClock, FiDollarSign, FiUsers, FiArrowLeft, FiPlus } from 'react-icons/fi'
@@ -97,6 +97,73 @@ const getDestinationImage = (destination: string) => {
     url: cityImages[destination] || 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df',
     alt: `Vue de ${destination || 'la ville'}`
   }
+}
+
+function ParallaxCover({ src, alt, children }: { src: string, alt: string, children: React.ReactNode }) {
+  const [offset, setOffset] = useState(0);
+  const [scale, setScale] = useState(1);
+  const ref = useRef<HTMLDivElement>(null);
+  const ticking = useRef(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!ref.current) return;
+      if (!ticking.current) {
+        window.requestAnimationFrame(() => {
+          const rect = ref.current!.getBoundingClientRect();
+          const windowHeight = window.innerHeight;
+          const visible = Math.max(0, Math.min(1, 1 - rect.top / windowHeight));
+          setOffset((visible - 0.5) * 60); // Parallaxe
+          setScale(1 + visible * 0.12);    // Zoom progressif de 1 à 1.12
+          ticking.current = false;
+        });
+        ticking.current = true;
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      style={{
+        position: 'relative',
+        overflow: 'hidden',
+        borderRadius: '1rem',
+        height: 256,
+      }}
+      className="mb-8"
+    >
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        sizes="(max-width: 768px) 100vw, 700px"
+        style={{
+          objectFit: 'cover',
+          transform: `translateY(${offset}px) scale(${scale})`,
+          transition: 'transform 0.2s cubic-bezier(0.4,0,0.2,1)',
+          zIndex: 1,
+          borderRadius: '1rem',
+        }}
+        priority
+      />
+      <div
+        style={{
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: 2,
+        }}
+      >
+        {children}
+      </div>
+    </div>
+  );
 }
 
 export default function ProgramClient({ initialProgram }: { initialProgram: Program }) {
@@ -209,14 +276,7 @@ export default function ProgramClient({ initialProgram }: { initialProgram: Prog
           </Link>
         </div>
 
-        <div className="relative h-64 mb-8 rounded-xl overflow-hidden">
-          <Image 
-            src={getDestinationImage(program.destination).url}
-            alt={getDestinationImage(program.destination).alt}
-            priority={true}
-            fill
-            className="object-cover"
-          />
+        <ParallaxCover src={getDestinationImage(program.destination).url} alt={getDestinationImage(program.destination).alt}>
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
             <h1 className="text-2xl font-bold mb-2">{program.title || `Séjour à ${program.destination}`}</h1>
@@ -225,7 +285,7 @@ export default function ProgramClient({ initialProgram }: { initialProgram: Prog
               <span>{program.destination}</span>
             </div>
           </div>
-        </div>
+        </ParallaxCover>
 
         <div className="bg-white rounded-xl p-6 shadow-sm mb-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

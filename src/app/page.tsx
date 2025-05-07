@@ -1,60 +1,16 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 import Image from 'next/image'
 import ReactDOM from 'react-dom'
+import LoginForm from '@/components/auth/LoginForm'
 
 // Composant pour la modale de connexion
 function LoginModal({ open, onClose }: { open: boolean, onClose: () => void }) {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
-  const router = useRouter()
-
   if (!open) return null
-
-  const handleGoogleSignIn = async () => {
-    setLoading(true)
-    setError(null)
-    try {
-      const client = createClient()
-      if (!client) throw new Error('Impossible de créer le client Supabase')
-      const { error } = await client.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback?redirect=%2Fdashboard`,
-          queryParams: { access_type: 'offline', prompt: 'consent' }
-        },
-      })
-      if (error) throw error
-    } catch (e: any) {
-      setError(e.message)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setError(null)
-    try {
-      const client = createClient()
-      if (!client) throw new Error('Impossible de créer le client Supabase')
-      const { error } = await client.auth.signInWithPassword({ email, password })
-      if (error) throw error
-      setLoading(false)
-      onClose()
-      router.push('/dashboard')
-    } catch (e: any) {
-      setError(e.message)
-      setLoading(false)
-    }
-  }
 
   const modalContent = (
     <div
@@ -71,44 +27,7 @@ function LoginModal({ open, onClose }: { open: boolean, onClose: () => void }) {
         </div>
         <div className="flex flex-col items-center">
           <div className="w-12 h-1.5 bg-gray-200 rounded-full mb-4 mt-1" />
-          <h2 className="text-xl font-bold mb-4 text-center">Connexion</h2>
-          <button
-            className="w-full py-3 bg-indigo-600 text-white rounded-lg font-semibold mt-2 mb-4 disabled:opacity-60"
-            onClick={handleGoogleSignIn}
-            disabled={loading}
-          >
-            Se connecter avec Google
-          </button>
-          <form className="w-full flex flex-col gap-3 mb-2" onSubmit={handleSubmit}>
-            <input
-              type="email"
-              placeholder="Email"
-              className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              autoComplete="email"
-              disabled={loading}
-              required
-            />
-            <input
-              type="password"
-              placeholder="Mot de passe"
-              className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              autoComplete="current-password"
-              disabled={loading}
-              required
-            />
-            {error && <div className="text-red-600 text-sm bg-red-100 rounded-md p-2">{error}</div>}
-            <button
-              type="submit"
-              className="w-full py-3 bg-indigo-500 text-white rounded-lg font-semibold mt-2 disabled:opacity-60"
-              disabled={loading}
-            >
-              {loading ? 'Connexion...' : 'Se connecter'}
-            </button>
-          </form>
+          <LoginForm />
         </div>
       </div>
       <style jsx global>{`
@@ -161,10 +80,79 @@ const getDestinationImage = (destination: string) => {
   }
 }
 
+// Hook pour scroll horizontal par drag
+function useHorizontalDragScroll() {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    let isDown = false;
+    let startX = 0;
+    let scrollLeft = 0;
+
+    // Mouse events
+    const onMouseDown = (e: MouseEvent) => {
+      isDown = true;
+      el.classList.add('dragging');
+      startX = e.pageX - el.offsetLeft;
+      scrollLeft = el.scrollLeft;
+    };
+    const onMouseLeave = () => {
+      isDown = false;
+      el.classList.remove('dragging');
+    };
+    const onMouseUp = () => {
+      isDown = false;
+      el.classList.remove('dragging');
+    };
+    const onMouseMove = (e: MouseEvent) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - el.offsetLeft;
+      const walk = (x - startX) * 1.5;
+      el.scrollLeft = scrollLeft - walk;
+    };
+
+    // Touch events
+    const onTouchStart = (e: TouchEvent) => {
+      isDown = true;
+      startX = e.touches[0].pageX - el.offsetLeft;
+      scrollLeft = el.scrollLeft;
+    };
+    const onTouchEnd = () => { isDown = false; };
+    const onTouchMove = (e: TouchEvent) => {
+      if (!isDown) return;
+      const x = e.touches[0].pageX - el.offsetLeft;
+      const walk = (x - startX) * 1.5;
+      el.scrollLeft = scrollLeft - walk;
+    };
+
+    el.addEventListener('mousedown', onMouseDown);
+    el.addEventListener('mouseleave', onMouseLeave);
+    el.addEventListener('mouseup', onMouseUp);
+    el.addEventListener('mousemove', onMouseMove);
+    el.addEventListener('touchstart', onTouchStart);
+    el.addEventListener('touchend', onTouchEnd);
+    el.addEventListener('touchmove', onTouchMove);
+
+    return () => {
+      el.removeEventListener('mousedown', onMouseDown);
+      el.removeEventListener('mouseleave', onMouseLeave);
+      el.removeEventListener('mouseup', onMouseUp);
+      el.removeEventListener('mousemove', onMouseMove);
+      el.removeEventListener('touchstart', onTouchStart);
+      el.removeEventListener('touchend', onTouchEnd);
+      el.removeEventListener('touchmove', onTouchMove);
+    };
+  }, []);
+  return ref;
+}
+
 // Carrousel horizontal (plusieurs cartes visibles)
 function PopularDestinations() {
   const [destinationsData, setDestinationsData] = useState<{ city: string, country?: string, imageurl?: string }[]>([])
   const router = useRouter()
+  const scrollRef = useHorizontalDragScroll();
 
   // Liste des destinations populaires (pour l'ordre et le pays)
   const popularList = [
@@ -213,18 +201,26 @@ function PopularDestinations() {
       <div className="flex items-center justify-between mb-4 w-full px-2">
         <h2 className="text-xl font-bold">Destinations populaires</h2>
       </div>
-      <div className="w-full overflow-x-auto scrollbar-hide no-scrollbar" style={{ WebkitOverflowScrolling: 'touch' }}>
-        <div className="flex gap-6 px-2 pb-2 whitespace-nowrap">
-          {popularList.map((dest) => {
+      <div
+        ref={scrollRef}
+        className="w-full scrollbar-hide"
+        style={{
+          overflowX: 'auto',
+          WebkitOverflowScrolling: 'touch',
+          cursor: 'grab',
+        }}
+      >
+        <div className="flex gap-6 px-2 pb-2 flex-nowrap" style={{ minWidth: 900 }}>
+          {popularList.map((dest, i) => {
             const imgUrl = getImageForCity(dest.city)
             return (
               <div
                 key={dest.city}
-                className="inline-block min-w-[240px] max-w-[280px] bg-white rounded-2xl shadow-sm overflow-hidden flex-shrink-0 align-top cursor-pointer hover:shadow-md transition-shadow"
+                className="inline-block min-w-[240px] max-w-[280px] bg-white rounded-2xl shadow-sm flex-shrink-0 align-top cursor-pointer hover:shadow-md transition-shadow"
                 onClick={() => handleDestinationClick(dest.city)}
               >
                 <div className="relative w-full h-48">
-                  <ImageWithFallback src={imgUrl} alt={`Vue de ${dest.city}`} fill className="object-cover rounded-2xl" />
+                  <ImageWithFallback src={imgUrl} alt={`Vue de ${dest.city}`} fill className="object-cover rounded-2xl" priority={i === 0} />
                 </div>
                 <div className="p-4 w-full text-left">
                   <div className="font-bold text-xl">{dest.city}</div>
