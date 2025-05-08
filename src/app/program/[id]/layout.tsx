@@ -1,16 +1,13 @@
 import { Metadata } from 'next'
 
-interface Props {
-  children: React.ReactNode
-  params: {
-    id: string
-  }
-}
-
 export const metadata: Metadata = {
   title: 'Programme',
 }
 
-export default function ProgramLayout({ children }: Props) {
+export default function ProgramLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return children
 } 
