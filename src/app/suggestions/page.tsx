@@ -12,6 +12,7 @@ import ProgressBar from '@/components/suggestions/ProgressBar'
 import { Activity } from '@/types/activity'
 import { FormData } from '@/types/form'
 import { getActivitiesByCriteria } from '@/lib/supabase/activities'
+import CategoryChips from '@/components/suggestions/CategoryChips'
 
 interface DatabaseActivity extends Activity {}
 
@@ -32,16 +33,7 @@ export default function SuggestionsPage() {
 
   // Si c'est une suggestion de restaurant, rediriger vers la page dédiée
   useEffect(() => {
-    console.log('Type de suggestion:', type)
     if (type === 'restaurant') {
-      console.log('Redirection vers la page des restaurants avec params:', {
-        type,
-        city: searchParams.get('city'),
-        budget: searchParams.get('budget'),
-        program: searchParams.get('program'),
-        day: searchParams.get('day'),
-        slot: searchParams.get('slot')
-      })
       router.push(`/suggestions/restaurants?${searchParams.toString()}`)
       return
     }
@@ -91,9 +83,6 @@ export default function SuggestionsPage() {
 
       try {
         const activitiesByCategory = await getActivitiesByCriteria(formData)
-        // Log debug : afficher toutes les catégories présentes dans les activités brutes
-        const allRawCategories = Object.keys(activitiesByCategory)
-        console.log('Catégories présentes dans les activités brutes (avant filtrage):', allRawCategories)
         // Récupérer les activités déjà sélectionnées
         let alreadySelected: Activity[] = []
         if (typeof window !== 'undefined') {
@@ -122,9 +111,6 @@ export default function SuggestionsPage() {
         if (cats.length > 0) {
           setCurrentCategory(cats[0])
         }
-        // Log des catégories disponibles
-        console.log('Catégories disponibles (normalisées):', cats)
-        console.log('Contenu complet de activitiesByCategory (après filtrage):', filteredByCategory)
       } catch (err) {
         console.error('Erreur lors de la récupération des activités:', err)
         setError('Erreur lors de la récupération des suggestions')
@@ -272,13 +258,20 @@ export default function SuggestionsPage() {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <div className="max-w-md mx-auto px-4 pt-8 pb-2 w-full flex-1">
         {/* Résumé de la recherche */}
-        <div className="text-center text-gray-700 text-base font-medium mb-4">
+        <div className="text-center text-gray-700 text-base font-medium mb-2">
           {getResume()}
         </div>
-        {/* Titre de la catégorie courante */}
-        <h2 className="text-xl font-bold text-gray-900 mb-2 text-center">
-          {getMoodLabel(currentCategory)}
-        </h2>
+        {/* Pastilles de catégories centrées */}
+        <div className="flex justify-center mb-2">
+          <CategoryChips
+            categories={categories}
+            activeCategory={currentCategory}
+            onSelect={cat => {
+              setCurrentCategory(cat);
+              setCurrentIndex(0);
+            }}
+          />
+        </div>
         {/* Nombre de suggestions restantes */}
         <div className="text-center text-sm text-gray-500 mb-2">
           {currentActivities.length - currentIndex} suggestion{currentActivities.length - currentIndex > 1 ? 's' : ''} restante{currentActivities.length - currentIndex > 1 ? 's' : ''} dans cette catégorie
@@ -287,11 +280,15 @@ export default function SuggestionsPage() {
           currentIndex={currentIndex}
           totalItems={currentActivities.length}
         />
-        <div className="mt-8 min-h-[350px] flex items-center justify-center">
+        {/* Zone swipe robuste : la carte est au-dessus des boutons fixes */}
+        <div className="mt-6 flex items-center justify-center min-h-[350px] z-20">
           <AnimatePresence mode="wait">
             {(pendingActivity || currentActivity) ? (
               <motion.div
                 key={(pendingActivity || currentActivity).id + (pendingSwipe ? '-' + pendingSwipe.direction : '')}
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.9}
                 initial={{ opacity: 0, x: 100 }}
                 animate={{
                   x: pendingSwipe && pendingSwipe.id === (pendingActivity || currentActivity).id
@@ -304,11 +301,13 @@ export default function SuggestionsPage() {
                 }}
                 exit={{ opacity: 0, x: -100 }}
                 transition={{ duration: pendingSwipe ? 0.35 : 0.3 }}
-                onPanEnd={(_, info) => handleSwipe(info)}
-                className="relative w-full"
+                className="w-full max-w-md z-0"
               >
                 <ActivityCard
-                  activity={pendingActivity || currentActivity}
+                  activity={{
+                    ...(pendingActivity || currentActivity),
+                    categories: categories
+                  }}
                   onDelete={handleDelete}
                   onSwipe={handleSwipe}
                 />
@@ -334,8 +333,8 @@ export default function SuggestionsPage() {
           </div>
         )}
       </div>
-      {/* Boutons fixes en bas de la page */}
-      <div className="fixed bottom-20 left-0 right-0 flex justify-center gap-12 z-30 pointer-events-none">
+      {/* Boutons fixes en bas de la page, en dehors de la zone swipe, z-10 */}
+      <div className="fixed bottom-20 left-0 right-0 flex justify-center gap-12 z-10">
         <div className="flex gap-12 pointer-events-auto">
           <button
             onClick={() => handleSwipeBtn('left')}

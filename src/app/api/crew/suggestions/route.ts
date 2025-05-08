@@ -14,7 +14,6 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://0.0.0.0:8000'
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    console.log('📝 Données reçues:', body);
     
     const response = await fetch(`${API_URL}/suggestions`, {
       method: 'POST',
@@ -27,28 +26,22 @@ export async function POST(request: Request) {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('❌ Erreur API:', {
-        status: response.status,
-        statusText: response.statusText,
-        error: errorText
-      });
       
       throw new Error(`Le service de suggestions est temporairement indisponible (${response.status})`);
     }
 
     const data = await response.json();
-    console.log('✅ Réponse API:', data);
     return NextResponse.json({ success: true, activities: data });
     
   } catch (error) {
-    console.error('❌ Erreur:', error);
+    const { error: errorResponse, statusCode } = handleApiError(error)
     return NextResponse.json(
       { 
         success: false, 
-        error: error instanceof Error ? error.message : 'Une erreur est survenue',
+        error: errorResponse,
         details: error instanceof Error ? error.message : 'fetch failed'
       },
-      { status: 503 }
+      { status: statusCode }
     );
   }
 }
@@ -57,7 +50,6 @@ async function handler(request: Request) {
   try {
     // Vérifier que le token API est configuré
     if (!process.env.CREW_API_TOKEN) {
-      console.error('❌ Token API Crew non configuré')
       return NextResponse.json(
         { 
           success: false, 
@@ -69,7 +61,6 @@ async function handler(request: Request) {
     }
 
     const body: CrewAIRequest = await request.json()
-    console.log('📝 Données reçues du formulaire:', body.formData)
     
     // Validation des données
     if (!body.formData) {
@@ -93,7 +84,6 @@ async function handler(request: Request) {
     const cacheKey = SUGGESTIONS_CACHE_KEY(destination, moods)
     const cachedData = cache.get<TransformedResponse>(cacheKey, { storage: 'memory' })
     if (cachedData) {
-      console.log('✅ Données récupérées du cache pour:', destination)
       return NextResponse.json(cachedData)
     }
 
@@ -108,9 +98,6 @@ async function handler(request: Request) {
     try {
       const healthCheck = await fetch(`${CREW_API_URL}/health`, { headers })
       if (!healthCheck.ok) {
-        const errorText = await healthCheck.text()
-        console.error('❌ API Crew AI indisponible:', errorText)
-        
         if (healthCheck.status === 401) {
           return NextResponse.json(
             { 
@@ -125,7 +112,6 @@ async function handler(request: Request) {
         throw new Error('API Crew AI indisponible')
       }
     } catch (error) {
-      console.error('❌ Erreur lors de la vérification de santé de l\'API:', error)
       return NextResponse.json(
         { 
           success: false, 
@@ -146,12 +132,6 @@ async function handler(request: Request) {
       interests: body.formData.moods
     }
 
-    console.log('🔄 [API/crew/suggestions] Envoi à Crew AI:', {
-      url: `${CREW_API_URL}/suggestions`,
-      headers,
-      data: crewRequestData
-    })
-
     let crewResponse;
     try {
       crewResponse = await fetch(`${CREW_API_URL}/suggestions`, {
@@ -160,7 +140,6 @@ async function handler(request: Request) {
         body: JSON.stringify(crewRequestData),
       })
     } catch (fetchError) {
-      console.error('❌ [API/crew/suggestions] Erreur fetch vers Crew AI:', fetchError)
       return NextResponse.json(
         {
           success: false,
@@ -173,11 +152,6 @@ async function handler(request: Request) {
 
     if (!crewResponse.ok) {
       const errorText = await crewResponse.text()
-      console.error('❌ Erreur de l\'API Crew:', {
-        status: crewResponse.status,
-        statusText: crewResponse.statusText,
-        error: errorText
-      })
 
       // Gestion spécifique des erreurs d'authentification
       if (crewResponse.status === 401) {
@@ -202,7 +176,6 @@ async function handler(request: Request) {
     }
 
     const data: CrewAIResponse = await crewResponse.json()
-    console.log('✅ Réponse brute de Crew AI:', data)
     
     // Transformation de la réponse
     const transformedResponse: TransformedResponse = {
@@ -222,15 +195,8 @@ async function handler(request: Request) {
       })
     }
 
-    console.log('✅ Réponse transformée:', {
-      success: transformedResponse.success,
-      activitiesCount: transformedResponse.activities.length,
-      categories: transformedResponse.activities.map(a => a.category)
-    })
-
     return NextResponse.json(transformedResponse)
   } catch (error) {
-    console.error('❌ Erreur inattendue:', error)
     const { error: errorResponse, statusCode } = handleApiError(error)
     return NextResponse.json(
       { 

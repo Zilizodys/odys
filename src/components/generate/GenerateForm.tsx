@@ -50,8 +50,39 @@ interface SearchResult {
   score?: number
 }
 
-// Cache pour les résultats de recherche
-const searchCache: { [key: string]: SearchResult[] } = {}
+// Cache pour les résultats de recherche avec expiration
+interface CacheEntry {
+  data: SearchResult[];
+  timestamp: number;
+}
+
+const CACHE_EXPIRATION = 1000 * 60 * 60; // 1 heure
+const MAX_CACHE_SIZE = 100;
+
+const searchCache: { [key: string]: CacheEntry } = {};
+
+// Fonction pour nettoyer le cache
+const cleanCache = () => {
+  const now = Date.now();
+  const keys = Object.keys(searchCache);
+  
+  // Supprimer les entrées expirées
+  keys.forEach(key => {
+    if (now - searchCache[key].timestamp > CACHE_EXPIRATION) {
+      delete searchCache[key];
+    }
+  });
+  
+  // Limiter la taille du cache
+  if (keys.length > MAX_CACHE_SIZE) {
+    const sortedKeys = keys.sort((a, b) => 
+      searchCache[b].timestamp - searchCache[a].timestamp
+    );
+    sortedKeys.slice(MAX_CACHE_SIZE).forEach(key => {
+      delete searchCache[key];
+    });
+  }
+};
 
 // Normaliser le texte (enlever les accents, mettre en minuscule)
 const normalizeText = (text: string) => {
@@ -92,7 +123,7 @@ const debouncedSearch = debounce(async (query: string) => {
       }
     })
     
-    searchCache[normalizedQuery] = results
+    searchCache[normalizedQuery] = { data: results, timestamp: Date.now() }
     return results
   } catch (error) {
     console.error('Erreur lors de la recherche:', error)
@@ -202,7 +233,7 @@ export default function GenerateForm() {
 
     // Vérifier le cache
     if (searchCache[normalizedInput]) {
-      setSuggestions(searchCache[normalizedInput])
+      setSuggestions(searchCache[normalizedInput].data)
       return
     }
 
@@ -260,7 +291,7 @@ export default function GenerateForm() {
       ).slice(0, 5)
 
       // Mettre en cache
-      searchCache[normalizedInput] = uniqueResults
+      searchCache[normalizedInput] = { data: uniqueResults, timestamp: Date.now() }
       setSuggestions(uniqueResults)
     } catch (error) {
       console.error('Erreur:', error)
@@ -275,13 +306,13 @@ export default function GenerateForm() {
     [fetchCitySuggestions]
   )
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Mémoriser les fonctions de gestion des événements
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = e.target
     const newValue = type === 'number' ? Number(value) : value
     
     setFormData(prev => {
       const updated = { ...prev, [name]: newValue }
-      // Sauvegarder dans le cache à chaque modification
       cache.set(FORM_CACHE_KEY, updated, {
         storage: 'local',
         ttl: FORM_CACHE_TTL
@@ -296,20 +327,9 @@ export default function GenerateForm() {
         setSuggestions([])
       }
     }
-  }
+  }, [debouncedFetchSuggestions])
 
-  // Nettoyer le cache périodiquement
-  useEffect(() => {
-    const cacheCleanupInterval = setInterval(() => {
-      Object.keys(searchCache).forEach(key => {
-        delete searchCache[key]
-      })
-    }, 1000 * 60 * 5) // Nettoyer toutes les 5 minutes
-
-    return () => clearInterval(cacheCleanupInterval)
-  }, [])
-
-  const handleMoodToggle = (mood: MoodType) => {
+  const handleMoodToggle = useCallback((mood: MoodType) => {
     setFormData(prev => {
       const moods = prev.moods || []
       const updated = {
@@ -324,40 +344,34 @@ export default function GenerateForm() {
       })
       return updated
     })
-  }
+  }, [])
 
-  const handleNext = async () => {
-    // Si ce n'est pas la dernière étape, passer simplement à l'étape suivante
+  const handleNext = useCallback(async () => {
     if (currentStep < 5) {
       setDirection('right')
       setCurrentStep(prev => prev + 1)
       return
     }
 
-    // À la dernière étape, on sauvegarde les critères et on redirige
     try {
       localStorage.setItem('formData', JSON.stringify(formData))
       router.push('/suggestions')
     } catch (error) {
       setError('Erreur lors de la sauvegarde des critères')
     }
-  }
+  }, [currentStep, formData, router])
 
-  const handlePrevious = () => {
+  const handlePrevious = useCallback(() => {
     if (currentStep > 1) {
       setDirection('left')
       setCurrentStep(prev => prev - 1)
     }
-  }
+  }, [currentStep])
 
-  const calculateProgress = () => ((currentStep - 1) / 4) * 100
+  // Mémoriser les valeurs calculées
+  const progress = useMemo(() => ((currentStep - 1) / 4) * 100, [currentStep])
 
-  const calculateDuration = (formData: FormData): number => {
-    if (!formData.startDate || !formData.endDate) return 0
-    return differenceInDays(new Date(formData.endDate), new Date(formData.startDate))
-  }
-
-  const isNextDisabled = () => {
+  const isNextDisabled = useMemo(() => {
     switch (currentStep) {
       case 1:
         return !destinationValidee
@@ -372,7 +386,16 @@ export default function GenerateForm() {
       default:
         return false
     }
-  }
+  }, [currentStep, destinationValidee, dateRange, formData])
+
+  // Nettoyer le cache périodiquement
+  useEffect(() => {
+    const cacheCleanupInterval = setInterval(() => {
+      cleanCache()
+    }, 1000 * 60 * 5) // Nettoyer toutes les 5 minutes
+
+    return () => clearInterval(cacheCleanupInterval)
+  }, [])
 
   const handleDestinationSelect = (destination: string) => {
     setFormData(prev => ({ ...prev, destination }))
@@ -640,8 +663,8 @@ export default function GenerateForm() {
   // Mémorisation des étapes pour éviter les re-rendus inutiles
   const Step1 = useMemo(() => (
     <StepWrapper key="step1" title="Où veux-tu partir ?" direction={direction}>
-      <div className="space-y-4 pt-2">
-        <p className="text-sm text-gray-500 text-left mb-1">
+      <div className="space-y-2 pt-1">
+        <p className="text-sm text-gray-500 text-left mb-0">
           Entrez la ville ou le pays de votre choix
         </p>
         <div className="relative">
@@ -656,7 +679,7 @@ export default function GenerateForm() {
             value={formData.destination}
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
-            className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-base"
           />
           {destinationValidee && (
             <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
@@ -666,11 +689,11 @@ export default function GenerateForm() {
           {/* Suggestions d'autocomplétion */}
           {isLoading ? <SuggestionsSkeleton /> : null}
         </div>
-        <div className="space-y-2">
-          <p className="text-sm font-medium text-gray-700">
+        <div className="space-y-1">
+          <p className="text-sm font-medium text-gray-700 mb-0">
             Destinations populaires
           </p>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-1">
             {SUGGESTED_DESTINATIONS.map((destination) => (
               <button
                 key={destination.city}
@@ -681,15 +704,15 @@ export default function GenerateForm() {
                     handleDestinationSelect(destination.city)
                   }
                 }}
-                className={`p-2 rounded-lg border flex items-center space-x-2 transition-colors text-sm ${
+                className={`py-2 px-2 rounded-lg border flex items-center space-x-1 transition-colors text-sm ${
                   formData.destination === destination.city
                     ? 'border-indigo-600 bg-indigo-50'
                     : 'border-gray-200 hover:border-indigo-200 hover:bg-gray-50'
                 }`}
               >
-                <span className="text-xl">{destination.icon}</span>
+                <span className="text-lg">{destination.icon}</span>
                 <div className="text-left">
-                  <div className="font-medium">{destination.city}</div>
+                  <div className="font-medium text-sm">{destination.city}</div>
                   <div className="text-xs text-gray-500">{destination.country}</div>
                 </div>
               </button>
@@ -706,7 +729,7 @@ export default function GenerateForm() {
         <p className="text-sm text-gray-500">
           Choisissez les dates de votre voyage. Cela nous aidera à planifier l'itinéraire parfait pour votre séjour.
         </p>
-        <div className="max-w-md w-full mx-auto">
+        <div className="-mx-4">
           <div className="bg-indigo-50 rounded-xl overflow-hidden mb-2">
             <button
               onClick={handleStartNow}
@@ -841,67 +864,66 @@ export default function GenerateForm() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto relative pt-12">
-      <FormHeader
-        currentStep={currentStep}
-        totalSteps={5}
-        onPrevious={handlePrevious}
-      />
-
-      {/* Loading overlay */}
-      {isLoading && (
-        <div className="absolute inset-0 bg-white/80 flex items-center justify-center z-50">
-          <div className="flex flex-col items-center gap-4">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
-            <p className="text-gray-600">Génération des suggestions en cours...</p>
-          </div>
-        </div>
-      )}
-
-      {/* Error message */}
-      {error && (
-        <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-          <div className="flex items-start">
-            <div className="flex-shrink-0">
-              <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-              </svg>
+    <>
+      <div className="max-w-md mx-auto flex flex-col flex-1 bg-white pb-24 mt-[120px]">
+        <FormHeader
+          currentStep={currentStep}
+          totalSteps={5}
+          onPrevious={handlePrevious}
+        />
+        {/* Loading overlay */}
+        {isLoading && (
+          <div className="absolute inset-0 bg-white/80 flex items-center justify-center z-50">
+            <div className="flex flex-col items-center gap-4">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
+              <p className="text-gray-600">Génération des suggestions en cours...</p>
             </div>
-            <div className="ml-3">
-              <h3 className="text-sm font-medium text-red-800">
-                Erreur lors de la génération des suggestions
-              </h3>
-              <div className="mt-2 text-sm text-red-700">
-                <p>{error}</p>
-                {error.includes('Token') && (
-                  <p className="mt-2">
-                    Le service de suggestions n'est pas correctement configuré. Veuillez contacter le support technique.
-                  </p>
-                )}
+          </div>
+        )}
+        {/* Error message */}
+        {error && (
+          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <div className="flex items-start">
+              <div className="flex-shrink-0">
+                <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <h3 className="text-sm font-medium text-red-800">
+                  Erreur lors de la génération des suggestions
+                </h3>
+                <div className="mt-2 text-sm text-red-700">
+                  <p>{error}</p>
+                  {error.includes('Token') && (
+                    <p className="mt-2">
+                      Le service de suggestions n'est pas correctement configuré. Veuillez contacter le support technique.
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
           </div>
+        )}
+        {/* Form steps */}
+        <div className="px-4">
+          <AnimatePresence initial={false} mode="wait">
+            {currentStep === 1 && Step1}
+            {currentStep === 2 && Step2}
+            {currentStep === 3 && Step3}
+            {currentStep === 4 && Step4}
+            {currentStep === 5 && Step5}
+          </AnimatePresence>
+          <FormFooter
+            currentStep={currentStep}
+            totalSteps={5}
+            onPrevious={handlePrevious}
+            onNext={currentStep === 1 ? handleDestinationSubmit : handleNext}
+            isNextDisabled={isNextDisabled}
+            isLoading={isLoading}
+          />
         </div>
-      )}
-
-      {/* Form steps */}
-      <div className="relative flex flex-col justify-between min-h-[calc(100vh-120px)] max-w-2xl mx-auto pb-2">
-        <AnimatePresence initial={false} mode="wait">
-          {currentStep === 1 && Step1}
-          {currentStep === 2 && Step2}
-          {currentStep === 3 && Step3}
-          {currentStep === 4 && Step4}
-          {currentStep === 5 && Step5}
-        </AnimatePresence>
       </div>
-      <FormFooter
-        currentStep={currentStep}
-        totalSteps={5}
-        onPrevious={handlePrevious}
-        onNext={currentStep === 1 ? handleDestinationSubmit : handleNext}
-        isNextDisabled={isNextDisabled()}
-        isLoading={isLoading}
-      />
-    </div>
+    </>
   )
 }

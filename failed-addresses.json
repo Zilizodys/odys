@@ -1,0 +1,1298 @@
+[
+  {
+    "id": "19d1bff3-57fe-43c7-a3de-0e1c2245d6a6",
+    "originalAddress": "42 Rue de la Marine, 13001 Marseille",
+    "originalCity": "Marseille",
+    "formattedAddress": "[ENRICHED] 42 Rue de la Marine, 13001 Marseille"
+  },
+  {
+    "id": "0c3a978f-9d2c-45a8-a115-61a526dcff7b",
+    "originalAddress": "2 Rue Jean Dagnaux, Toulouse",
+    "originalCity": "toulouse",
+    "formattedAddress": "[ENRICHED] 2 Rue Jean Dagnaux, Toulouse"
+  },
+  {
+    "id": "73baecd9-eb1a-4c7b-a03d-ed3447efdcd0",
+    "originalAddress": "Madison Square Park, New York, NY 10010",
+    "originalCity": "New York",
+    "formattedAddress": "[ENRICHED] Madison Square Park, New York, NY 10010"
+  },
+  {
+    "id": "28032808-b444-48d0-afae-26a1d8f3bcd8",
+    "originalAddress": "27 Prince St A, New York, NY 10012",
+    "originalCity": "New York",
+    "formattedAddress": "[ENRICHED] 27 Prince St A, New York, NY 10012"
+  },
+  {
+    "id": "f09443c2-9fa6-4299-b3e2-b0b6a60ef0af",
+    "originalAddress": "Allée Regards de Provence, 13002 Marseille",
+    "originalCity": "marseille",
+    "formattedAddress": "[ENRICHED] Allée Regards de Provence, 13002 Marseille"
+  },
+  {
+    "id": "f490f953-adc0-490c-a407-ab34c613bc58",
+    "originalAddress": "Rue du Marché des Capucins, 13001 Marseille",
+    "originalCity": "marseille",
+    "formattedAddress": "[ENRICHED] Rue du Marché des Capucins, 13001 Marseille"
+  },
+  {
+    "id": "491946a4-42b2-4137-af6d-29213fa09dcd",
+    "originalAddress": "8 Rue du Commandant André, 13008 Marseille",
+    "originalCity": "marseille",
+    "formattedAddress": "[ENRICHED] 8 Rue du Commandant André, 13008 Marseille"
+  },
+  {
+    "id": "87888ef0-015d-4572-a033-b80e8e40b917",
+    "originalAddress": "35 Rue du Commandant André, 13008 Marseille",
+    "originalCity": "marseille",
+    "formattedAddress": "[ENRICHED] 35 Rue du Commandant André, 13008 Marseille"
+  },
+  {
+    "id": "54ee3ac3-6961-4515-b9c1-93cd9fe0d089",
+    "originalAddress": "Riverside Building, County Hall, London SE1 7PB",
+    "originalCity": "londres",
+    "formattedAddress": "[ENRICHED] Riverside Building, County Hall, London SE1 7PB"
+  },
+  {
+    "id": "536ddb50-5fff-4cc8-af8a-2dd9464b548f",
+    "originalAddress": "West End, London",
+    "originalCity": "londres",
+    "formattedAddress": "[ENRICHED] West End, London"
+  },
+  {
+    "id": "855916ed-298a-42a4-bd83-cb0406c5522e",
+    "originalAddress": "Kensington Gore, South Kensington, London SW7 2AP",
+    "originalCity": "londres",
+    "formattedAddress": "[ENRICHED] Kensington Gore, South Kensington, London SW7 2AP"
+  },
+  {
+    "id": "10d4de6d-ec3a-4eb0-847a-b4b47d021918",
+    "originalAddress": "High St, Ascot SL5 7JX",
+    "originalCity": "londres",
+    "formattedAddress": "[ENRICHED] High St, Ascot SL5 7JX"
+  },
+  {
+    "id": "de9b6f59-3a3a-49cb-a71d-51d0a3930a91",
+    "originalAddress": "London Heliport, SE1",
+    "originalCity": "londres",
+    "formattedAddress": "[ENRICHED] London Heliport, SE1"
+  },
+  {
+    "id": "97202d44-06f4-444c-907d-6aaf33ae7863",
+    "originalAddress": "20 Deans Yd, London SW1P 3PA",
+    "originalCity": "londres",
+    "formattedAddress": "[ENRICHED] 20 Deans Yd, London SW1P 3PA"
+  },
+  {
+    "id": "496723df-a485-48be-a67f-98b05b8b8cd7",
+    "originalAddress": "High St, Bray SL6 2AQ",
+    "originalCity": "londres",
+    "formattedAddress": "[ENRICHED] High St, Bray SL6 2AQ"
+  },
+  {
+    "id": "d17213d1-43af-47aa-92d6-3046f00e06ec",
+    "originalAddress": "Via della Salara Vecchia, 5/6, 00186 Roma RM",
+    "originalCity": "rome",
+    "formattedAddress": "[ENRICHED] Via della Salara Vecchia, 5/6, 00186 Roma RM"
+  },
+  {
+    "id": "ecb35013-c58d-4217-b383-9508621f8774",
+    "originalAddress": "Salita dei Crescenzi, 31, 00186 Roma RM",
+    "originalCity": "rome",
+    "formattedAddress": "[ENRICHED] Salita dei Crescenzi, 31, 00186 Roma RM"
+  },
+  {
+    "id": "416a9081-9b5f-4310-9865-2f8a068e2836",
+    "originalAddress": "Via G. Bettolo, 32, 00195 Roma RM",
+    "originalCity": "rome",
+    "formattedAddress": "[ENRICHED] Via G. Bettolo, 32, 00195 Roma RM"
+  },
+  {
+    "id": "021b560d-9a36-47fb-93f2-223dcd01b6c6",
+    "originalAddress": "30 Lincoln Center Plaza, New York, NY 10023",
+    "originalCity": "new-york",
+    "formattedAddress": "[ENRICHED] 30 Lincoln Center Plaza, New York, NY 10023"
+  },
+  {
+    "id": "030dbf6d-be4b-422a-9a56-075696d5221f",
+    "originalAddress": "70 Lincoln Center Plaza, New York, NY 10023",
+    "originalCity": "new-york",
+    "formattedAddress": "[ENRICHED] 70 Lincoln Center Plaza, New York, NY 10023"
+  },
+  {
+    "id": "7a61ef00-29f2-414e-b363-df505fecc539",
+    "originalAddress": "Square de l'Atomium, 1020 Brussel",
+    "originalCity": "bruxelles",
+    "formattedAddress": "[ENRICHED] Square de l'Atomium, 1020 Brussel"
+  },
+  {
+    "id": "7f3b92bc-3e36-46d1-b78c-d1e5441122d0",
+    "originalAddress": "Riemegemstraat 1, 9770 Kruishoutem",
+    "originalCity": "bruxelles",
+    "formattedAddress": "[ENRICHED] Riemegemstraat 1, 9770 Kruishoutem"
+  },
+  {
+    "id": "1c5f7986-30c1-465d-b797-6697b160d768",
+    "originalAddress": "Langestraat 19, 8000 Brugge",
+    "originalCity": "bruxelles",
+    "formattedAddress": "[ENRICHED] Langestraat 19, 8000 Brugge"
+  },
+  {
+    "id": "141ef8ed-ffcc-45e0-81bf-3fb524e80716",
+    "originalAddress": "Square de l'Atomium, 1020 Brussel",
+    "originalCity": "bruxelles",
+    "formattedAddress": "[ENRICHED] Square de l'Atomium, 1020 Brussel"
+  },
+  {
+    "id": "aa9f1e4f-ed58-47e3-a1af-3d2d9e984951",
+    "originalAddress": "Parque de Santa Catarina, 9000-001 Funchal",
+    "originalCity": "madere",
+    "formattedAddress": "[ENRICHED] Parque de Santa Catarina, 9000-001 Funchal"
+  },
+  {
+    "id": "a8e07e98-8492-486f-8214-8d820b446dc9",
+    "originalAddress": "Parque Municipal do Funchal, 9000-001 Funchal",
+    "originalCity": "madere",
+    "formattedAddress": "[ENRICHED] Parque Municipal do Funchal, 9000-001 Funchal"
+  },
+  {
+    "id": "7141551a-ecf1-4ac1-a440-02bff071f7a3",
+    "originalAddress": "Rua do Portão de São Tiago, 9060-250 Funchal",
+    "originalCity": "madere",
+    "formattedAddress": "[ENRICHED] Rua do Portão de São Tiago, 9060-250 Funchal"
+  },
+  {
+    "id": "58e7003b-9b93-4b76-9caf-e7fa1caf53c9",
+    "originalAddress": "Rua do Portão 5, 9000-001 Funchal",
+    "originalCity": "madere",
+    "formattedAddress": "[ENRICHED] Rua do Portão 5, 9000-001 Funchal"
+  },
+  {
+    "id": "accdc5e1-7200-4b05-b99d-3cc356f611bb",
+    "originalAddress": "Rua do Dr. Fernão Ornelas 50, 9000-082 Funchal",
+    "originalCity": "madere",
+    "formattedAddress": "[ENRICHED] Rua do Dr. Fernão Ornelas 50, 9000-082 Funchal"
+  },
+  {
+    "id": "321076ea-9512-430a-99b8-85b14a1a79b5",
+    "originalAddress": "Rua do Dr. Fernão Ornelas 50, 9000-082 Funchal",
+    "originalCity": "madere",
+    "formattedAddress": "[ENRICHED] Rua do Dr. Fernão Ornelas 50, 9000-082 Funchal"
+  },
+  {
+    "id": "6cdba1a9-8eef-48ad-9805-73f85b4383df",
+    "originalAddress": "Base de Loisirs de la Ramée, Tournefeuille",
+    "originalCity": "marseille",
+    "formattedAddress": "[ENRICHED] Base de Loisirs de la Ramée, Tournefeuille"
+  },
+  {
+    "id": "171e2fae-7ce8-4349-9a45-2fc0fbadc50b",
+    "originalAddress": "Base de Loisirs de la Ramée, Tournefeuille",
+    "originalCity": "marseille",
+    "formattedAddress": "[ENRICHED] Base de Loisirs de la Ramée, Tournefeuille"
+  },
+  {
+    "id": "7ca72591-1749-4839-9bbe-4593a2fef18f",
+    "originalAddress": "2 Rue Jean Dagnaux, Toulouse",
+    "originalCity": "toulouse",
+    "formattedAddress": "[ENRICHED] 2 Rue Jean Dagnaux, Toulouse"
+  },
+  {
+    "id": "57755952-cf7c-4a3c-8ed9-8fbb5d617827",
+    "originalAddress": "Lo Stadio Giuseppe Meazza, noto anche come Stadio San Siro dal quartiere in cui è situato, è lo stadio di calcio della città di Milano, nonché il più capiente stadio italiano e uno degli impianti calcistici più famosi e prestigiosi d'Europa.",
+    "originalCity": "milan",
+    "formattedAddress": "[ENRICHED] Lo Stadio Giuseppe Meazza, noto anche come Stadio San Siro dal quartiere in cui è situato, è lo stadio di calcio della città di Milano, nonché il più capiente stadio italiano e uno degli impianti calcistici più famosi e prestigiosi d'Europa."
+  },
+  {
+    "id": "1d78e511-9d19-48d5-bc58-d04e7cefc5c9",
+    "originalAddress": "Viale Sarca 232 (Via Chiese), 20126 Milano Lombardia",
+    "originalCity": "milan",
+    "formattedAddress": "[ENRICHED] Viale Sarca 232 (Via Chiese), 20126 Milano Lombardia"
+  },
+  {
+    "id": "1c9c2eb8-5571-4762-aabc-aa50431c881b",
+    "originalAddress": "Nata nel 1890, da allora è la casa dello sport (quello vero) di Milano. La Società Canottieri Milano vanta una tradizione sportiva ultracentenaria ed è una delle polisportive centenarie della nostra città...",
+    "originalCity": "milan",
+    "formattedAddress": "[ENRICHED] Nata nel 1890, da allora è la casa dello sport (quello vero) di Milano. La Società Canottieri Milano vanta una tradizione sportiva ultracentenaria ed è una delle polisportive centenarie della nostra città..."
+  },
+  {
+    "id": "39001b92-9f2d-4c8e-b1fe-cc5119230c40",
+    "originalAddress": "Via Carlo Imbonati (Via Bovio), 20159 Milano Lombardia",
+    "originalCity": "milan",
+    "formattedAddress": "[ENRICHED] Via Carlo Imbonati (Via Bovio), 20159 Milano Lombardia"
+  },
+  {
+    "id": "292b8c1f-a6f6-42c0-bc6b-eb3e0376fb9e",
+    "originalAddress": "Si tratta del 6° centro fitness di Milano: un Family Club con palestra, piscina, corsi fitness, area relax, centro benessere, personal trainers e ovviamente area bambini Club-V.",
+    "originalCity": "milan",
+    "formattedAddress": "[ENRICHED] Si tratta del 6° centro fitness di Milano: un Family Club con palestra, piscina, corsi fitness, area relax, centro benessere, personal trainers e ovviamente area bambini Club-V."
+  },
+  {
+    "id": "71caf9b2-9c6a-48b1-b631-8be12d6cbe51",
+    "originalAddress": "Originally built in 1932, the Excelsior Hotel Gallia, a Luxury Collection Hotel, Milan is located in the heart of this vibrant, creative city and serves as the premier threshold to new Milan.",
+    "originalCity": "milan",
+    "formattedAddress": "[ENRICHED] Originally built in 1932, the Excelsior Hotel Gallia, a Luxury Collection Hotel, Milan is located in the heart of this vibrant, creative city and serves as the premier threshold to new Milan."
+  },
+  {
+    "id": "f8020112-38a5-496c-bf1f-c027453ac6ef",
+    "originalAddress": "La Galleria Vittorio Emanuele II di Milano è un passaggio coperto che collega piazza della Scala e piazza Duomo tra loro e con due strade (via Pellico e via Foscolo) tramite due corti bracci perpendicolari all'asse principale. L'Ottagono centrale è considerato il salotto della città.",
+    "originalCity": "milan",
+    "formattedAddress": "[ENRICHED] La Galleria Vittorio Emanuele II di Milano è un passaggio coperto che collega piazza della Scala e piazza Duomo tra loro e con due strade (via Pellico e via Foscolo) tramite due corti bracci perpendicolari all'asse principale. L'Ottagono centrale è considerato il salotto della città."
+  },
+  {
+    "id": "60a7defc-3125-4595-80cd-f3240c311cac",
+    "originalAddress": "Piazza del Duomo è la piazza principale di Milano, suo vero e proprio centro geometrico e commerciale da oltre sette secoli.",
+    "originalCity": "milan",
+    "formattedAddress": "[ENRICHED] Piazza del Duomo è la piazza principale di Milano, suo vero e proprio centro geometrico e commerciale da oltre sette secoli."
+  },
+  {
+    "id": "67fd4c53-4c79-4d6a-973a-4b3a3d1bed61",
+    "originalAddress": "Piazza Cordusio 3 (Via Orefici), 20123 Milano Lombardia",
+    "originalCity": "milan",
+    "formattedAddress": "[ENRICHED] Piazza Cordusio 3 (Via Orefici), 20123 Milano Lombardia"
+  },
+  {
+    "id": "d81d5327-dcab-4032-bad0-c0fbf428a31b",
+    "originalAddress": "ELV - Culture of Innovation: progettazione culturale e Direzione artistica per rappresentare, narrare, valorizzare e divulgare il patrimonio dei Territori, delle Istituzioni e delle Aziende",
+    "originalCity": "milan",
+    "formattedAddress": "[ENRICHED] ELV - Culture of Innovation: progettazione culturale e Direzione artistica per rappresentare, narrare, valorizzare e divulgare il patrimonio dei Territori, delle Istituzioni e delle Aziende"
+  },
+  {
+    "id": "97c3bf01-3c85-48ff-8aba-4e412608c92d",
+    "originalAddress": "Via Andrea Palladio 2 (Ripamonti), Milano Lombardia",
+    "originalCity": "milan",
+    "formattedAddress": "[ENRICHED] Via Andrea Palladio 2 (Ripamonti), Milano Lombardia"
+  },
+  {
+    "id": "bd7beb12-5a86-4e33-844f-039213816742",
+    "originalAddress": "Viale Vittorio Veneto 31 (Piazza Repubblica), 20124 Milano Lombardia",
+    "originalCity": "milan",
+    "formattedAddress": "[ENRICHED] Viale Vittorio Veneto 31 (Piazza Repubblica), 20124 Milano Lombardia"
+  },
+  {
+    "id": "fa81601f-f950-4677-ae95-84aeb47f6b76",
+    "originalAddress": "Il Duomo di Milano, monumento simbolo del capoluogo lombardo, è dedicato a Santa Maria Nascente ed è situato nell'omonima piazza nel centro della città.",
+    "originalCity": "milan",
+    "formattedAddress": "[ENRICHED] Il Duomo di Milano, monumento simbolo del capoluogo lombardo, è dedicato a Santa Maria Nascente ed è situato nell'omonima piazza nel centro della città."
+  },
+  {
+    "id": "7259ead4-ef91-4cea-8f94-5cdb5a13d54d",
+    "originalAddress": "Un gioiello architettonico Anni '30 firmato Portaluppi, nell'angolo più silenzioso di Milano.",
+    "originalCity": "milan",
+    "formattedAddress": "[ENRICHED] Un gioiello architettonico Anni '30 firmato Portaluppi, nell'angolo più silenzioso di Milano."
+  },
+  {
+    "id": "e2a6d224-3c9c-4e97-8337-e6ae0cf2c225",
+    "originalAddress": "La Galleria Vittorio Emanuele II di Milano è un passaggio coperto che collega piazza della Scala e piazza Duomo tra loro e con due strade (via Pellico e via Foscolo) tramite due corti bracci perpendicolari all'asse principale. L'Ottagono centrale è considerato il salotto della città.",
+    "originalCity": "milan",
+    "formattedAddress": "[ENRICHED] La Galleria Vittorio Emanuele II di Milano è un passaggio coperto che collega piazza della Scala e piazza Duomo tra loro e con due strade (via Pellico e via Foscolo) tramite due corti bracci perpendicolari all'asse principale. L'Ottagono centrale è considerato il salotto della città."
+  },
+  {
+    "id": "7fd1b4e0-b72c-4013-9f8e-6c960794618a",
+    "originalAddress": "Piazza del Duomo è la piazza principale di Milano, suo vero e proprio centro geometrico e commerciale da oltre sette secoli.",
+    "originalCity": "milan",
+    "formattedAddress": "[ENRICHED] Piazza del Duomo è la piazza principale di Milano, suo vero e proprio centro geometrico e commerciale da oltre sette secoli."
+  },
+  {
+    "id": "fb60a86a-6f8c-49f6-9dbd-acd7179a9730",
+    "originalAddress": "La Pinacoteca di Brera, aperta al pubblico nel 1809, si trova nell’omonimo palazzo, dove hanno sede anche altre istituzioni culturali, quali la Biblioteca Braidense, l'Osservatorio Astronomico, l'Orto Botanico, l’Istituto Lombardo Accademia di Scienze e Lettere e l'Accademia di Belle Arti.",
+    "originalCity": "milan",
+    "formattedAddress": "[ENRICHED] La Pinacoteca di Brera, aperta al pubblico nel 1809, si trova nell’omonimo palazzo, dove hanno sede anche altre istituzioni culturali, quali la Biblioteca Braidense, l'Osservatorio Astronomico, l'Orto Botanico, l’Istituto Lombardo Accademia di Scienze e Lettere e l'Accademia di Belle Arti."
+  },
+  {
+    "id": "6bca38ca-6598-4eb5-9021-59ab16a1548c",
+    "originalAddress": "La Triennale di Milano is an international cultural institution which organises exhibitions and conferences as well as hosting arts, design, architecture, fashion, cinema, communications and social events.",
+    "originalCity": "milan",
+    "formattedAddress": "[ENRICHED] La Triennale di Milano is an international cultural institution which organises exhibitions and conferences as well as hosting arts, design, architecture, fashion, cinema, communications and social events."
+  },
+  {
+    "id": "c2b6ca6e-22ce-4973-8da6-0e397f934d41",
+    "originalAddress": "Piazza della Scala 6 (Via Manzoni, 2), 20121 Milano Lombardia",
+    "originalCity": "milan",
+    "formattedAddress": "[ENRICHED] Piazza della Scala 6 (Via Manzoni, 2), 20121 Milano Lombardia"
+  },
+  {
+    "id": "bf87ec0c-106d-4f9e-97d2-3f5df998ef4c",
+    "originalAddress": "HangarBicocca offre al pubblico una notevole quantità di mostre e proposte culturali, spazi e servizi e numerose attività per grandi e piccoli.",
+    "originalCity": "milan",
+    "formattedAddress": "[ENRICHED] HangarBicocca offre al pubblico una notevole quantità di mostre e proposte culturali, spazi e servizi e numerose attività per grandi e piccoli."
+  },
+  {
+    "id": "79ed14cd-514c-44e9-b561-41275310b7fb",
+    "originalAddress": "Various departure points along the Thames",
+    "originalCity": "",
+    "formattedAddress": "[ENRICHED] Various departure points along the Thames"
+  },
+  {
+    "id": "deab9ddf-f34f-4ae3-831a-a96be085ee64",
+    "originalAddress": "Esplanade de Pontac, 134 Quai de Bacalan, 33300 Bordeaux",
+    "originalCity": "Bordeaux",
+    "formattedAddress": "[ENRICHED] Esplanade de Pontac, 134 Quai de Bacalan, 33300 Bordeaux"
+  },
+  {
+    "id": "e090a9d0-abf6-4da5-8c9e-fc1d2cda181e",
+    "originalAddress": "Rue de L'Ermitage 1, 1490 Court-Saint-Etienne",
+    "originalCity": "saint-etienne",
+    "formattedAddress": "[ENRICHED] Rue de L'Ermitage 1, 1490 Court-Saint-Etienne"
+  },
+  {
+    "id": "c38e3ff2-9ca2-44f3-a881-ded12114c01b",
+    "originalAddress": "2 Rue Jean Dagnaux, Toulouse",
+    "originalCity": "toulouse",
+    "formattedAddress": "[ENRICHED] 2 Rue Jean Dagnaux, Toulouse"
+  },
+  {
+    "id": "8346b8e7-7b26-4eb9-947d-38f137033e11",
+    "originalAddress": "Palazzo Colonna, P.za dei Santi Apostoli, 52, 00187 Roma RM, Italy",
+    "originalCity": "Rome",
+    "formattedAddress": "[ENRICHED] Palazzo Colonna, P.za dei Santi Apostoli, 52, 00187 Roma RM, Italy"
+  },
+  {
+    "id": "ab954d96-9c0c-44a7-a69f-953a59d2b16a",
+    "originalAddress": "Palau Nacional, Parc de Montjuïc, s/n, Sants-Montjuïc, 08038 Barcelona, Spain",
+    "originalCity": "Barcelone",
+    "formattedAddress": "[ENRICHED] Palau Nacional, Parc de Montjuïc, s/n, Sants-Montjuïc, 08038 Barcelona, Spain"
+  },
+  {
+    "id": "0b39de3b-0d52-4a5c-9158-a81b3d55158d",
+    "originalAddress": "Parc de Montjuïc, s/n, Sants-Montjuïc, 08038 Barcelona, Spain",
+    "originalCity": "Barcelone",
+    "formattedAddress": "[ENRICHED] Parc de Montjuïc, s/n, Sants-Montjuïc, 08038 Barcelona, Spain"
+  },
+  {
+    "id": "ccb225bc-bb26-424a-aef5-6ad8c8cbfe87",
+    "originalAddress": "Rambla de Catalunya, 27, Local, Eixample, 08007 Barcelona, Spain",
+    "originalCity": "Barcelone",
+    "formattedAddress": "[ENRICHED] Rambla de Catalunya, 27, Local, Eixample, 08007 Barcelona, Spain"
+  },
+  {
+    "id": "e8400659-852a-415f-8759-fe07cd91cbd3",
+    "originalAddress": "Rambla de Catalunya, 2, 4, Eixample, 08007 Barcelona, Spain",
+    "originalCity": "Barcelone",
+    "formattedAddress": "[ENRICHED] Rambla de Catalunya, 2, 4, Eixample, 08007 Barcelona, Spain"
+  },
+  {
+    "id": "4003b825-c3ba-450f-9891-9aaccb057abe",
+    "originalAddress": "The Now Building Rooftop, Outernet, Denmark St, London WC2H 0LA, United Kingdom",
+    "originalCity": "Londres",
+    "formattedAddress": "[ENRICHED] The Now Building Rooftop, Outernet, Denmark St, London WC2H 0LA, United Kingdom"
+  },
+  {
+    "id": "fcea924b-c1eb-4ae9-bb4e-f552267a8e57",
+    "originalAddress": "R25M+R3, New York, NY 10025, United States",
+    "originalCity": "New York",
+    "formattedAddress": "[ENRICHED] R25M+R3, New York, NY 10025, United States"
+  },
+  {
+    "id": "f3e24b84-cd7f-48e1-96c5-7e4641e9f5d1",
+    "originalAddress": "41 Seaver Wy, Flushing, NY 11368, United States",
+    "originalCity": "New York",
+    "formattedAddress": "[ENRICHED] 41 Seaver Wy, Flushing, NY 11368, United States"
+  },
+  {
+    "id": "b466fbc8-c8f2-4ff0-9041-3ec1c3ff8c6a",
+    "originalAddress": "2-1 Yoyogikamizonocho, Shibuya, Tokyo 151-0052, Japan",
+    "originalCity": "Tokyo",
+    "formattedAddress": "[ENRICHED] 2-1 Yoyogikamizonocho, Shibuya, Tokyo 151-0052, Japan"
+  },
+  {
+    "id": "96677031-ee2c-433f-9893-9de9961c8485",
+    "originalAddress": "Japan, 〒150-0042 Tokyo, Shibuya, Udagawacho, 13−8 B1",
+    "originalCity": "Tokyo",
+    "formattedAddress": "[ENRICHED] Japan, 〒150-0042 Tokyo, Shibuya, Udagawacho, 13−8 B1"
+  },
+  {
+    "id": "758c9363-6e8d-446e-ac5e-227dc111394c",
+    "originalAddress": "Historical Neighborhood, Bastakiya, Villa 44 - Al Hisn St - Al Fahidi - Dubai - United Arab Emirates",
+    "originalCity": "Dubaï",
+    "formattedAddress": "[ENRICHED] Historical Neighborhood, Bastakiya, Villa 44 - Al Hisn St - Al Fahidi - Dubai - United Arab Emirates"
+  },
+  {
+    "id": "9a77a7db-5b39-41d1-9306-f9787ab7e71a",
+    "originalAddress": "1 Jumeira St - Al Mina - Jumeirah 1 - Dubai - United Arab Emirates",
+    "originalCity": "Dubaï",
+    "formattedAddress": "[ENRICHED] 1 Jumeira St - Al Mina - Jumeirah 1 - Dubai - United Arab Emirates"
+  },
+  {
+    "id": "8a2c5645-c758-4502-882d-d01d98ad03a3",
+    "originalAddress": "7873+RP9 Dubai Creek, Heritage Area - Al Seef St - Al Hamriya - Dubai - United Arab Emirates",
+    "originalCity": "Dubaï",
+    "formattedAddress": "[ENRICHED] 7873+RP9 Dubai Creek, Heritage Area - Al Seef St - Al Hamriya - Dubai - United Arab Emirates"
+  },
+  {
+    "id": "5591924e-b745-4894-96f4-193c06cb1059",
+    "originalAddress": "Tower 2 - Level 54, Address Sky View Hotel - Sheikh Mohammed bin Rashid Blvd - Dubai - United Arab Emirates",
+    "originalCity": "Dubaï",
+    "formattedAddress": "[ENRICHED] Tower 2 - Level 54, Address Sky View Hotel - Sheikh Mohammed bin Rashid Blvd - Dubai - United Arab Emirates"
+  },
+  {
+    "id": "2e6147e0-37bf-4f8b-9502-fa6f77eca18a",
+    "originalAddress": "Villa 531 Jumeirah Beach Road - Jumeirah - Jumeirah 3 - Dubai - United Arab Emirates",
+    "originalCity": "Dubaï",
+    "formattedAddress": "[ENRICHED] Villa 531 Jumeirah Beach Road - Jumeirah - Jumeirah 3 - Dubai - United Arab Emirates"
+  },
+  {
+    "id": "94367eaf-0794-4886-a1ec-6a0c687e6131",
+    "originalAddress": "Dusit Thani Dubai - 24th Floor - 133 Sheikh Zayed Rd - Trade Centre - DIFC - Dubai - United Arab Emirates",
+    "originalCity": "Dubaï",
+    "formattedAddress": "[ENRICHED] Dusit Thani Dubai - 24th Floor - 133 Sheikh Zayed Rd - Trade Centre - DIFC - Dubai - United Arab Emirates"
+  },
+  {
+    "id": "6923c26c-c034-458a-b976-83fcd3517520",
+    "originalAddress": "Address Dubai Mall Hotel - Downtown - Level 12 - Sheikh Mohammed bin Rashid Blvd - Dubai - United Arab Emirates",
+    "originalCity": "Dubaï",
+    "formattedAddress": "[ENRICHED] Address Dubai Mall Hotel - Downtown - Level 12 - Sheikh Mohammed bin Rashid Blvd - Dubai - United Arab Emirates"
+  },
+  {
+    "id": "e446f30c-9853-4a4c-9496-9499e50501cd",
+    "originalAddress": "Zabeel Area - Metro Station - near Al Jafiliya - Za'abeel - Al Kifaf - Dubai - United Arab Emirates",
+    "originalCity": "Dubaï",
+    "formattedAddress": "[ENRICHED] Zabeel Area - Metro Station - near Al Jafiliya - Za'abeel - Al Kifaf - Dubai - United Arab Emirates"
+  },
+  {
+    "id": "5fbf7782-7b52-40b9-9a13-32cdc0924f61",
+    "originalAddress": "689F+58R - Club One Dubai, Occidental Hotel - Al Jaddaf - Dubai - United Arab Emirates",
+    "originalCity": "Dubaï",
+    "formattedAddress": "[ENRICHED] 689F+58R - Club One Dubai, Occidental Hotel - Al Jaddaf - Dubai - United Arab Emirates"
+  },
+  {
+    "id": "6ba5aff8-36ba-41ed-b066-b7ffc45d762d",
+    "originalAddress": "Centre 1 - Plot 49 Sheikh Zayed Rd - Trade Centre - Dubai - United Arab Emirates",
+    "originalCity": "Dubaï",
+    "formattedAddress": "[ENRICHED] Centre 1 - Plot 49 Sheikh Zayed Rd - Trade Centre - Dubai - United Arab Emirates"
+  },
+  {
+    "id": "033a167b-0e9c-4abb-85f3-a8660011a418",
+    "originalAddress": "7th floor of Conrad Dubai - Sheikh Zayed Rd - Trade Centre - Trade Centre 1 - Dubai - United Arab Emirates",
+    "originalCity": "Dubaï",
+    "formattedAddress": "[ENRICHED] 7th floor of Conrad Dubai - Sheikh Zayed Rd - Trade Centre - Trade Centre 1 - Dubai - United Arab Emirates"
+  },
+  {
+    "id": "a6a95bfe-1c54-408f-a6a5-c65f4f708ad8",
+    "originalAddress": "The H Hotel Dubai - 1 Sheikh Zayed Rd - Trade Centre - Trade Centre 1 - Dubai - United Arab Emirates",
+    "originalCity": "Dubaï",
+    "formattedAddress": "[ENRICHED] The H Hotel Dubai - 1 Sheikh Zayed Rd - Trade Centre - Trade Centre 1 - Dubai - United Arab Emirates"
+  },
+  {
+    "id": "5b11df79-4e2a-451f-9e54-92bd7fe8c772",
+    "originalAddress": "Marriott Hotel - near Downtown - Al Jaddaf - Dubai - United Arab Emirates",
+    "originalCity": "Dubaï",
+    "formattedAddress": "[ENRICHED] Marriott Hotel - near Downtown - Al Jaddaf - Dubai - United Arab Emirates"
+  },
+  {
+    "id": "42cb27be-e922-42e1-b397-af895a311ca0",
+    "originalAddress": "Prime Business Centre - Sheikh Mohammed Bin Zayed Rd - Jumeirah Village - Dubai Sports City - Dubai - United Arab Emirates",
+    "originalCity": "Dubaï",
+    "formattedAddress": "[ENRICHED] Prime Business Centre - Sheikh Mohammed Bin Zayed Rd - Jumeirah Village - Dubai Sports City - Dubai - United Arab Emirates"
+  },
+  {
+    "id": "92c776ec-1d4a-49ae-8201-4056d0403e5b",
+    "originalAddress": "Za'abeel Street - Al Jaddaf - Dubai - United Arab Emirates",
+    "originalCity": "Dubaï",
+    "formattedAddress": "[ENRICHED] Za'abeel Street - Al Jaddaf - Dubai - United Arab Emirates"
+  },
+  {
+    "id": "71b9fe95-79fd-4046-b5b3-f749ada6e49c",
+    "originalAddress": "Gate No.1 Near - شارع الشيخ محمد بن زايد - Dubai - United Arab Emirates",
+    "originalCity": "Dubaï",
+    "formattedAddress": "[ENRICHED] Gate No.1 Near - شارع الشيخ محمد بن زايد - Dubai - United Arab Emirates"
+  },
+  {
+    "id": "a1d96e00-a263-4d96-a5d2-b4061780519b",
+    "originalAddress": "Cnr Bridge St &, Phillip St, Sydney NSW 2000, Australia",
+    "originalCity": "Sydney",
+    "formattedAddress": "[ENRICHED] Cnr Bridge St &, Phillip St, Sydney NSW 2000, Australia"
+  },
+  {
+    "id": "2700bad4-ed86-47ae-ab0b-17f4dfd59a12",
+    "originalAddress": "Shop 7.07-7.08/25 Martin Pl, Sydney NSW 2000, Australia",
+    "originalCity": "Sydney",
+    "formattedAddress": "[ENRICHED] Shop 7.07-7.08/25 Martin Pl, Sydney NSW 2000, Australia"
+  },
+  {
+    "id": "032ae6c3-f170-4077-b86a-b52a40756207",
+    "originalAddress": "Level 1/5-7 Young St, Sydney NSW 2000, Australia",
+    "originalCity": "Sydney",
+    "formattedAddress": "[ENRICHED] Level 1/5-7 Young St, Sydney NSW 2000, Australia"
+  },
+  {
+    "id": "bcec15c3-be2b-4ed0-8c13-644b5794c94b",
+    "originalAddress": "57JQ+XV, Manly NSW 2095, Australia",
+    "originalCity": "Sydney",
+    "formattedAddress": "[ENRICHED] 57JQ+XV, Manly NSW 2095, Australia"
+  },
+  {
+    "id": "e5b2da9d-99e3-4bf6-8c86-67a499aa7141",
+    "originalAddress": "15 Locked Bag, Paddington NSW 2021, Australia",
+    "originalCity": "Sydney",
+    "formattedAddress": "[ENRICHED] 15 Locked Bag, Paddington NSW 2021, Australia"
+  },
+  {
+    "id": "4453f17a-c354-4ab2-a7fa-973cd37265b9",
+    "originalAddress": "Cankurtaran, 34122 Fatih/İstanbul, Türkiye",
+    "originalCity": "Istanbul",
+    "formattedAddress": "[ENRICHED] Cankurtaran, 34122 Fatih/İstanbul, Türkiye"
+  },
+  {
+    "id": "a11acf73-40b8-48c5-880e-60a6fd48f9ec",
+    "originalAddress": "Binbirdirek, At Meydanı Cd No:12, 34122 Fatih/İstanbul, Türkiye",
+    "originalCity": "Istanbul",
+    "formattedAddress": "[ENRICHED] Binbirdirek, At Meydanı Cd No:12, 34122 Fatih/İstanbul, Türkiye"
+  },
+  {
+    "id": "d91eab08-daa0-4057-b48d-e927d949ffc8",
+    "originalAddress": "Cankurtaran, 34122 Fatih/İstanbul, Türkiye",
+    "originalCity": "Istanbul",
+    "formattedAddress": "[ENRICHED] Cankurtaran, 34122 Fatih/İstanbul, Türkiye"
+  },
+  {
+    "id": "262d3714-00f9-47b1-90fc-c1a58b4543d2",
+    "originalAddress": "Şahkulu, Galip Dede Cd. No:15, 34420 Beyoğlu/İstanbul, Türkiye",
+    "originalCity": "Istanbul",
+    "formattedAddress": "[ENRICHED] Şahkulu, Galip Dede Cd. No:15, 34420 Beyoğlu/İstanbul, Türkiye"
+  },
+  {
+    "id": "046693d7-f446-4880-87c7-bc3fee544278",
+    "originalAddress": "Gülhane Parkı, Cankurtaran, Taya Hatun Sk No:8A, 34122 Fatih/İstanbul, Türkiye",
+    "originalCity": "Istanbul",
+    "formattedAddress": "[ENRICHED] Gülhane Parkı, Cankurtaran, Taya Hatun Sk No:8A, 34122 Fatih/İstanbul, Türkiye"
+  },
+  {
+    "id": "53a5aa2e-735b-452c-b01b-40d6afdc2eb3",
+    "originalAddress": "Emin Sinan, Piyer Loti Cd. No:35, 34126 Fatih/İstanbul, Türkiye",
+    "originalCity": "Istanbul",
+    "formattedAddress": "[ENRICHED] Emin Sinan, Piyer Loti Cd. No:35, 34126 Fatih/İstanbul, Türkiye"
+  },
+  {
+    "id": "bf395279-08d7-4491-b7e8-0a35f92ebca6",
+    "originalAddress": "Hoca Paşa, Darüssade Sk. No:6, 34110 Fatih/İstanbul, Türkiye",
+    "originalCity": "Istanbul",
+    "formattedAddress": "[ENRICHED] Hoca Paşa, Darüssade Sk. No:6, 34110 Fatih/İstanbul, Türkiye"
+  },
+  {
+    "id": "71a7ce4d-c8b4-477b-8c34-676e4f62b05d",
+    "originalAddress": "Sultan Ahmet, Akbıyık Cd. No:64, 34122 Fatih/İstanbul, Türkiye",
+    "originalCity": "Istanbul",
+    "formattedAddress": "[ENRICHED] Sultan Ahmet, Akbıyık Cd. No:64, 34122 Fatih/İstanbul, Türkiye"
+  },
+  {
+    "id": "abc0702e-d84b-4e03-a966-610d317019df",
+    "originalAddress": "Sultan Ahmet, Akbıyık Cd. No:75, 34140 Fatih/İstanbul, Türkiye",
+    "originalCity": "Istanbul",
+    "formattedAddress": "[ENRICHED] Sultan Ahmet, Akbıyık Cd. No:75, 34140 Fatih/İstanbul, Türkiye"
+  },
+  {
+    "id": "e18f98dc-fb1c-43c2-8883-528a831d885f",
+    "originalAddress": "Emin Sinan, Piyer Loti Cd. No:34, 34130 Fatih/İstanbul, Türkiye",
+    "originalCity": "Istanbul",
+    "formattedAddress": "[ENRICHED] Emin Sinan, Piyer Loti Cd. No:34, 34130 Fatih/İstanbul, Türkiye"
+  },
+  {
+    "id": "6086c5d5-b711-4fb2-beb2-a5e61eda93bb",
+    "originalAddress": "Cankurtaran, Kennedy Cad., 34122 Fatih/İstanbul, Türkiye",
+    "originalCity": "Istanbul",
+    "formattedAddress": "[ENRICHED] Cankurtaran, Kennedy Cad., 34122 Fatih/İstanbul, Türkiye"
+  },
+  {
+    "id": "7f61b8b8-d49e-4e9e-862c-c249c3265950",
+    "originalAddress": "Yıldız, Çırağan Cd., 34349 Beşiktaş/İstanbul, Türkiye",
+    "originalCity": "Istanbul",
+    "formattedAddress": "[ENRICHED] Yıldız, Çırağan Cd., 34349 Beşiktaş/İstanbul, Türkiye"
+  },
+  {
+    "id": "a974d2df-f23a-425d-a984-77139ce4a29b",
+    "originalAddress": "Reşitpaşa, Emirgan Sk., 34467 Sarıyer/İstanbul, Türkiye",
+    "originalCity": "Istanbul",
+    "formattedAddress": "[ENRICHED] Reşitpaşa, Emirgan Sk., 34467 Sarıyer/İstanbul, Türkiye"
+  },
+  {
+    "id": "5355b4cd-811a-4bbd-b384-527dd8aeb6ae",
+    "originalAddress": "Harbiye, Maçka Cd., 34000 Şişli/İstanbul, Türkiye",
+    "originalCity": "Istanbul",
+    "formattedAddress": "[ENRICHED] Harbiye, Maçka Cd., 34000 Şişli/İstanbul, Türkiye"
+  },
+  {
+    "id": "6de2df56-4c5a-4af9-92ed-8f0a46a56087",
+    "originalAddress": "Gümüşsuyu, Tak-ı Zafer Cd., 34437 Beyoğlu/İstanbul, Türkiye",
+    "originalCity": "Istanbul",
+    "formattedAddress": "[ENRICHED] Gümüşsuyu, Tak-ı Zafer Cd., 34437 Beyoğlu/İstanbul, Türkiye"
+  },
+  {
+    "id": "4cf1f2b8-294b-4aff-87cb-3040ed8da777",
+    "originalAddress": "istiklal Caddesi, Bekar Sk. No:10, 34435 Beyoğlu/İstanbul, Türkiye",
+    "originalCity": "Istanbul",
+    "formattedAddress": "[ENRICHED] istiklal Caddesi, Bekar Sk. No:10, 34435 Beyoğlu/İstanbul, Türkiye"
+  },
+  {
+    "id": "b9571e77-9fd6-415f-9307-be69e7634fa6",
+    "originalAddress": "Kamer Hatun, Kamer Hatun Cd. No:19, 34435 Beyoğlu/İstanbul, Türkiye",
+    "originalCity": "Istanbul",
+    "formattedAddress": "[ENRICHED] Kamer Hatun, Kamer Hatun Cd. No:19, 34435 Beyoğlu/İstanbul, Türkiye"
+  },
+  {
+    "id": "7ec9c678-e3fc-4143-89aa-5363732b53f8",
+    "originalAddress": "Çiçek Pasajı, Sahne Sok, Hüseyinağa, İstiklal Cd. No: 2/A, 34437 Beyoğlu/İstanbul, Türkiye",
+    "originalCity": "Istanbul",
+    "formattedAddress": "[ENRICHED] Çiçek Pasajı, Sahne Sok, Hüseyinağa, İstiklal Cd. No: 2/A, 34437 Beyoğlu/İstanbul, Türkiye"
+  },
+  {
+    "id": "01d7eb14-151c-4eec-981c-29bca0d641e2",
+    "originalAddress": "Hüseyinağa, Sahne Sk. No:20, 34435 Beyoğlu/İstanbul, Türkiye",
+    "originalCity": "Istanbul",
+    "formattedAddress": "[ENRICHED] Hüseyinağa, Sahne Sk. No:20, 34435 Beyoğlu/İstanbul, Türkiye"
+  },
+  {
+    "id": "1113f95d-f3f5-49c7-97c0-0661b10f1d04",
+    "originalAddress": "Bahçeşehir 1. Kısım mah No:1, 34011 Başakşehir/İstanbul, Türkiye",
+    "originalCity": "Istanbul",
+    "formattedAddress": "[ENRICHED] Bahçeşehir 1. Kısım mah No:1, 34011 Başakşehir/İstanbul, Türkiye"
+  },
+  {
+    "id": "10562716-d6e0-455f-9713-c565d4dc3cb5",
+    "originalAddress": "Ziya Gökalp No:5, 34490 Başakşehir/İstanbul, Türkiye",
+    "originalCity": "Istanbul",
+    "formattedAddress": "[ENRICHED] Ziya Gökalp No:5, 34490 Başakşehir/İstanbul, Türkiye"
+  },
+  {
+    "id": "a1f5f374-677f-414b-8b6e-3e1a66767d0e",
+    "originalAddress": "Zühtüpaşa, Recep Peker Cd. No:3 D:1, 34724 Kadıköy/İstanbul, Türkiye",
+    "originalCity": "Istanbul",
+    "formattedAddress": "[ENRICHED] Zühtüpaşa, Recep Peker Cd. No:3 D:1, 34724 Kadıköy/İstanbul, Türkiye"
+  },
+  {
+    "id": "7d1f3f45-e76d-4a78-8b45-674f769a0a21",
+    "originalAddress": "Vişnezade, Dolmabahçe Cd. No:1, 34357 Beşiktaş/İstanbul, Türkiye",
+    "originalCity": "Istanbul",
+    "formattedAddress": "[ENRICHED] Vişnezade, Dolmabahçe Cd. No:1, 34357 Beşiktaş/İstanbul, Türkiye"
+  },
+  {
+    "id": "8be20cfc-b47c-451c-966d-5e5d962f2706",
+    "originalAddress": "4.Etap Fatih Teri̇m Stadı Başakşehir, Başak, Yunus Emre Cd., 34480 Başakşehir/İstanbul, Türkiye",
+    "originalCity": "Istanbul",
+    "formattedAddress": "[ENRICHED] 4.Etap Fatih Teri̇m Stadı Başakşehir, Başak, Yunus Emre Cd., 34480 Başakşehir/İstanbul, Türkiye"
+  },
+  {
+    "id": "9b6a9555-c8f1-4ee6-bc39-25055d5759d6",
+    "originalAddress": "Çatma Mescit, Refik Saydam Cd., 34430 Beyoğlu/İstanbul, Türkiye",
+    "originalCity": "Istanbul",
+    "formattedAddress": "[ENRICHED] Çatma Mescit, Refik Saydam Cd., 34430 Beyoğlu/İstanbul, Türkiye"
+  },
+  {
+    "id": "4c5f3062-9da8-4fbc-b122-5227e0acd5f9",
+    "originalAddress": "Av. Infante Dom Henrique, s/n - Parque do Flamengo, Rio de Janeiro - RJ, 22210-030, Brazil",
+    "originalCity": "Rio de Janeiro",
+    "formattedAddress": "[ENRICHED] Av. Infante Dom Henrique, s/n - Parque do Flamengo, Rio de Janeiro - RJ, 22210-030, Brazil"
+  },
+  {
+    "id": "6c67b5e8-582b-49f7-8f96-d22328daf88c",
+    "originalAddress": "R. Paulo César de Andrade, s/n - Laranjeiras, Rio de Janeiro - RJ, 22221-090, Brazil",
+    "originalCity": "Rio de Janeiro",
+    "formattedAddress": "[ENRICHED] R. Paulo César de Andrade, s/n - Laranjeiras, Rio de Janeiro - RJ, 22221-090, Brazil"
+  },
+  {
+    "id": "59544893-d812-4d84-bb84-ea62995360c7",
+    "originalAddress": "Av. Nossa Sra. de Copacabana, 435 - Copacabana, Rio de Janeiro - RJ, 22050-002, Brazil",
+    "originalCity": "Rio de Janeiro",
+    "formattedAddress": "[ENRICHED] Av. Nossa Sra. de Copacabana, 435 - Copacabana, Rio de Janeiro - RJ, 22050-002, Brazil"
+  },
+  {
+    "id": "711a76f3-fe1c-4e0e-a0f0-00f184e2ee22",
+    "originalAddress": "8 rue au maire, 4 Rue Volta, 75003 Paris, France",
+    "originalCity": "Paris",
+    "formattedAddress": "[ENRICHED] 8 rue au maire, 4 Rue Volta, 75003 Paris, France"
+  },
+  {
+    "id": "26393502-8085-4d3b-9ad6-71164891c3b6",
+    "originalAddress": "15 Parv. de la Défense, 92092 Puteaux, France",
+    "originalCity": "Paris",
+    "formattedAddress": "[ENRICHED] 15 Parv. de la Défense, 92092 Puteaux, France"
+  },
+  {
+    "id": "d76aaab0-801c-47bb-bf3e-1164130cd90f",
+    "originalAddress": "Via Santa Maria in Via, 19, 00187 Roma RM, Italy",
+    "originalCity": "Rome",
+    "formattedAddress": "[ENRICHED] Via Santa Maria in Via, 19, 00187 Roma RM, Italy"
+  },
+  {
+    "id": "01610a5c-6c3f-40ec-80b3-46bff8954f76",
+    "originalAddress": "Via Nazionale, 22/Int.B, 00184 Roma RM, Italy",
+    "originalCity": "Rome",
+    "formattedAddress": "[ENRICHED] Via Nazionale, 22/Int.B, 00184 Roma RM, Italy"
+  },
+  {
+    "id": "58440901-8c5b-4fb1-98d2-c2cfa42e5f41",
+    "originalAddress": "Piazzale del, V.le del Giardino Zoologico, 1, 00197 Roma RM, Italy",
+    "originalCity": "Rome",
+    "formattedAddress": "[ENRICHED] Piazzale del, V.le del Giardino Zoologico, 1, 00197 Roma RM, Italy"
+  },
+  {
+    "id": "40e2acc1-88bc-4085-be82-ee38bae73560",
+    "originalAddress": "Via Salaria, 267, 273/275 Roma RM, Italy",
+    "originalCity": "Rome",
+    "formattedAddress": "[ENRICHED] Via Salaria, 267, 273/275 Roma RM, Italy"
+  },
+  {
+    "id": "bdb68519-e113-4a86-88fa-d94256625309",
+    "originalAddress": "Via della Pace, snc, 00038 Valmontone RM, Italy",
+    "originalCity": "Rome",
+    "formattedAddress": "[ENRICHED] Via della Pace, snc, 00038 Valmontone RM, Italy"
+  },
+  {
+    "id": "dddb846c-a6ad-4d30-b7c1-86b6d342ba58",
+    "originalAddress": "Via Borgognona, 36, 00166, Via Borgognona, 32, 00187 Roma RM, Italy",
+    "originalCity": "Rome",
+    "formattedAddress": "[ENRICHED] Via Borgognona, 36, 00166, Via Borgognona, 32, 00187 Roma RM, Italy"
+  },
+  {
+    "id": "b5dbf0ae-c7cb-4546-9417-dd6f1b3825a5",
+    "originalAddress": "Big Fun Museum, Rambla de Sant Josep, 88-94, Ciutat Vella, 08002 Barcelona, Spain",
+    "originalCity": "Barcelone",
+    "formattedAddress": "[ENRICHED] Big Fun Museum, Rambla de Sant Josep, 88-94, Ciutat Vella, 08002 Barcelona, Spain"
+  },
+  {
+    "id": "8a5d7cb1-040a-4941-8293-c245a6a54be8",
+    "originalAddress": "La Rambla, 96 bis, 96 bis, Ciutat Vella, 08002 Barcelona, Spain",
+    "originalCity": "Barcelone",
+    "formattedAddress": "[ENRICHED] La Rambla, 96 bis, 96 bis, Ciutat Vella, 08002 Barcelona, Spain"
+  },
+  {
+    "id": "d244bd58-9b36-4214-bbf1-a93c08b4a860",
+    "originalAddress": "Plaza Leonardo Da Vinci, 4-5, Sant Martí, 08019 Barcelona, Spain",
+    "originalCity": "Barcelone",
+    "formattedAddress": "[ENRICHED] Plaza Leonardo Da Vinci, 4-5, Sant Martí, 08019 Barcelona, Spain"
+  },
+  {
+    "id": "37b155dc-7c59-4b84-9fe8-1bd4a301a4fa",
+    "originalAddress": "El Corte Inglés, Pl. de Catalunya, 14, L'Eixample, 08002 Barcelona, Spain",
+    "originalCity": "Barcelone",
+    "formattedAddress": "[ENRICHED] El Corte Inglés, Pl. de Catalunya, 14, L'Eixample, 08002 Barcelona, Spain"
+  },
+  {
+    "id": "4195f26e-c9c3-4d08-a827-f682029af50f",
+    "originalAddress": "Office address for (📞 reservations only, Plaça dels Àngels, 1, Ciutat Vella, 08001 Barcelona, Spain",
+    "originalCity": "Barcelone",
+    "formattedAddress": "[ENRICHED] Office address for (📞 reservations only, Plaça dels Àngels, 1, Ciutat Vella, 08001 Barcelona, Spain"
+  },
+  {
+    "id": "1db55e8b-9fad-4efc-92fe-7cc2428d117f",
+    "originalAddress": "Frente al Puerto, Plaza Pau Vila 1 Local 5, Palau De Mar, 08039 Barcelona, Spain",
+    "originalCity": "Barcelone",
+    "formattedAddress": "[ENRICHED] Frente al Puerto, Plaza Pau Vila 1 Local 5, Palau De Mar, 08039 Barcelona, Spain"
+  },
+  {
+    "id": "a0adc17f-80ed-4264-8822-a66909fcce91",
+    "originalAddress": "Carrer dels Mercaders, 10, Ciutat Vella, 08003 Barcelona, Spain",
+    "originalCity": "Barcelone",
+    "formattedAddress": "[ENRICHED] Carrer dels Mercaders, 10, Ciutat Vella, 08003 Barcelona, Spain"
+  },
+  {
+    "id": "f73ff257-9766-4af7-b544-65c10639ceef",
+    "originalAddress": "Carrer Doctor Font i Quer, 2, Sants-Montjuïc, 08038 Barcelona, Spain",
+    "originalCity": "Barcelone",
+    "formattedAddress": "[ENRICHED] Carrer Doctor Font i Quer, 2, Sants-Montjuïc, 08038 Barcelona, Spain"
+  },
+  {
+    "id": "8d0327d7-6a3f-43a2-af95-42d36991edb1",
+    "originalAddress": "Pl. del Tibidabo, 3, 4, Sarrià-Sant Gervasi, 08035 Barcelona, Spain",
+    "originalCity": "Barcelone",
+    "formattedAddress": "[ENRICHED] Pl. del Tibidabo, 3, 4, Sarrià-Sant Gervasi, 08035 Barcelona, Spain"
+  },
+  {
+    "id": "d1b08f8b-e3e3-48a6-9eb7-76a65c8bce55",
+    "originalAddress": "Carrer de València, 307, 313, L'Eixample, 08009 Barcelona, Spain",
+    "originalCity": "Barcelone",
+    "formattedAddress": "[ENRICHED] Carrer de València, 307, 313, L'Eixample, 08009 Barcelona, Spain"
+  },
+  {
+    "id": "81fa129a-698f-422e-a26a-327ff55e80dc",
+    "originalAddress": "Parque de la Estacion del Norte s/n, 08018 Barcelona, Spain",
+    "originalCity": "Barcelone",
+    "formattedAddress": "[ENRICHED] Parque de la Estacion del Norte s/n, 08018 Barcelona, Spain"
+  },
+  {
+    "id": "66f6a948-ec99-4167-a384-fcbacdce639e",
+    "originalAddress": "Plaça Comercial Subterráneo, S/N, 08003 Barcelona, Spain",
+    "originalCity": "Barcelone",
+    "formattedAddress": "[ENRICHED] Plaça Comercial Subterráneo, S/N, 08003 Barcelona, Spain"
+  },
+  {
+    "id": "85e11e2b-e19f-49b1-bb54-087891531d9a",
+    "originalAddress": "24,, Carrer del Pintor Alsamora, 20, 08016 Barcelona, Spain",
+    "originalCity": "Barcelone",
+    "formattedAddress": "[ENRICHED] 24,, Carrer del Pintor Alsamora, 20, 08016 Barcelona, Spain"
+  },
+  {
+    "id": "4db6c7c6-40e6-41ed-8920-8cc9f3203e74",
+    "originalAddress": "85 Bis, Gran Via Carles III, Carrer de Sabino Arana, 22-24, 08028 Barcelona, Spain",
+    "originalCity": "Barcelone",
+    "formattedAddress": "[ENRICHED] 85 Bis, Gran Via Carles III, Carrer de Sabino Arana, 22-24, 08028 Barcelona, Spain"
+  },
+  {
+    "id": "6094826e-48f9-485e-8119-93d816547768",
+    "originalAddress": "82, Carrer de Pau Alsina, 80, 08024 Barcelona, Spain",
+    "originalCity": "Barcelone",
+    "formattedAddress": "[ENRICHED] 82, Carrer de Pau Alsina, 80, 08024 Barcelona, Spain"
+  },
+  {
+    "id": "3ecf2f92-78a9-477e-999c-e466f4e93325",
+    "originalAddress": "Gran Via de les Corts Catalanes, planta Cúpula, Eixample, 08015 Barcelona, Spain",
+    "originalCity": "Barcelone",
+    "formattedAddress": "[ENRICHED] Gran Via de les Corts Catalanes, planta Cúpula, Eixample, 08015 Barcelona, Spain"
+  },
+  {
+    "id": "90ba1799-f6b8-47cf-9861-098a240fcf38",
+    "originalAddress": "La Roca Village s/n, 08430 Santa Agnès de Malanyanes, Barcelona, Spain",
+    "originalCity": "Barcelone",
+    "formattedAddress": "[ENRICHED] La Roca Village s/n, 08430 Santa Agnès de Malanyanes, Barcelona, Spain"
+  },
+  {
+    "id": "60a388ce-ddb7-49b6-9c76-5bfb4adee5eb",
+    "originalAddress": "Carrer de Tuset, 19, 21, Sarrià-Sant Gervasi, 08006 Barcelona, Spain",
+    "originalCity": "Barcelone",
+    "formattedAddress": "[ENRICHED] Carrer de Tuset, 19, 21, Sarrià-Sant Gervasi, 08006 Barcelona, Spain"
+  },
+  {
+    "id": "45a0b021-a01d-4efd-aab4-01c0a91d01c4",
+    "originalAddress": "No 1, West India Quay, Hertsmere Rd, London E14 4AL, United Kingdom",
+    "originalCity": "Londres",
+    "formattedAddress": "[ENRICHED] No 1, West India Quay, Hertsmere Rd, London E14 4AL, United Kingdom"
+  },
+  {
+    "id": "b232d980-897a-4d66-ae0a-645e8063be40",
+    "originalAddress": "1, Sky Garden Walk, London EC3M 8AF, United Kingdom",
+    "originalCity": "Londres",
+    "formattedAddress": "[ENRICHED] 1, Sky Garden Walk, London EC3M 8AF, United Kingdom"
+  },
+  {
+    "id": "eacc09b6-bcd3-4727-b547-2c7c5a68e280",
+    "originalAddress": "Shoreditch Town Hall, 380 Old St, London EC1V 9LT, United Kingdom",
+    "originalCity": "Londres",
+    "formattedAddress": "[ENRICHED] Shoreditch Town Hall, 380 Old St, London EC1V 9LT, United Kingdom"
+  },
+  {
+    "id": "2b3998e4-5af3-4ee0-8a52-891ba7cee609",
+    "originalAddress": "180 Strand, Temple, London WC2R 1EA, United Kingdom",
+    "originalCity": "Londres",
+    "formattedAddress": "[ENRICHED] 180 Strand, Temple, London WC2R 1EA, United Kingdom"
+  },
+  {
+    "id": "5de576bb-8991-4c74-a634-c4b18657d3cc",
+    "originalAddress": "Flemings Mayfair, 7-12 Half Moon St, 7-12 Half Moon St, London W1J 7BH, United Kingdom",
+    "originalCity": "Londres",
+    "formattedAddress": "[ENRICHED] Flemings Mayfair, 7-12 Half Moon St, 7-12 Half Moon St, London W1J 7BH, United Kingdom"
+  },
+  {
+    "id": "dde79a60-7045-49c3-9c43-7a8cae6d87bc",
+    "originalAddress": "Unit 57, Bernard St, London WC1N 1BS, United Kingdom",
+    "originalCity": "Londres",
+    "formattedAddress": "[ENRICHED] Unit 57, Bernard St, London WC1N 1BS, United Kingdom"
+  },
+  {
+    "id": "38b73f36-9237-4a24-a6c7-1d4b87398465",
+    "originalAddress": "Pier 86, W 46th St, New York, NY 10036, United States",
+    "originalCity": "New York",
+    "formattedAddress": "[ENRICHED] Pier 86, W 46th St, New York, NY 10036, United States"
+  },
+  {
+    "id": "76bb864f-b803-4315-9fc4-ca9bd45f076a",
+    "originalAddress": "Flushing Meadows Corona Park, Building, Corona, NY 11368, United States",
+    "originalCity": "New York",
+    "formattedAddress": "[ENRICHED] Flushing Meadows Corona Park, Building, Corona, NY 11368, United States"
+  },
+  {
+    "id": "be71e323-b8a8-4454-8241-4f9b70dc2ab5",
+    "originalAddress": "28 Liberty St 60th floor, New York, NY 10005, United States",
+    "originalCity": "New York",
+    "formattedAddress": "[ENRICHED] 28 Liberty St 60th floor, New York, NY 10005, United States"
+  },
+  {
+    "id": "523c8270-e655-4f22-a3f1-20ebab99edcd",
+    "originalAddress": "Payson Ave. &, Seaman Ave, New York, NY 10034, United States",
+    "originalCity": "New York",
+    "formattedAddress": "[ENRICHED] Payson Ave. &, Seaman Ave, New York, NY 10034, United States"
+  },
+  {
+    "id": "3834156c-e055-4fb0-8894-7fe185496398",
+    "originalAddress": "Middletown Road & Stadium, Avenue, Bronx, NY 10465, United States",
+    "originalCity": "New York",
+    "formattedAddress": "[ENRICHED] Middletown Road & Stadium, Avenue, Bronx, NY 10465, United States"
+  },
+  {
+    "id": "4203585f-80e7-4612-bed5-859f9c253bd6",
+    "originalAddress": "5th Ave &, 24 E 135th St, New York, NY 10037, United States",
+    "originalCity": "New York",
+    "formattedAddress": "[ENRICHED] 5th Ave &, 24 E 135th St, New York, NY 10037, United States"
+  },
+  {
+    "id": "8b24d29c-5f8c-443a-b4a7-c2c24f2d3508",
+    "originalAddress": "Grand Concourse bet. E. 192 St. and, E Kingsbridge Rd, Bronx, NY 10458, United States",
+    "originalCity": "New York",
+    "formattedAddress": "[ENRICHED] Grand Concourse bet. E. 192 St. and, E Kingsbridge Rd, Bronx, NY 10458, United States"
+  },
+  {
+    "id": "2704e21a-811f-4623-b041-26cc9e4f0944",
+    "originalAddress": "Brooklyn Ave &, Prospect Pl, Brooklyn, NY 11213, United States",
+    "originalCity": "New York",
+    "formattedAddress": "[ENRICHED] Brooklyn Ave &, Prospect Pl, Brooklyn, NY 11213, United States"
+  },
+  {
+    "id": "4aa90283-fcc5-43ea-b264-4a4a74244b7e",
+    "originalAddress": "Broadway and Van, Cortlandt Park South, Bronx, NY 10471, United States",
+    "originalCity": "New York",
+    "formattedAddress": "[ENRICHED] Broadway and Van, Cortlandt Park South, Bronx, NY 10471, United States"
+  },
+  {
+    "id": "23b82877-098b-4b85-8746-8b5191e6e8e3",
+    "originalAddress": "Varick Street &, Laight St, New York, NY 10013, United States",
+    "originalCity": "New York",
+    "formattedAddress": "[ENRICHED] Varick Street &, Laight St, New York, NY 10013, United States"
+  },
+  {
+    "id": "fe3be013-6dfa-4109-a912-17f332511288",
+    "originalAddress": "627 W 51st St 2nd floor, New York, NY 10019, United States",
+    "originalCity": "New York",
+    "formattedAddress": "[ENRICHED] 627 W 51st St 2nd floor, New York, NY 10019, United States"
+  },
+  {
+    "id": "6bed7e8f-6eb4-420e-b712-a9475dbff3d2",
+    "originalAddress": "59th Street and, 1000 Third Avenue, Lexington Ave, New York, NY 10022, United States",
+    "originalCity": "New York",
+    "formattedAddress": "[ENRICHED] 59th Street and, 1000 Third Avenue, Lexington Ave, New York, NY 10022, United States"
+  },
+  {
+    "id": "ec4b2acc-9752-4e0d-b884-13081fbd09c4",
+    "originalAddress": "257 Rue de Vaugirard 7e étage, 75015 Paris, France",
+    "originalCity": "Paris",
+    "formattedAddress": "[ENRICHED] 257 Rue de Vaugirard 7e étage, 75015 Paris, France"
+  },
+  {
+    "id": "8842d773-f04f-48ac-b950-78a96959fd3d",
+    "originalAddress": "41 Rue des Pirogues de Bercy, 75012 Bercy Village - Paris, France",
+    "originalCity": "Paris",
+    "formattedAddress": "[ENRICHED] 41 Rue des Pirogues de Bercy, 75012 Bercy Village - Paris, France"
+  },
+  {
+    "id": "f64d45db-3523-4596-ac0b-a993baf5e909",
+    "originalAddress": "3 Av. de la Prte d'Auteuil, 75016 Paris, France",
+    "originalCity": "Paris",
+    "formattedAddress": "[ENRICHED] 3 Av. de la Prte d'Auteuil, 75016 Paris, France"
+  },
+  {
+    "id": "05d05405-df28-4aad-83c9-3d5ce9558168",
+    "originalAddress": "Via Fabio Massimo, n.80/a, 00192 Roma RM, Italy",
+    "originalCity": "Rome",
+    "formattedAddress": "[ENRICHED] Via Fabio Massimo, n.80/a, 00192 Roma RM, Italy"
+  },
+  {
+    "id": "7ffe40d9-20b4-4c50-8fc2-b028bf6f5f53",
+    "originalAddress": "Via dei Romagnoli, 00071 Torvaianica RM, Italy",
+    "originalCity": "Rome",
+    "formattedAddress": "[ENRICHED] Via dei Romagnoli, 00071 Torvaianica RM, Italy"
+  },
+  {
+    "id": "bac6cd69-ef3e-4760-a9fd-7a439a109274",
+    "originalAddress": "Unnamed Road, 00197 Roma RM, Italy",
+    "originalCity": "Rome",
+    "formattedAddress": "[ENRICHED] Unnamed Road, 00197 Roma RM, Italy"
+  },
+  {
+    "id": "da62857b-20de-43e3-bb0b-599aa526a634",
+    "originalAddress": "RFH8+JX, 00144 Roma RM, Italy",
+    "originalCity": "Rome",
+    "formattedAddress": "[ENRICHED] RFH8+JX, 00144 Roma RM, Italy"
+  },
+  {
+    "id": "ecad6c3f-a1fd-4625-b998-129ec92bd31a",
+    "originalAddress": "Via Irina Alberti, 00128 Roma RM, Italy",
+    "originalCity": "Rome",
+    "formattedAddress": "[ENRICHED] Via Irina Alberti, 00128 Roma RM, Italy"
+  },
+  {
+    "id": "64f5e18c-680a-42a0-a077-a4535144b2c1",
+    "originalAddress": "C/ Constança, Carrer de Déu i Mata, esquina, 08029 Barcelona, Spain",
+    "originalCity": "Barcelone",
+    "formattedAddress": "[ENRICHED] C/ Constança, Carrer de Déu i Mata, esquina, 08029 Barcelona, Spain"
+  },
+  {
+    "id": "17b5e378-c6f9-4b4f-b70f-f1ebf9daede9",
+    "originalAddress": "Carrer de la Diputació, 191, Local 3, Eixample, 08011 Barcelona, Spain",
+    "originalCity": "Barcelone",
+    "formattedAddress": "[ENRICHED] Carrer de la Diputació, 191, Local 3, Eixample, 08011 Barcelona, Spain"
+  },
+  {
+    "id": "3183558a-6969-4247-9524-60299df96a97",
+    "originalAddress": "Calle de, Carrer d'Andrea Dòria, 45, Ciutat Vella, 08003 Barcelona, Spain",
+    "originalCity": "Barcelone",
+    "formattedAddress": "[ENRICHED] Calle de, Carrer d'Andrea Dòria, 45, Ciutat Vella, 08003 Barcelona, Spain"
+  },
+  {
+    "id": "dc59b8c4-8c3f-494c-8f0a-3a178ea94eba",
+    "originalAddress": "Plaça de la Sardana, 717, Sants-Montjuïc, 08038 Barcelona, Spain",
+    "originalCity": "Barcelone",
+    "formattedAddress": "[ENRICHED] Plaça de la Sardana, 717, Sants-Montjuïc, 08038 Barcelona, Spain"
+  },
+  {
+    "id": "c7397bb0-4637-4ffc-8441-53209901ad70",
+    "originalAddress": "Playa de Bogatell, Paseo Maritimo del Bogatell, s/n, Sant Martí, 08005 Barcelona, Spain",
+    "originalCity": "Barcelone",
+    "formattedAddress": "[ENRICHED] Playa de Bogatell, Paseo Maritimo del Bogatell, s/n, Sant Martí, 08005 Barcelona, Spain"
+  },
+  {
+    "id": "09b4587a-1ece-49ab-ba0f-f86a42f8415c",
+    "originalAddress": "Plaça Rosa Del Vents 1, Final, Pg. de Joan de Borbó, 08039 Barcelona, Spain",
+    "originalCity": "Barcelone",
+    "formattedAddress": "[ENRICHED] Plaça Rosa Del Vents 1, Final, Pg. de Joan de Borbó, 08039 Barcelona, Spain"
+  },
+  {
+    "id": "3fa6dbab-d33a-4291-bc3f-0455b7f0166c",
+    "originalAddress": "del Port Vell, Moll d'Espanya, s/n, Ciutat Vella, 08039 Barcelona, Spain",
+    "originalCity": "Barcelone",
+    "formattedAddress": "[ENRICHED] del Port Vell, Moll d'Espanya, s/n, Ciutat Vella, 08039 Barcelona, Spain"
+  },
+  {
+    "id": "d7726cc5-a3eb-472f-84ee-a374ae74f217",
+    "originalAddress": "Travessera de les Corts, 252, 254, Distrito de Les Corts, 08014 Barcelona, Spain",
+    "originalCity": "Barcelone",
+    "formattedAddress": "[ENRICHED] Travessera de les Corts, 252, 254, Distrito de Les Corts, 08014 Barcelona, Spain"
+  },
+  {
+    "id": "e3729809-f689-4d0f-857a-b212cc2494ba",
+    "originalAddress": "Font d en Fargues, 6, Passeig de la Font d'en Fargas, 8, 08032 Barcelona, Spain",
+    "originalCity": "Barcelone",
+    "formattedAddress": "[ENRICHED] Font d en Fargues, 6, Passeig de la Font d'en Fargas, 8, 08032 Barcelona, Spain"
+  },
+  {
+    "id": "7cf0a9a3-2abc-4c8f-8bc1-8b4371f4f208",
+    "originalAddress": "Carrer del Comte Borrell, 21, 33, L'Eixample, 08015 Barcelona, Spain",
+    "originalCity": "Barcelone",
+    "formattedAddress": "[ENRICHED] Carrer del Comte Borrell, 21, 33, L'Eixample, 08015 Barcelona, Spain"
+  },
+  {
+    "id": "5b807a2c-865d-4758-96ee-b7e786766af3",
+    "originalAddress": "Carrer de la Diputació, 27, 37, Eixample, 08015 Barcelona, Spain",
+    "originalCity": "Barcelone",
+    "formattedAddress": "[ENRICHED] Carrer de la Diputació, 27, 37, Eixample, 08015 Barcelona, Spain"
+  },
+  {
+    "id": "4fd7ce1c-2cff-4f6a-b1fe-839a40490a41",
+    "originalAddress": "Pl. del Poeta Boscà, 1, 2, Ciutat Vella, 08003 Barcelona, Spain",
+    "originalCity": "Barcelone",
+    "formattedAddress": "[ENRICHED] Pl. del Poeta Boscà, 1, 2, Ciutat Vella, 08003 Barcelona, Spain"
+  },
+  {
+    "id": "6d122f04-3b72-43cf-b1ae-c8628e6a600f",
+    "originalAddress": "Carrer Transversal 5, Núm 63, Sants-Montjuïc, 08040 BIOMARKET, Barcelona, Spain",
+    "originalCity": "Barcelone",
+    "formattedAddress": "[ENRICHED] Carrer Transversal 5, Núm 63, Sants-Montjuïc, 08040 BIOMARKET, Barcelona, Spain"
+  },
+  {
+    "id": "8ee9840d-e15a-403c-904a-38eebae0d42d",
+    "originalAddress": "Carrer de Verdi, 200, 210, Gracia, 08024 Barcelona, Spain",
+    "originalCity": "Barcelone",
+    "formattedAddress": "[ENRICHED] Carrer de Verdi, 200, 210, Gracia, 08024 Barcelona, Spain"
+  },
+  {
+    "id": "4d1427a4-d154-421e-b49c-22a0432720ef",
+    "originalAddress": "Ace Corner, N Circular Rd., London NW10 7UD, United Kingdom",
+    "originalCity": "Londres",
+    "formattedAddress": "[ENRICHED] Ace Corner, N Circular Rd., London NW10 7UD, United Kingdom"
+  },
+  {
+    "id": "5143cf11-81eb-4480-b9bb-9b1df82158f2",
+    "originalAddress": "13 Kingly Ct, Carnaby, London W1B 5PW, United Kingdom",
+    "originalCity": "Londres",
+    "formattedAddress": "[ENRICHED] 13 Kingly Ct, Carnaby, London W1B 5PW, United Kingdom"
+  },
+  {
+    "id": "9036ba02-6ba9-41ad-bce7-107cad6af603",
+    "originalAddress": "1, Sky Garden Walk, London EC3M 8AF, United Kingdom",
+    "originalCity": "Londres",
+    "formattedAddress": "[ENRICHED] 1, Sky Garden Walk, London EC3M 8AF, United Kingdom"
+  },
+  {
+    "id": "e604c38e-a3fc-4d22-bf2e-4918f5b7c487",
+    "originalAddress": "Unit 3B, 127 Hackney Rd, London E2 8GY, United Kingdom",
+    "originalCity": "Londres",
+    "formattedAddress": "[ENRICHED] Unit 3B, 127 Hackney Rd, London E2 8GY, United Kingdom"
+  },
+  {
+    "id": "5ac59519-461c-4f5a-b131-022a66e4066c",
+    "originalAddress": "Monument, 2B Eastcheap, London EC3M 1AE, United Kingdom",
+    "originalCity": "Londres",
+    "formattedAddress": "[ENRICHED] Monument, 2B Eastcheap, London EC3M 1AE, United Kingdom"
+  },
+  {
+    "id": "c9319786-70a8-4ea5-853f-40141f2e5d83",
+    "originalAddress": "1 Milford Ln, Temple, London WC2R 3LL, United Kingdom",
+    "originalCity": "Londres",
+    "formattedAddress": "[ENRICHED] 1 Milford Ln, Temple, London WC2R 3LL, United Kingdom"
+  },
+  {
+    "id": "5db3dba1-e521-4e8b-bcaa-193b4a15a58e",
+    "originalAddress": "Ground Floor 70, Basement and, 88 Oxford St, London W1D 1BP, United Kingdom",
+    "originalCity": "Londres",
+    "formattedAddress": "[ENRICHED] Ground Floor 70, Basement and, 88 Oxford St, London W1D 1BP, United Kingdom"
+  },
+  {
+    "id": "f6d64b1b-4058-4b0c-9bc8-00d6d61c5409",
+    "originalAddress": "7th Floor, 2 Spring Gardens, London SW1A 2TS, United Kingdom",
+    "originalCity": "Londres",
+    "formattedAddress": "[ENRICHED] 7th Floor, 2 Spring Gardens, London SW1A 2TS, United Kingdom"
+  },
+  {
+    "id": "925a169d-f60e-4bbe-bcd5-462855f28749",
+    "originalAddress": "Riverside Building, County Hall, Westminster Bridge Rd, London SE1 7PB, United Kingdom",
+    "originalCity": "Londres",
+    "formattedAddress": "[ENRICHED] Riverside Building, County Hall, Westminster Bridge Rd, London SE1 7PB, United Kingdom"
+  },
+  {
+    "id": "5a73d488-bef5-4783-b844-ec5147ecb829",
+    "originalAddress": "195-203 Waterloo Rd, Baron's Pl, London SE1 8UX, United Kingdom",
+    "originalCity": "Londres",
+    "formattedAddress": "[ENRICHED] 195-203 Waterloo Rd, Baron's Pl, London SE1 8UX, United Kingdom"
+  },
+  {
+    "id": "be2d0a6d-8619-441c-b2c8-4a1438148d54",
+    "originalAddress": "33 N Wharf Rd, Merchant Sq, London W2 1LA, United Kingdom",
+    "originalCity": "Londres",
+    "formattedAddress": "[ENRICHED] 33 N Wharf Rd, Merchant Sq, London W2 1LA, United Kingdom"
+  },
+  {
+    "id": "a514dcd8-880a-40b1-81a4-b1c2408b93c9",
+    "originalAddress": "Entrance on, 120 Oxford St, Wells St, London W1D 1LT, United Kingdom",
+    "originalCity": "Londres",
+    "formattedAddress": "[ENRICHED] Entrance on, 120 Oxford St, Wells St, London W1D 1LT, United Kingdom"
+  },
+  {
+    "id": "a2a95494-797c-4147-b19f-c03a8e31be67",
+    "originalAddress": "Bank, 21 Lombard St, London EC3V 9AH, United Kingdom",
+    "originalCity": "Londres",
+    "formattedAddress": "[ENRICHED] Bank, 21 Lombard St, London EC3V 9AH, United Kingdom"
+  },
+  {
+    "id": "820552be-7c88-4a06-95f2-1d0afd7d47ba",
+    "originalAddress": "Imperial Wharf the Boulevard, Imperial Wharf, 3 The Blvd, London SW6 2UB, United Kingdom",
+    "originalCity": "Londres",
+    "formattedAddress": "[ENRICHED] Imperial Wharf the Boulevard, Imperial Wharf, 3 The Blvd, London SW6 2UB, United Kingdom"
+  },
+  {
+    "id": "289daf2c-1259-4dec-b6e5-120d2615b9fa",
+    "originalAddress": "1, priory court, Pilgrim St, London EC4V 6DE, United Kingdom",
+    "originalCity": "Londres",
+    "formattedAddress": "[ENRICHED] 1, priory court, Pilgrim St, London EC4V 6DE, United Kingdom"
+  },
+  {
+    "id": "df065041-45af-4c13-bce8-2124d45728ea",
+    "originalAddress": "10036 326 W 47th St, New York, NY 10036, United States",
+    "originalCity": "New York",
+    "formattedAddress": "[ENRICHED] 10036 326 W 47th St, New York, NY 10036, United States"
+  },
+  {
+    "id": "61925f64-6e30-48bd-a0df-23a046d9c3a6",
+    "originalAddress": "Riverside, Park South, W 70th St #500, New York, NY 10069, United States",
+    "originalCity": "New York",
+    "formattedAddress": "[ENRICHED] Riverside, Park South, W 70th St #500, New York, NY 10069, United States"
+  },
+  {
+    "id": "140259eb-58e7-4c0e-b2a1-390bd55f39a7",
+    "originalAddress": "84 E 10th St 2nd FL, New York, NY 10003, United States",
+    "originalCity": "New York",
+    "formattedAddress": "[ENRICHED] 84 E 10th St 2nd FL, New York, NY 10003, United States"
+  },
+  {
+    "id": "60a365a3-b704-4a83-a3d6-cd888dedd66d",
+    "originalAddress": "441 9th Ave Suite 101, New York, NY 10001, United States",
+    "originalCity": "New York",
+    "formattedAddress": "[ENRICHED] 441 9th Ave Suite 101, New York, NY 10001, United States"
+  },
+  {
+    "id": "87df16a3-7efe-4546-adf9-e02a5fcb3948",
+    "originalAddress": "70 Pine St 64th Floor, New York, NY 10005, United States",
+    "originalCity": "New York",
+    "formattedAddress": "[ENRICHED] 70 Pine St 64th Floor, New York, NY 10005, United States"
+  },
+  {
+    "id": "c75f591d-3714-4d21-b377-d28bde49f3a0",
+    "originalAddress": "3 Mitchell Pl 26th floor, New York, NY 10017, United States",
+    "originalCity": "New York",
+    "formattedAddress": "[ENRICHED] 3 Mitchell Pl 26th floor, New York, NY 10017, United States"
+  },
+  {
+    "id": "c417d818-66c7-40c6-9a9f-9497af0fca27",
+    "originalAddress": "180 Orchard St 15th floor, New York, NY 10002, United States",
+    "originalCity": "New York",
+    "formattedAddress": "[ENRICHED] 180 Orchard St 15th floor, New York, NY 10002, United States"
+  },
+  {
+    "id": "8bf1e11c-e483-4545-86b7-223a77873314",
+    "originalAddress": "125-17 Rockaway Blvd, Jamaica, NY 11420, United States",
+    "originalCity": "New York",
+    "formattedAddress": "[ENRICHED] 125-17 Rockaway Blvd, Jamaica, NY 11420, United States"
+  },
+  {
+    "id": "0892747e-46c5-4402-bd8c-1a4a5a9ace4c",
+    "originalAddress": "485 7th Ave 18th floor, New York, NY 10018, United States",
+    "originalCity": "New York",
+    "formattedAddress": "[ENRICHED] 485 7th Ave 18th floor, New York, NY 10018, United States"
+  },
+  {
+    "id": "343d8d6e-486e-40aa-9059-1a40e5d3d242",
+    "originalAddress": "Between 5th & 6th, 70 W 36th St., New York, NY 10018, United States",
+    "originalCity": "New York",
+    "formattedAddress": "[ENRICHED] Between 5th & 6th, 70 W 36th St., New York, NY 10018, United States"
+  },
+  {
+    "id": "08c86fe0-a5bf-4719-896b-094c25cd1292",
+    "originalAddress": "Beach In Fort Washington Park, Hudson River Greenway, New York, NY 10032, United States",
+    "originalCity": "New York",
+    "formattedAddress": "[ENRICHED] Beach In Fort Washington Park, Hudson River Greenway, New York, NY 10032, United States"
+  },
+  {
+    "id": "3f8f32ff-44ed-4d70-87fa-1d17c7926053",
+    "originalAddress": "Center Rd, Breezy Point, NY 11697, United States",
+    "originalCity": "New York",
+    "formattedAddress": "[ENRICHED] Center Rd, Breezy Point, NY 11697, United States"
+  },
+  {
+    "id": "1dce5507-79f2-4ce4-8a13-f7ae83f4d63a",
+    "originalAddress": "The People's Beach at Jacob Riis Park, 157 Rockaway Beach Blvd, Queens, NY 11694, United States",
+    "originalCity": "New York",
+    "formattedAddress": "[ENRICHED] The People's Beach at Jacob Riis Park, 157 Rockaway Beach Blvd, Queens, NY 11694, United States"
+  },
+  {
+    "id": "c442af0f-5e2a-45dd-a295-c51862d041a9",
+    "originalAddress": "Rockaway Beach, Boardwalk, Far Rockaway, NY 11693, United States",
+    "originalCity": "New York",
+    "formattedAddress": "[ENRICHED] Rockaway Beach, Boardwalk, Far Rockaway, NY 11693, United States"
+  },
+  {
+    "id": "d9570206-2abe-48d5-b348-6e3d30f4bf1e",
+    "originalAddress": "Rockaway Beach Boardwalk, Arverne, NY 11692, United States",
+    "originalCity": "New York",
+    "formattedAddress": "[ENRICHED] Rockaway Beach Boardwalk, Arverne, NY 11692, United States"
+  },
+  {
+    "id": "5beddcbd-ac22-4772-93ed-45c3982f19a8",
+    "originalAddress": "1-12, 1-98 Cross Bay Pkwy, Far Rockaway, NY 11693, United States",
+    "originalCity": "New York",
+    "formattedAddress": "[ENRICHED] 1-12, 1-98 Cross Bay Pkwy, Far Rockaway, NY 11693, United States"
+  },
+  {
+    "id": "02474074-101a-46bc-b064-15b5b1dd6098",
+    "originalAddress": "482 W 43rd St 2nd floor, New York, NY 10036, United States",
+    "originalCity": "New York",
+    "formattedAddress": "[ENRICHED] 482 W 43rd St 2nd floor, New York, NY 10036, United States"
+  },
+  {
+    "id": "91b18863-f92c-45df-891d-a45e285372ce",
+    "originalAddress": "1 E 28th St # 5b, New York, NY 10016, United States",
+    "originalCity": "New York",
+    "formattedAddress": "[ENRICHED] 1 E 28th St # 5b, New York, NY 10016, United States"
+  },
+  {
+    "id": "b89f5f89-0216-4216-abe2-2c018f219c30",
+    "originalAddress": "Union Square W &, E 17th St, New York, NY 10003, United States",
+    "originalCity": "New York",
+    "formattedAddress": "[ENRICHED] Union Square W &, E 17th St, New York, NY 10003, United States"
+  }
+]

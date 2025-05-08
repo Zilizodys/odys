@@ -26,16 +26,12 @@ export default function RestaurantSuggestionsPage() {
   const slotIndex = searchParams.get('slot')
 
   useEffect(() => {
-    console.log('PARAMS URL reçus dans /suggestions/restaurants:', { city, budget, programId, dayIndex, slotIndex })
     const fetchRestaurants = async () => {
       if (!city) {
-        console.log('Ville manquante')
         setError('Ville manquante')
         setLoading(false)
         return
       }
-
-      console.log('Paramètres de recherche:', { city, budget, programId, dayIndex, slotIndex })
 
       try {
         const activitiesByCategory = await getActivitiesByCriteria({
@@ -47,20 +43,15 @@ export default function RestaurantSuggestionsPage() {
           moods: ['food', 'romantic']
         })
         
-        console.log('Activités récupérées par catégorie:', activitiesByCategory)
-        
         // Filtrer pour ne garder que les restaurants
         const allRestaurants = Object.values(activitiesByCategory).flat()
-        console.log('Tous les restaurants:', allRestaurants)
         
         const filteredRestaurants = allRestaurants.filter(
           (activity: Activity) => ['restaurant', 'gastronomie'].includes(activity.category.toLowerCase())
         )
         
-        console.log('Restaurants filtrés:', filteredRestaurants)
         setRestaurants(filteredRestaurants)
       } catch (err) {
-        console.error('Erreur lors de la récupération des restaurants:', err)
         setError('Erreur lors de la récupération des suggestions')
       } finally {
         setLoading(false)

@@ -39,7 +39,6 @@ export default function SummaryPage() {
       if (tempProgramStr) {
         try {
           const tempProgram = JSON.parse(tempProgramStr)
-          console.log('Programme temporaire trouvé:', tempProgram)
           handleSaveProgram(tempProgram)
         } catch (error) {
           console.error('Erreur lors de la récupération du programme temporaire:', error)
@@ -115,7 +114,6 @@ export default function SummaryPage() {
       const { data: { session } } = await client.auth.getSession()
 
       if (!session) {
-        console.log('Pas de session, sauvegarde temporaire et redirection')
         // Sauvegarder le programme temporairement
         localStorage.setItem('tempProgram', JSON.stringify({ ...programToSave, activities: dedupedActivities }))
         const currentUrl = '/summary'
@@ -124,7 +122,6 @@ export default function SummaryPage() {
         return
       }
 
-      console.log('Session trouvée, sauvegarde du programme')
       // 1. Création du programme (sans activities)
       const { data: insertedPrograms, error: programError } = await client
         .from('programs')

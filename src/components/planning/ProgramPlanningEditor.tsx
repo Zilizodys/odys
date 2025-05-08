@@ -37,7 +37,7 @@ export default function ProgramPlanningEditor({ planning, onChange, city, progra
 
     // Vérifier que les indices sont valides
     if ([from.dayIdx, from.slotIdx, to.dayIdx, to.slotIdx].some(x => isNaN(x))) {
-      console.error('Invalid drop indices:', { fromDayIdx: from.dayIdx, fromSlotIdx: from.slotIdx, toDayIdx: to.dayIdx, toSlotIdx: to.slotIdx });
+      // console.error('Invalid drop indices:', { fromDayIdx: from.dayIdx, fromSlotIdx: from.slotIdx, toDayIdx: to.dayIdx, toSlotIdx: to.slotIdx });
       return;
     }
 
@@ -45,7 +45,7 @@ export default function ProgramPlanningEditor({ planning, onChange, city, progra
     if (!planning.days[from.dayIdx] || !planning.days[to.dayIdx] ||
         !planning.days[from.dayIdx].activities[from.slotIdx] || 
         !planning.days[to.dayIdx].activities[to.slotIdx]) {
-      console.error('Invalid day or slot indices');
+      // console.error('Invalid day or slot indices');
       return;
     }
 

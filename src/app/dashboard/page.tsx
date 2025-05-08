@@ -8,11 +8,12 @@ import { Activity } from '@/types/activity'
 import ProgramCard, { ProgramCardProps } from '@/components/ProgramCard'
 import { Program } from '@/types/program'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Destination } from '@/types/destination'
 
 export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
   const [programs, setPrograms] = useState<Program[]>([])
-  const [destinations, setDestinations] = useState<{ city: string, imageurl: string }[]>([])
+  const [destinations, setDestinations] = useState<Destination[]>([])
   const router = useRouter()
   const supabase = createClientComponentClient()
 
@@ -56,36 +57,32 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const fetchDestinations = async () => {
-      console.log('Début du fetch des destinations')
-      
-      // D'abord, vérifions la structure de la table
-      const { data: tableInfo, error: tableError } = await supabase
-        .from('destinations')
-        .select('*')
-        .limit(1)
-      
-      console.log('Structure de la table:', tableInfo)
-      console.log('Erreur table:', tableError)
-
-      // Ensuite, récupérons toutes les destinations
-      const { data, error } = await supabase
-        .from('destinations')
-        .select('city, imageurl')
-      
-      console.log('Erreur complète:', error)
-      console.log('Données brutes des destinations:', data)
-      
-      if (error) {
+      try {
+        const { data, error } = await supabase
+          .from('destinations')
+          .select('city, imageurl')
+          .order('city')
+        
+        if (error) {
+          throw error
+        }
+        
+        if (data) {
+          // Ajouter les images par défaut pour les destinations sans image
+          const destinationsWithImages = data.map(dest => ({
+            ...dest,
+            imageurl: dest.imageurl || defaultCityImages[dest.city.toLowerCase()]
+          }))
+          
+          setDestinations(destinationsWithImages)
+        }
+      } catch (error) {
         console.error('Erreur lors du chargement des destinations:', error)
-        return
-      }
-      
-      if (data) {
-        console.log('Nombre de destinations trouvées:', data.length)
-        console.log('Exemple de destination:', JSON.stringify(data[0], null, 2))
-        setDestinations(data)
+      } finally {
+        setLoading(false)
       }
     }
+
     fetchDestinations()
   }, [])
 
@@ -156,12 +153,6 @@ export default function DashboardPage() {
       d.imageurl || defaultCityImages[normalizeCityName(d.city)] || '/images/activities/Mascot.png'
     ])
   )
-
-  // Logs de débogage
-  useEffect(() => {
-    console.log('Destinations:', destinations)
-    console.log('CityImageMap:', cityImageMap)
-  }, [destinations])
 
   const handleDeleteProgram = async (programId: string) => {
     try {

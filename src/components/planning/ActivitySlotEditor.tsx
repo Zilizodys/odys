@@ -25,13 +25,9 @@ export default function ActivitySlotEditor({ activity, slotIndex, onChange, onAd
   const router = useRouter()
   const [showModal, setShowModal] = useState(false)
 
-  // Log des props reçues pour debug
-  console.log('[DEBUG PROPS] city:', city, 'programId:', programId, 'dayIndex:', dayIndex, 'slotIndex:', slotIndex)
-
   const handleAddRestaurantClick = () => {
     if (city && programId !== undefined && dayIndex !== undefined && slotIndex !== undefined) {
       const url = `/suggestions?type=restaurant&city=${encodeURIComponent(city)}&budget=${budget ?? ''}&program=${programId}&day=${dayIndex}&slot=${slotIndex}`
-      console.log('[DEBUG REDIRECT] Redirection vers :', url)
       router.push(url)
     } else if (onAddRestaurant) {
       onAddRestaurant(slotIndex)
@@ -61,7 +57,6 @@ export default function ActivitySlotEditor({ activity, slotIndex, onChange, onAd
           title="Supprimer"
           onClick={e => {
             e.stopPropagation()
-            console.log('Suppression demandée depuis ActivitySlotEditor')
             if (onDelete) onDelete()
           }}
         >

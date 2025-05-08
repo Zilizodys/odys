@@ -391,7 +391,7 @@ export default function DayPlanEditor({ day, dayIndex, planning, onPlanningChang
                     </button>
                   </div>
                   {/* Droppable toujours monté, contenu conditionnel */}
-                  <Droppable droppableId={`day-${dayIndex}-slot-${numericSlotIdx}`} direction="vertical" type="activity">
+                  <Droppable droppableId={`day-${dayIndex}-slot-${numericSlotIdx}`} direction="vertical" type="activity" isDropDisabled={false} isCombineEnabled={false}>
                     {(provided, snapshot) => (
                       <div
                         ref={provided.innerRef}
@@ -428,7 +428,6 @@ export default function DayPlanEditor({ day, dayIndex, planning, onPlanningChang
                                 budget={budget}
                                 onDelete={() => {
                                   if (isDragging) return
-                                  console.log('Suppression exécutée dans DayPlanEditor', { activity, activityIdx, slotIdx: numericSlotIdx });
                                   const newActivities = [...slot.activities];
                                   newActivities.splice(activityIdx, 1);
                                   const newDay = { ...day, activities: [...day.activities] };

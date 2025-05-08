@@ -3,6 +3,7 @@ import { useState } from 'react'
 import ImageWithFallback from '@/components/ui/ImageWithFallback'
 import { Activity } from '@/types/activity'
 import { FiX, FiHeart } from 'react-icons/fi'
+import CategoryChips from './CategoryChips'
 
 interface ActivityCardProps {
   activity: Activity

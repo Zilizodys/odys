@@ -44,7 +44,7 @@ class Cache {
           }
         }
       } catch (error) {
-        console.warn('Erreur lors du nettoyage du cache localStorage:', error);
+        // console.warn('Erreur lors du nettoyage du cache localStorage:', error);
       }
     }
   }
@@ -56,7 +56,7 @@ class Cache {
       if (!item) return null;
       return JSON.parse(item);
     } catch (error) {
-      console.warn('Erreur lors de la lecture du cache localStorage:', error);
+      // console.warn('Erreur lors de la lecture du cache localStorage:', error);
       return null;
     }
   }
@@ -66,7 +66,7 @@ class Cache {
     try {
       localStorage.setItem(key, JSON.stringify(value));
     } catch (error) {
-      console.warn('Erreur lors de l\'écriture dans le cache localStorage:', error);
+      // console.warn('Erreur lors de l\'écriture dans le cache localStorage:', error);
     }
   }
 
@@ -116,7 +116,7 @@ class Cache {
         try {
           localStorage.removeItem(`cache:${key}`);
         } catch (error) {
-          console.warn('Erreur lors de la suppression du cache localStorage:', error);
+          // console.warn('Erreur lors de la suppression du cache localStorage:', error);
         }
       }
       return null;
@@ -132,7 +132,7 @@ class Cache {
       try {
         localStorage.removeItem(`cache:${key}`);
       } catch (error) {
-        console.warn('Erreur lors de la suppression du cache localStorage:', error);
+        // console.warn('Erreur lors de la suppression du cache localStorage:', error);
       }
     }
   }
@@ -151,7 +151,7 @@ class Cache {
           }
         }
       } catch (error) {
-        console.warn('Erreur lors du nettoyage du cache localStorage:', error);
+        // console.warn('Erreur lors du nettoyage du cache localStorage:', error);
       }
     }
   }

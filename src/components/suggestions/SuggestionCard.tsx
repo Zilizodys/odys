@@ -3,6 +3,7 @@
 import { motion, PanInfo, useAnimation } from 'framer-motion'
 import { useEffect } from 'react'
 import { Suggestion } from '@/types/suggestion'
+import CategoryChips from './CategoryChips'
 
 interface SuggestionCardProps {
   suggestion: Suggestion
@@ -43,6 +44,13 @@ export default function SuggestionCard({ suggestion, onSwipe, isTop }: Suggestio
       animate={controls}
       initial={{ scale: 1 }}
     >
+      <div className="mb-2">
+        <CategoryChips
+          categories={[suggestion.category]}
+          activeCategory={suggestion.category}
+          onSelect={() => {}}
+        />
+      </div>
       <div className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden shadow-xl">
         <img
           src={suggestion.image || `https://placehold.co/600x400/e4e4e7/1f2937?text=${encodeURIComponent(suggestion.title)}`}

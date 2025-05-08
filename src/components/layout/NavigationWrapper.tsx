@@ -10,10 +10,11 @@ export default function NavigationWrapper({
 }) {
   const pathname = usePathname()
   const isProgramPage = pathname?.startsWith('/program/')
+  const isGeneratePage = pathname === '/generate'
 
   return (
     <>
-      {!isProgramPage && <Header />}
+      {!isProgramPage && !isGeneratePage && <Header />}
       {children}
     </>
   )

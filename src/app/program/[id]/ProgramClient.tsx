@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { Activity } from '@/types/activity'
 import { FiMapPin, FiClock, FiDollarSign, FiUsers, FiArrowLeft, FiPlus } from 'react-icons/fi'
@@ -17,6 +17,7 @@ import { Pencil } from 'lucide-react'
 import { Dialog } from '@headlessui/react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useMotionValue, useAnimation } from 'framer-motion'
+import ProgramMap from '@/components/program/ProgramMap'
 
 interface Program {
   id: string
@@ -178,17 +179,188 @@ const BUDGET_OPTIONS = [
   { value: 3, label: 'Luxe' },
 ]
 
-export default function ProgramClient({ initialProgram }: { initialProgram: Program }) {
+export default function ProgramClient({ programId }: { programId: string }) {
   const router = useRouter()
-  const [program, setProgram] = useState<Program>(initialProgram)
+  const [program, setProgram] = useState<Program | null>(null)
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const [view, setView] = useState<'planning' | 'activities'>('planning')
   const [showEditModal, setShowEditModal] = useState(false)
   const [showStickyCTA, setShowStickyCTA] = useState(false)
   const [hasReachedBottom, setHasReachedBottom] = useState(false)
   const lastScrollY = useRef(0)
   const [isSaving, setIsSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [isMapFullscreen, setIsMapFullscreen] = useState(false)
+
+  // Fetch du programme côté client
+  useEffect(() => {
+    async function fetchProgram() {
+      setIsLoading(true)
+      setError(null)
+      try {
+        const supabase = createClient()
+        const { data: program, error: programError } = await supabase
+          .from('programs')
+          .select(`
+            id,
+            user_id,
+            title,
+            description,
+            destination,
+            start_date,
+            end_date,
+            budget,
+            companion,
+            created_at,
+            updated_at,
+            coverImage,
+            moods,
+            program_activities!inner (
+              activity:activities (
+                id,
+                title,
+                description,
+                price,
+                address,
+                imageurl,
+                category,
+                city
+              )
+            )
+          `)
+          .eq('id', programId)
+          .single()
+        if (programError || !program) {
+          setError('Programme introuvable ou erreur de chargement.')
+          setIsLoading(false)
+          return
+        }
+        const activities = (program.program_activities || []).map((pa: any) => pa.activity)
+        let coverImage = program.coverImage
+        if (!coverImage) {
+          const { data: destData } = await supabase
+            .from('destinations')
+            .select('city, imageurl')
+            .eq('city', program.destination)
+            .single()
+          coverImage = (destData && 'imageurl' in destData) ? destData.imageurl : '/images/activities/Mascot.png'
+        }
+        setProgram({
+          id: program.id,
+          title: program.title,
+          description: program.description,
+          activities,
+          imageurl: coverImage || '/images/activities/Mascot.png',
+          created_at: program.created_at,
+          updated_at: program.updated_at,
+          destination: program.destination,
+          start_date: program.start_date,
+          end_date: program.end_date,
+          budget: program.budget,
+          companion: program.companion,
+          coverImage,
+          moods: program.moods || [],
+          cover_image: program.coverImage || null
+        })
+        setIsLoading(false)
+      } catch (e) {
+        setError('Erreur lors du chargement du programme.')
+        setIsLoading(false)
+      }
+    }
+    fetchProgram()
+  }, [programId])
+
+  // Optimiser le rendu initial avec useMemo
+  const groupedActivities = useMemo(() => 
+    program ? groupActivitiesByCategory(program.activities) : {},
+    [program]
+  )
+
+  const [planning, setPlanning] = useState<ProgramPlanning>({ days: [] });
+
+  useEffect(() => {
+    if (program) {
+      setPlanning(
+        autoAssignActivities(
+          program.activities,
+          program.start_date,
+          program.end_date
+        )
+      );
+    }
+  }, [program]);
+
+  const programActivities = useMemo(() => 
+    getProgramActivities(planning),
+    [planning]
+  )
+
+  // Optimiser les fonctions avec useCallback
+  const handleDeleteActivity = useCallback(async (activityId: string) => {
+    try {
+      setIsLoading(true)
+      const supabase = createClient()
+      if (!supabase) {
+        throw new Error('Client Supabase non initialisé')
+      }
+
+      const { error: deleteError } = await supabase
+        .from('program_activities')
+        .delete()
+        .eq('program_id', program?.id)
+        .eq('activity_id', activityId)
+
+      if (deleteError) {
+        throw deleteError
+      }
+
+      setProgram(prev => ({
+        ...prev!,
+        activities: prev!.activities.filter(a => a.id !== activityId)
+      }))
+    } catch (error) {
+      console.error('Erreur lors de la suppression de l\'activité:', error)
+      alert('Une erreur est survenue lors de la suppression de l\'activité.')
+    } finally {
+      setIsLoading(false)
+    }
+  }, [program?.id])
+
+  const handleSaveProgram = useCallback(async () => {
+    setIsSaving(true)
+    try {
+      const supabase = createClient()
+      const { error: programError } = await supabase
+        .from('programs')
+        .update({
+          start_date: program?.start_date,
+          end_date: program?.end_date,
+          budget: program?.budget,
+          companion: program?.companion,
+        })
+        .eq('id', program?.id)
+      if (programError) throw programError
+      router.push('/dashboard')
+    } catch (e) {
+      alert('Erreur lors de la sauvegarde du programme')
+    } finally {
+      setIsSaving(false)
+    }
+  }, [program, router])
+
+  // Gérer les erreurs de chargement des images
+  const handleImageError = useCallback((e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    const img = e.target as HTMLImageElement
+    img.src = '/images/activities/Mascot.png'
+  }, [])
+
+  // Optimiser le chargement des images
+  const coverImageUrl = useMemo(() => {
+    if (!program) return getDestinationImage('').url;
+    return program.coverImage || (program as any).cover_image || getDestinationImage(program.destination).url;
+  }, [program]);
 
   // Masquer le header global sur la page programme
   useEffect(() => {
@@ -208,15 +380,6 @@ export default function ProgramClient({ initialProgram }: { initialProgram: Prog
       }
     }
   }, [])
-
-  // Générer le planning à partir des activités et des dates
-  const [planning, setPlanning] = useState<ProgramPlanning>(() =>
-    autoAssignActivities(
-      program.activities,
-      program.start_date,
-      program.end_date
-    )
-  )
 
   // Ajout : synchronisation du restaurant sélectionné
   useEffect(() => {
@@ -266,69 +429,24 @@ export default function ProgramClient({ initialProgram }: { initialProgram: Prog
     return () => window.removeEventListener('scroll', handleScroll)
   }, [hasReachedBottom])
 
-  const handleDeleteActivity = async (activityId: string) => {
-    try {
-      setIsLoading(true)
-      const supabase = createClient()
-      if (!supabase) {
-        throw new Error('Client Supabase non initialisé')
-      }
-
-      const { error: deleteError } = await supabase
-        .from('program_activities')
-        .delete()
-        .eq('program_id', program.id)
-        .eq('activity_id', activityId)
-
-      if (deleteError) {
-        throw deleteError
-      }
-
-      setProgram(prev => ({
-        ...prev,
-        activities: prev.activities.filter(a => a.id !== activityId)
-      }))
-    } catch (error) {
-      console.error('Erreur lors de la suppression de l\'activité:', error)
-      alert('Une erreur est survenue lors de la suppression de l\'activité.')
-    } finally {
-      setIsLoading(false)
-    }
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4">Une erreur est survenue</h2>
+          <p className="text-gray-600 mb-8">{error}</p>
+          <button
+            onClick={() => router.push('/dashboard')}
+            className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+          >
+            Retour au tableau de bord
+          </button>
+        </div>
+      </div>
+    )
   }
 
-  const groupedActivities = groupActivitiesByCategory(program.activities)
-  const programActivities = getProgramActivities(planning)
-
-  // Fonction de sauvegarde du programme
-  const handleSaveProgram = async () => {
-    setIsSaving(true)
-    try {
-      const supabase = createClient()
-      // Met à jour les infos du programme
-      const { error: programError } = await supabase
-        .from('programs')
-        .update({
-          start_date: program.start_date,
-          end_date: program.end_date,
-          budget: program.budget,
-          companion: program.companion,
-        })
-        .eq('id', program.id)
-      if (programError) throw programError
-      // Met à jour le planning (exemple simplifié, à adapter selon ta structure)
-      // Ici, on suppose que tu veux mettre à jour les activités du programme
-      // (à adapter si tu as une table de jointure ou une logique différente)
-      // ...
-      // Redirige vers le dashboard après succès
-      router.push('/dashboard')
-    } catch (e) {
-      alert('Erreur lors de la sauvegarde du programme')
-    } finally {
-      setIsSaving(false)
-    }
-  }
-
-  if (isLoading) {
+  if (isLoading || !program) {
     return (
       <div className="min-h-screen bg-gray-50 pb-24">
         <div className="container mx-auto px-4 py-8">
@@ -349,12 +467,13 @@ export default function ProgramClient({ initialProgram }: { initialProgram: Prog
       {/* Cover full width, collée en haut */}
       <div className="relative w-full h-[390px] sm:h-[510px]">
         <Image
-          src={program.coverImage || (program as any).cover_image || getDestinationImage(program.destination).url}
+          src={coverImageUrl}
           alt={program.title || getDestinationImage(program.destination).alt}
           fill
           sizes="100vw"
           style={{ objectFit: 'cover' }}
           priority
+          onError={handleImageError}
         />
         {/* Overlay sombre pour lisibilité */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
@@ -398,7 +517,7 @@ export default function ProgramClient({ initialProgram }: { initialProgram: Prog
             <FiDollarSign className="text-indigo-500" />
             <div>
               <p className="text-sm text-gray-500">Budget</p>
-              <p className="font-medium">{program.budget}€</p>
+              <p className="font-medium">{(BUDGET_OPTIONS.find(option => option.value === program.budget)?.label) || 'Budget inconnu'}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -492,60 +611,90 @@ export default function ProgramClient({ initialProgram }: { initialProgram: Prog
                 onSubmit={e => {
                   e.preventDefault()
                   const form = e.target as HTMLFormElement
-                  const start_date = (form.elements.namedItem('start_date') as HTMLInputElement).value
-                  const end_date = (form.elements.namedItem('end_date') as HTMLInputElement).value
-                  const budget = Number((form.elements.namedItem('budget') as HTMLSelectElement).value)
-                  const companion = (form.elements.namedItem('companion') as HTMLSelectElement).value
-                  setProgram(prev => ({ ...prev, start_date, end_date, budget, companion }))
+                  const titleInput = form.elements.namedItem('title') as HTMLInputElement | null;
+                  const startDateInput = form.elements.namedItem('start_date') as HTMLInputElement | null;
+                  const endDateInput = form.elements.namedItem('end_date') as HTMLInputElement | null;
+                  const budgetInput = form.elements.namedItem('budget') as HTMLSelectElement | null;
+                  const companionInput = form.elements.namedItem('companion') as HTMLSelectElement | null;
+
+                  if (!titleInput || !startDateInput || !endDateInput || !budgetInput || !companionInput) {
+                    alert("Veuillez remplir tous les champs du formulaire.");
+                    return;
+                  }
+
+                  const title = titleInput.value;
+                  const start_date = startDateInput.value;
+                  const end_date = endDateInput.value;
+                  const budget = Number(budgetInput.value);
+                  const companion = companionInput.value;
+                  setProgram(prev => ({ ...prev!, title, start_date, end_date, budget, companion }))
                   setShowEditModal(false)
                 }}
                 className="flex flex-col gap-4"
               >
+                <div className="material-field">
+                  <input
+                    type="text"
+                    name="title"
+                    defaultValue={program.title || ''}
+                    className="material-input"
+                    placeholder=" "
+                  />
+                  <label className="material-label">Titre du programme</label>
+                </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Dates</label>
                   <div className="flex flex-col sm:flex-row gap-2 w-full">
-                    <input
-                      type="date"
-                      name="start_date"
-                      defaultValue={program.start_date}
-                      className="border rounded-lg px-3 py-2 w-full"
-                      required
-                    />
+                    <div className="material-field w-full">
+                      <input
+                        type="date"
+                        name="start_date"
+                        defaultValue={program.start_date}
+                        className="material-input"
+                        required
+                        placeholder=" "
+                      />
+                      <label className="material-label">Début</label>
+                    </div>
                     <span className="self-center text-gray-400 hidden sm:inline">→</span>
-                    <input
-                      type="date"
-                      name="end_date"
-                      defaultValue={program.end_date}
-                      className="border rounded-lg px-3 py-2 w-full"
-                      required
-                    />
+                    <div className="material-field w-full">
+                      <input
+                        type="date"
+                        name="end_date"
+                        defaultValue={program.end_date}
+                        className="material-input"
+                        required
+                        placeholder=" "
+                      />
+                      <label className="material-label">Fin</label>
+                    </div>
                   </div>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Budget</label>
+                <div className="material-field">
                   <select
                     name="budget"
                     defaultValue={program.budget}
-                    className="border rounded-lg px-3 py-2 w-full"
+                    className="material-input"
                     required
                   >
                     {BUDGET_OPTIONS.map(option => (
                       <option key={option.value} value={option.value}>{option.label}</option>
                     ))}
                   </select>
+                  <label className="material-label">Budget</label>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Voyageurs</label>
+                <div className="material-field">
                   <select
                     name="companion"
                     defaultValue={program.companion}
-                    className="border rounded-lg px-3 py-2 w-full"
+                    className="material-input"
                     required
                   >
                     {COMPANION_OPTIONS.map(option => (
                       <option key={option.value} value={option.value}>{option.label}</option>
                     ))}
                   </select>
+                  <label className="material-label">Voyageurs</label>
                 </div>
                 <div className="flex flex-row gap-2 mt-6 w-full">
                   <button
@@ -562,6 +711,49 @@ export default function ProgramClient({ initialProgram }: { initialProgram: Prog
                     Enregistrer
                   </button>
                 </div>
+                <style jsx>{`
+                  .material-field {
+                    position: relative;
+                    margin-bottom: 1.5rem;
+                  }
+                  .material-input {
+                    width: 100%;
+                    border: none;
+                    border-bottom: 2px solid #cbd5e1;
+                    outline: none;
+                    font-size: 1rem;
+                    padding: 1.1rem 0 0.5rem 0;
+                    background: transparent;
+                    transition: border-color 0.2s;
+                    box-shadow: none;
+                  }
+                  .material-input:focus {
+                    border: none;
+                    border-bottom: 2px solid #6366f1;
+                    box-shadow: none;
+                  }
+                  .material-label {
+                    position: absolute;
+                    left: 0;
+                    top: 1.1rem;
+                    color: #64748b;
+                    font-size: 1rem;
+                    pointer-events: none;
+                    transition: 0.2s cubic-bezier(0.4,0,0.2,1);
+                  }
+                  .material-input:focus + .material-label,
+                  .material-input:not(:placeholder-shown) + .material-label {
+                    top: -0.7rem;
+                    left: 0;
+                    font-size: 0.85rem;
+                    color: #6366f1;
+                    background: white;
+                    padding: 0 0.2rem;
+                  }
+                  select.material-input {
+                    padding-right: 2rem;
+                  }
+                `}</style>
               </form>
             </motion.div>
           </div>
@@ -596,6 +788,23 @@ export default function ProgramClient({ initialProgram }: { initialProgram: Prog
         >
           {isSaving ? 'Sauvegarde en cours...' : 'Sauvegarder les changements'}
         </button>
+      </div>
+
+      {/* Section des activités */}
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold mb-4">Carte des activités</h2>
+          <div 
+            className="cursor-pointer"
+            onClick={() => setIsMapFullscreen(true)}
+          >
+            <ProgramMap 
+              activities={program?.activities || []} 
+              isFullscreen={isMapFullscreen}
+              onClose={() => setIsMapFullscreen(false)}
+            />
+          </div>
+        </div>
       </div>
     </div>
   )

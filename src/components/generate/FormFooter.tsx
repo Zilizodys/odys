@@ -18,8 +18,8 @@ export default function FormFooter({
   isLoading
 }: FormFooterProps) {
   return (
-    <div className="fixed bottom-16 left-0 right-0 z-40 bg-white border-t border-gray-100 shadow-sm">
-      <div className="max-w-2xl mx-auto px-4 py-3 flex gap-4">
+    <div className="w-full bg-white border-t border-gray-100 shadow-sm">
+      <div className="max-w-2xl mx-auto px-4 py-2 flex gap-4">
         <button
           onClick={onPrevious}
           className={`w-1/2 px-6 py-3 rounded-lg font-medium transition-colors text-base ${

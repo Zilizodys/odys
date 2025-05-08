@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { FiMapPin, FiClock, FiDollarSign, FiUsers, FiTrash2, FiShare2 } from 'react-icons/fi'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Activity } from '@/types/activity'
 import { COMPANION_OPTIONS, BUDGET_OPTIONS } from '@/types/form'
 import Image from 'next/image'
@@ -171,20 +172,38 @@ const ProgramCard = ({ program, onDelete, onClick }: ProgramCardProps) => {
       {/* Fond swipe to delete, FIXE */}
       <div className="relative h-[500px] rounded-3xl overflow-hidden shadow-sm">
         <div className="absolute inset-y-0 right-0 w-[120px] flex flex-col items-center justify-center gap-4 bg-gray-50 rounded-r-3xl z-10">
-          <button
-            onClick={handleShare}
-            className="w-12 h-12 flex items-center justify-center rounded-full bg-white shadow hover:bg-indigo-50 border border-gray-200 transition-colors"
-            aria-label="Partager le programme"
-          >
-            <FiShare2 size={24} className="text-indigo-400" />
-          </button>
-          <button
-            onClick={handleDelete}
-            className="w-12 h-12 flex items-center justify-center rounded-full bg-white shadow hover:bg-red-50 border border-gray-200 transition-colors"
-            aria-label="Supprimer le programme"
-          >
-            <FiTrash2 size={24} className="text-red-400" />
-          </button>
+          <AnimatePresence>
+            {offsetX < 0 && (
+              <>
+                <motion.button
+                  key="share"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  transition={{ duration: 0.3, delay: 0.05 }}
+                  whileHover={{ scale: 1.1, boxShadow: "0 4px 16px rgba(80,80,180,0.10)" }}
+                  onClick={handleShare}
+                  className="w-12 h-12 flex items-center justify-center rounded-full bg-white shadow hover:bg-indigo-50 border border-gray-200 transition-colors"
+                  aria-label="Partager le programme"
+                >
+                  <FiShare2 size={24} className="text-indigo-400" />
+                </motion.button>
+                <motion.button
+                  key="delete"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  transition={{ duration: 0.3, delay: 0.15 }}
+                  whileHover={{ scale: 1.1, boxShadow: "0 4px 16px rgba(255,0,0,0.10)" }}
+                  onClick={handleDelete}
+                  className="w-12 h-12 flex items-center justify-center rounded-full bg-white shadow hover:bg-red-50 border border-gray-200 transition-colors"
+                  aria-label="Supprimer le programme"
+                >
+                  <FiTrash2 size={24} className="text-red-400" />
+                </motion.button>
+              </>
+            )}
+          </AnimatePresence>
         </div>
         {/* Card swipeable : image + details */}
         <div
@@ -237,7 +256,7 @@ const ProgramCard = ({ program, onDelete, onClick }: ProgramCardProps) => {
               <div>
                 <div className="text-gray-500 text-sm">Budget</div>
                 <div className="text-gray-900 font-medium">
-                  {budgetOption ? `${budgetOption.label}` : `${program.budget}€`}
+                  {budgetOption?.label || 'Budget inconnu'}
                   {estimatedBudget > 0 && (
                     <span className="text-gray-500 text-sm"> (estimé : {estimatedBudget}€)</span>
                   )}

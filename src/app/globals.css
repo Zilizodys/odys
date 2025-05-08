@@ -292,3 +292,9 @@ body[data-dashboard-page='true'] header, body[data-dashboard-page='true'] .Heade
 body[data-suggestions-page='true'] header, body[data-suggestions-page='true'] .Header {
   display: none !important;
 }
+
+/* Suppression du carré autour de la première date sélectionnée dans DayPicker */
+.rdp-day_range_start {
+  box-shadow: none !important;
+  border: none !important;
+}

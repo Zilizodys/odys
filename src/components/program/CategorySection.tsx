@@ -1,3 +1,5 @@
+'use client'
+
 import { useState } from 'react'
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi'
 import { Activity } from '@/types/activity'
@@ -58,7 +60,7 @@ export default function CategorySection({
 
       {isExpanded && (
         <div className="border-t border-gray-100">
-          <div className="p-4 space-y-3">
+          <div className="p-4 space-y-3" style={{ overflow: 'visible' }}>
             {activities.map((activity) => {
               const programActivity = isActivityInProgram(activity.id)
               return (

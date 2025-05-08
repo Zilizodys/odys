@@ -28,7 +28,7 @@ export default function StepWrapper({ children, title, direction = 'right' }: St
 
   return (
     <motion.div
-      className="w-full p-6"
+      className="w-full p-6 px-4"
       custom={direction}
       variants={variants}
       initial="enter"

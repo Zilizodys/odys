@@ -1,5 +1,5 @@
-import { motion, PanInfo, useAnimation } from 'framer-motion'
-import { Activity } from '@/types/activity'
+import { motion, PanInfo, useAnimation, AnimatePresence } from 'framer-motion'
+import { Activity, getActivityImageUrl } from '@/types/activity'
 import { FiMapPin, FiClock, FiDollarSign, FiTrash2, FiLink } from 'react-icons/fi'
 import { useState, useRef } from 'react'
 import Link from 'next/link'
@@ -27,11 +27,13 @@ export default function SwipeableActivityCard({
   const [isOpen, setIsOpen] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const startXRef = useRef(0)
+  const [offsetX, setOffsetX] = useState(0)
 
   const handleDragEnd = async (event: any, info: PanInfo) => {
     setIsDragging(false)
     const offset = info.offset.x
     const velocity = info.velocity.x
+    setOffsetX(offset)
 
     if (offset < -50) {
       await controls.start({ x: -100 }) // Révéler le bouton de suppression
@@ -76,28 +78,67 @@ export default function SwipeableActivityCard({
 
   return (
     <div className="relative">
-      <div 
-        className="absolute right-0 top-0 bottom-0 w-[100px] h-full bg-red-500 flex items-center justify-center cursor-pointer rounded-r-xl"
-        onClick={handleDeleteClick}
-      >
-        <FiTrash2 className="w-6 h-6 text-white" />
-      </div>
+      {/* Fond delete animé, sous la card */}
+      <AnimatePresence>
+        {offsetX < -10 && (
+          <motion.div
+            key="delete-bg"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.3 }}
+            className="absolute right-0 top-0 bottom-0 w-[100px] h-full flex items-center justify-center z-0"
+          >
+            <button
+              onClick={handleDeleteClick}
+              className="w-12 h-12 flex items-center justify-center rounded-full bg-white shadow hover:bg-red-50 border border-gray-200 transition-colors"
+              aria-label="Supprimer l'activité"
+            >
+              <FiTrash2 size={24} className="text-red-400" />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
       
       <motion.div
         className="relative bg-white rounded-xl overflow-hidden z-10 border border-gray-100 cursor-pointer transition-transform hover:scale-[1.02]"
         animate={controls}
-        drag={isDragging ? "x" : false}
-        dragConstraints={{ left: isOpen ? -100 : 0, right: 0 }}
-        dragElastic={0.1}
+        drag="x"
+        dragConstraints={{ left: -100, right: 0 }}
+        dragElastic={0.15}
+        dragListener={true}
+        dragDirectionLock={true}
+        style={{
+          touchAction: 'pan-y',
+          background: offsetX < -10 ? '#ffeaea' : 'white', // fond rouge clair si drag
+          transition: 'background 0.2s'
+        }}
+        onDrag={(e, info) => {
+          console.log('drag offsetX:', info.offset.x);
+          if (info.offset.x > 0) {
+            setOffsetX(0);
+          } else {
+            setOffsetX(info.offset.x);
+          }
+        }}
         onDragEnd={handleDragEnd}
         initial={{ x: 0 }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onClick={handleClick}
       >
+        {activity.imageurl && (
+          <div className="w-full h-32 relative mb-2">
+            <img
+              src={getActivityImageUrl(activity.imageurl)}
+              alt={activity.title}
+              className="object-cover w-full h-full rounded-t-xl"
+            />
+          </div>
+        )}
         <div className="p-5 flex flex-col gap-2">
           <div className="flex justify-between items-start">
-            <h3 className="text-xs font-semibold text-gray-900 mb-1 truncate">{activity.title}</h3>
+            <h3 className="text-base font-semibold text-gray-900 mb-1 truncate">{activity.title}</h3>
             {isUsedInProgram && programId && (
               <div 
                 className="flex items-center gap-1 px-2 py-1 bg-indigo-100 text-indigo-700 text-xs rounded-full"
@@ -130,4 +171,4 @@ export default function SwipeableActivityCard({
       </motion.div>
     </div>
   )
-} 
+}

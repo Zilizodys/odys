@@ -7,6 +7,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import ReactDOM from 'react-dom'
 import LoginForm from '@/components/auth/LoginForm'
+import { UserCog, Route, Users, Timer, ClipboardList, Sparkles, Briefcase } from 'lucide-react'
 
 // Composant pour la modale de connexion
 function LoginModal({ open, onClose }: { open: boolean, onClose: () => void }) {
@@ -80,79 +81,10 @@ const getDestinationImage = (destination: string) => {
   }
 }
 
-// Hook pour scroll horizontal par drag
-function useHorizontalDragScroll() {
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    let isDown = false;
-    let startX = 0;
-    let scrollLeft = 0;
-
-    // Mouse events
-    const onMouseDown = (e: MouseEvent) => {
-      isDown = true;
-      el.classList.add('dragging');
-      startX = e.pageX - el.offsetLeft;
-      scrollLeft = el.scrollLeft;
-    };
-    const onMouseLeave = () => {
-      isDown = false;
-      el.classList.remove('dragging');
-    };
-    const onMouseUp = () => {
-      isDown = false;
-      el.classList.remove('dragging');
-    };
-    const onMouseMove = (e: MouseEvent) => {
-      if (!isDown) return;
-      e.preventDefault();
-      const x = e.pageX - el.offsetLeft;
-      const walk = (x - startX) * 1.5;
-      el.scrollLeft = scrollLeft - walk;
-    };
-
-    // Touch events
-    const onTouchStart = (e: TouchEvent) => {
-      isDown = true;
-      startX = e.touches[0].pageX - el.offsetLeft;
-      scrollLeft = el.scrollLeft;
-    };
-    const onTouchEnd = () => { isDown = false; };
-    const onTouchMove = (e: TouchEvent) => {
-      if (!isDown) return;
-      const x = e.touches[0].pageX - el.offsetLeft;
-      const walk = (x - startX) * 1.5;
-      el.scrollLeft = scrollLeft - walk;
-    };
-
-    el.addEventListener('mousedown', onMouseDown);
-    el.addEventListener('mouseleave', onMouseLeave);
-    el.addEventListener('mouseup', onMouseUp);
-    el.addEventListener('mousemove', onMouseMove);
-    el.addEventListener('touchstart', onTouchStart);
-    el.addEventListener('touchend', onTouchEnd);
-    el.addEventListener('touchmove', onTouchMove);
-
-    return () => {
-      el.removeEventListener('mousedown', onMouseDown);
-      el.removeEventListener('mouseleave', onMouseLeave);
-      el.removeEventListener('mouseup', onMouseUp);
-      el.removeEventListener('mousemove', onMouseMove);
-      el.removeEventListener('touchstart', onTouchStart);
-      el.removeEventListener('touchend', onTouchEnd);
-      el.removeEventListener('touchmove', onTouchMove);
-    };
-  }, []);
-  return ref;
-}
-
 // Carrousel horizontal (plusieurs cartes visibles)
 function PopularDestinations() {
   const [destinationsData, setDestinationsData] = useState<{ city: string, country?: string, imageurl?: string }[]>([])
   const router = useRouter()
-  const scrollRef = useHorizontalDragScroll();
 
   // Liste des destinations populaires (pour l'ordre et le pays)
   const popularList = [
@@ -198,32 +130,27 @@ function PopularDestinations() {
 
   return (
     <section className="mt-8 w-full flex flex-col items-center">
-      <div className="flex items-center justify-between mb-4 w-full px-2">
-        <h2 className="text-xl font-bold">Destinations populaires</h2>
+      <div className="mb-4 w-full">
+        <h2 className="text-xl font-bold text-left pl-6">Destinations populaires</h2>
       </div>
       <div
-        ref={scrollRef}
-        className="w-full scrollbar-hide"
-        style={{
-          overflowX: 'auto',
-          WebkitOverflowScrolling: 'touch',
-          cursor: 'grab',
-        }}
+        className="w-full overflow-x-auto scroll-smooth scrollbar-hide pl-8"
+        style={{ WebkitOverflowScrolling: 'touch' }}
       >
-        <div className="flex gap-6 px-2 pb-2 flex-nowrap" style={{ minWidth: 900 }}>
+        <div className="flex gap-6 pb-2 flex-nowrap" style={{ minWidth: 900 }}>
           {popularList.map((dest, i) => {
             const imgUrl = getImageForCity(dest.city)
             return (
               <div
                 key={dest.city}
-                className="inline-block min-w-[240px] max-w-[280px] bg-white rounded-2xl shadow-sm flex-shrink-0 align-top cursor-pointer hover:shadow-md transition-shadow"
+                className="inline-block min-w-[220px] max-w-[240px] bg-white rounded-2xl shadow-sm flex-shrink-0 align-top cursor-pointer hover:shadow-md transition-shadow border border-gray-100"
                 onClick={() => handleDestinationClick(dest.city)}
               >
-                <div className="relative w-full h-48">
-                  <ImageWithFallback src={imgUrl} alt={`Vue de ${dest.city}`} fill className="object-cover rounded-2xl" priority={i === 0} />
+                <div className="relative w-full h-40 flex items-center justify-center overflow-hidden rounded-t-2xl">
+                  <ImageWithFallback src={imgUrl} alt={`Vue de ${dest.city}`} fill className="object-cover rounded-t-2xl" priority={i === 0} />
                 </div>
                 <div className="p-4 w-full text-left">
-                  <div className="font-bold text-xl">{dest.city}</div>
+                  <div className="font-bold text-lg">{dest.city}</div>
                   <div className="text-gray-500 text-base">{dest.country}</div>
                 </div>
               </div>
@@ -255,12 +182,15 @@ export default function Home() {
   }, [])
 
   return (
-    <div className="bg-white pb-24 flex flex-col">
-      <div className="flex-1 flex flex-col items-center justify-start pt-10 px-4">
-        <img src="/images/Mascot.png" alt="Mascotte Odys" className="w-24 h-24 mb-4" />
-        <p className="text-xl font-semibold text-center mb-8">Quelques questions<br />pour te proposer un programme sur-mesure</p>
+    <div className="bg-gray-50 min-h-screen flex flex-col">
+      <main className="flex-1 flex flex-col items-center justify-start pt-10 px-0">
+        <h1 className="sr-only">Odys - Crée ton voyage sur-mesure</h1>
+        <div className="w-full px-4 flex flex-col items-center">
+          <img src="/images/Mascot.png" alt="Mascotte Odys" className="w-24 h-24 mb-4" />
+          <p className="text-2xl font-bold text-indigo-700 text-center mb-6 w-full">Réponds à quelques questions pour ton voyage idéal.</p>
+        </div>
         <PopularDestinations />
-        <div className="mt-10 w-full flex flex-col items-center gap-4">
+        <div className="mt-10 w-full flex flex-col items-center gap-4 px-4">
           {isLoggedIn ? (
             <button
               className="w-full max-w-xs py-3 px-6 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-lg font-semibold shadow-md transition"
@@ -277,8 +207,59 @@ export default function Home() {
             </button>
           )}
         </div>
-      </div>
+
+        {/* Section Comment ça marche ? */}
+        <section className="mt-16 max-w-3xl w-full mx-auto text-center px-8">
+          <h2 className="text-2xl font-bold mb-8 text-indigo-700">Comment ça marche&nbsp;?</h2>
+          <div className="flex flex-col md:flex-row justify-center gap-8">
+            <div className="bg-white rounded-2xl shadow-md p-6 flex flex-col items-center w-full md:w-1/3 mb-4 md:mb-0">
+              <ClipboardList className="mb-3 w-12 h-12 text-indigo-700" />
+              <p className="font-semibold text-indigo-700 mb-1">1. Réponds à quelques questions</p>
+            </div>
+            <div className="bg-white rounded-2xl shadow-md p-6 flex flex-col items-center w-full md:w-1/3 mb-4 md:mb-0">
+              <Sparkles className="mb-3 w-12 h-12 text-indigo-700" />
+              <p className="font-semibold text-indigo-700 mb-1">2. L'algorithme Odys crée ton programme</p>
+            </div>
+            <div className="bg-white rounded-2xl shadow-md p-6 flex flex-col items-center w-full md:w-1/3">
+              <Briefcase className="mb-3 w-12 h-12 text-indigo-700" />
+              <p className="font-semibold text-indigo-700 mb-1">3. Pars l'esprit léger&nbsp;!</p>
+            </div>
+          </div>
+        </section>
+
+        {/* Section Témoignages */}
+        <section className="mt-16 max-w-3xl w-full mx-auto text-center">
+          <h2 className="text-2xl font-bold mb-8 text-indigo-700">Ils ont voyagé avec Odys</h2>
+          <div className="flex flex-col md:flex-row gap-6 justify-center">
+            <blockquote className="bg-white rounded-2xl shadow-md p-6 flex flex-col items-center max-w-xs mx-auto">
+              <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center mb-3">
+                <span className="text-indigo-700 font-bold text-xl">J</span>
+              </div>
+              <p className="italic mb-2">“Programme ultra-personnalisé, j'ai adoré chaque activité !”</p>
+              <span className="text-sm text-gray-500">— Julie, Paris</span>
+            </blockquote>
+            <blockquote className="bg-white rounded-2xl shadow-md p-6 flex flex-col items-center max-w-xs mx-auto">
+              <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center mb-3">
+                <span className="text-indigo-700 font-bold text-xl">K</span>
+              </div>
+              <p className="italic mb-2">“Super simple, rapide, et des idées auxquelles je n'aurais jamais pensé.”</p>
+              <span className="text-sm text-gray-500">— Karim, Lyon</span>
+            </blockquote>
+          </div>
+        </section>
+      </main>
       {loginOpen && <LoginModal open={loginOpen} onClose={() => setLoginOpen(false)} />}
+      {/* Footer */}
+      <footer className="w-full bg-white border-t border-gray-200 py-6 mt-12 text-center text-gray-500 text-sm">
+        <div className="container mx-auto flex flex-col md:flex-row justify-between items-center gap-2 px-4">
+          <div>© {new Date().getFullYear()} Odys. Tous droits réservés.</div>
+          <div className="flex gap-4">
+            <a href="/cgu" className="hover:underline">CGU</a>
+            <a href="mailto:contact@odysway.com" className="hover:underline">Contact</a>
+            <a href="https://www.instagram.com/odysway" target="_blank" rel="noopener noreferrer" className="hover:underline">Instagram</a>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }
