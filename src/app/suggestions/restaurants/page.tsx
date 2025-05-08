@@ -9,8 +9,9 @@ import { FormData } from '@/types/form'
 import { getActivitiesByCriteria } from '@/lib/supabase/activities'
 import ImageWithFallback from '@/components/ui/ImageWithFallback'
 import { FiX, FiHeart } from 'react-icons/fi'
+import { Suspense } from 'react'
 
-export default function RestaurantSuggestionsPage() {
+function RestaurantSuggestionsPageInner() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [loading, setLoading] = useState(true)
@@ -223,5 +224,13 @@ export default function RestaurantSuggestionsPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function RestaurantSuggestionsPage() {
+  return (
+    <Suspense>
+      <RestaurantSuggestionsPageInner />
+    </Suspense>
   )
 } 
