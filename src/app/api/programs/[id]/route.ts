@@ -53,7 +53,9 @@ export async function GET(
           address,
           imageurl,
           category,
-          city
+          city,
+          lat,
+          lng
         )
       `)
       .eq('program_id', params.id)
@@ -80,7 +82,9 @@ export async function GET(
           address: pa.activities.address,
           imageurl: pa.activities.imageurl,
           category: pa.activities.category,
-          city: pa.activities.city
+          city: pa.activities.city,
+          lat: pa.activities.lat ?? undefined,
+          lng: pa.activities.lng ?? undefined
         }))
       : [];
 
