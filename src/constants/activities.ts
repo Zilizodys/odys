@@ -11,7 +11,9 @@ export const MOCK_ACTIVITIES: Record<string, Activity[]> = {
       address: '15 rue de la Gastronomie',
       imageurl: '/images/restaurant1.jpg',
       category: 'restaurant',
-      city: 'paris'
+      city: 'paris',
+      lat: 48.8566,
+      lng: 2.3522
     },
     {
       id: 'rest2',
@@ -22,7 +24,9 @@ export const MOCK_ACTIVITIES: Record<string, Activity[]> = {
       address: '8 avenue des Saveurs',
       imageurl: '/images/restaurant2.jpg',
       category: 'restaurant',
-      city: 'paris'
+      city: 'paris',
+      lat: 48.8566,
+      lng: 2.3522
     },
     // ... ajouter 3 autres restaurants
   ],
@@ -36,7 +40,9 @@ export const MOCK_ACTIVITIES: Record<string, Activity[]> = {
       address: '3 ruelle des Secrets',
       imageurl: '/images/bar1.jpg',
       category: 'bar',
-      city: 'paris'
+      city: 'paris',
+      lat: 48.8566,
+      lng: 2.3522
     },
     {
       id: 'bar2',
@@ -47,7 +53,9 @@ export const MOCK_ACTIVITIES: Record<string, Activity[]> = {
       address: '42 rue du Panorama',
       imageurl: '/images/bar2.jpg',
       category: 'bar',
-      city: 'paris'
+      city: 'paris',
+      lat: 48.8566,
+      lng: 2.3522
     },
     // ... ajouter 3 autres bars
   ],
@@ -61,7 +69,9 @@ export const MOCK_ACTIVITIES: Record<string, Activity[]> = {
       address: '1 place des Arts',
       imageurl: '/images/culture1.jpg',
       category: 'culture',
-      city: 'paris'
+      city: 'paris',
+      lat: 48.8566,
+      lng: 2.3522
     },
     {
       id: 'cult2',
@@ -72,7 +82,9 @@ export const MOCK_ACTIVITIES: Record<string, Activity[]> = {
       address: '25 boulevard des Spectacles',
       imageurl: '/images/culture2.jpg',
       category: 'culture',
-      city: 'paris'
+      city: 'paris',
+      lat: 48.8566,
+      lng: 2.3522
     },
     // ... ajouter 3 autres activités culturelles
   ],
@@ -86,7 +98,9 @@ export const MOCK_ACTIVITIES: Record<string, Activity[]> = {
       address: '100 allée des Jardins',
       imageurl: '/images/nature1.jpg',
       category: 'nature',
-      city: 'paris'
+      city: 'paris',
+      lat: 48.8566,
+      lng: 2.3522
     },
     {
       id: 'nat2',
@@ -97,7 +111,9 @@ export const MOCK_ACTIVITIES: Record<string, Activity[]> = {
       address: 'Point de départ : Office de Tourisme',
       imageurl: '/images/nature2.jpg',
       category: 'nature',
-      city: 'paris'
+      city: 'paris',
+      lat: 48.8566,
+      lng: 2.3522
     },
     // ... ajouter 3 autres activités nature
   ],
@@ -111,7 +127,9 @@ export const MOCK_ACTIVITIES: Record<string, Activity[]> = {
       address: '5 place du Marché',
       imageurl: '/images/shopping1.jpg',
       category: 'shopping',
-      city: 'paris'
+      city: 'paris',
+      lat: 48.8566,
+      lng: 2.3522
     },
     {
       id: 'shop2',
@@ -122,7 +140,9 @@ export const MOCK_ACTIVITIES: Record<string, Activity[]> = {
       address: '55 rue du Commerce',
       imageurl: '/images/shopping2.jpg',
       category: 'shopping',
-      city: 'paris'
+      city: 'paris',
+      lat: 48.8566,
+      lng: 2.3522
     },
     // ... ajouter 3 autres activités shopping
   ]
