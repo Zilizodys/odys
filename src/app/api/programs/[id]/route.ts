@@ -4,18 +4,17 @@ import { NextResponse } from 'next/server';
 import { Program } from '@/types/program';
 import { Activity } from '@/types/activity';
 
-export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: Request) {
   try {
     const supabase = createRouteHandlerClient({ cookies });
 
-    // Récupérer le programme avec tous les champs
+    // Extraire l'id depuis l'URL
+    const url = new URL(request.url);
+    const id = url.pathname.split('/').pop();
     const { data: program, error: programError } = await supabase
       .from('programs')
       .select('*')
-      .eq('id', params.id)
+      .eq('id', id)
       .single();
 
     if (programError) {
@@ -58,7 +57,7 @@ export async function GET(
           lng
         )
       `)
-      .eq('program_id', params.id)
+      .eq('program_id', id)
       .order('order_index');
 
     if (activitiesError) {
