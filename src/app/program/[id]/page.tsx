@@ -2,10 +2,6 @@
 
 import ProgramClient from './ProgramClient'
 
-type ProgramPageProps = {
-  params: { id: string }
-}
-
-export default function ProgramPage({ params }: ProgramPageProps) {
+export default function ProgramPage({ params }: { params: { id: string } }) {
   return <ProgramClient programId={params.id} />
 } 
