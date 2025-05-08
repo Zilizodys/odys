@@ -23,7 +23,7 @@ export const getActivitiesByCriteria = async (formData: FormData): Promise<Recor
   // Récupérer toutes les activités pour la destination (insensible à la casse)
   const { data: activities, error } = await supabase
     .from('activities')
-    .select('id, title, description, price, address, imageurl, category, city, created_at, updated_at')
+    .select('id, title, description, price, address, imageurl, category, city, created_at, updated_at, lat, lng')
     .ilike('city', `%${formData.destination}%`)
     .order('created_at', { ascending: false })
 
