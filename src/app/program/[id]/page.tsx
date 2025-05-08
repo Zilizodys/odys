@@ -1,6 +1,5 @@
 'use client'
 
-import { Metadata } from 'next'
 import ProgramClient from './ProgramClient'
 
 type Props = {
@@ -10,10 +9,4 @@ type Props = {
 
 export default function ProgramPage({ params }: Props) {
   return <ProgramClient programId={params.id} />
-}
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  return {
-    title: `Programme ${params.id}`,
-  }
 } 
