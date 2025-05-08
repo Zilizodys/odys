@@ -1,18 +1,16 @@
 import { Metadata } from 'next'
 
-type LayoutProps = {
+interface Props {
   children: React.ReactNode
   params: {
     id: string
   }
 }
 
-export async function generateMetadata({ params }: LayoutProps): Promise<Metadata> {
-  return {
-    title: `Programme ${params.id}`,
-  }
+export const metadata: Metadata = {
+  title: 'Programme',
 }
 
-export default function ProgramLayout({ children }: LayoutProps) {
+export default function ProgramLayout({ children }: Props) {
   return children
 } 
