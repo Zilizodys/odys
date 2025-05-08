@@ -56,12 +56,37 @@ export default function ImageWithFallback({
   };
 
   if (fill) {
+    if (imgProps.src.includes('googleapis.com')) {
+      return (
+        <div className="relative w-full h-full">
+          <img 
+            src={imgProps.src}
+            alt={imgProps.alt}
+            style={{ objectFit: 'cover', width: '100%', height: '100%', borderRadius: 'inherit' }}
+            className={imgProps.className}
+          />
+        </div>
+      );
+    }
     return (
       <div className="relative w-full h-full">
         <Image 
           {...imgProps} 
           fill 
           style={{ objectFit: 'cover' }}
+        />
+      </div>
+    );
+  }
+
+  if (imgProps.src.includes('googleapis.com')) {
+    return (
+      <div className="relative">
+        <img
+          src={imgProps.src}
+          alt={imgProps.alt}
+          style={{ width: width || 400, height: height || 400, objectFit: 'cover', borderRadius: 'inherit' }}
+          className={imgProps.className}
         />
       </div>
     );
