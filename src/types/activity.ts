@@ -17,6 +17,9 @@ export interface Activity {
 }
 
 // Fonction utilitaire pour s'assurer que l'URL de l'image est correcte
-export function getActivityImageUrl(activity: Activity): string {
-  return activity.imageurl || '/images/activities/Mascot.png'
+export function getActivityImageUrl(imageUrl: string | Activity): string {
+  if (typeof imageUrl === 'string') {
+    return imageUrl || '/images/activities/Mascot.png'
+  }
+  return imageUrl.imageurl || '/images/activities/Mascot.png'
 } 
