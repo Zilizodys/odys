@@ -2,11 +2,10 @@
 
 import ProgramClient from './ProgramClient'
 
-type Props = {
+export default function ProgramPage({
+  params,
+}: {
   params: { id: string }
-  searchParams: { [key: string]: string | string[] | undefined }
-}
-
-export default function ProgramPage({ params }: Props) {
+}) {
   return <ProgramClient programId={params.id} />
 } 
