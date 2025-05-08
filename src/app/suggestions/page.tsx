@@ -13,10 +13,11 @@ import { Activity } from '@/types/activity'
 import { FormData } from '@/types/form'
 import { getActivitiesByCriteria } from '@/lib/supabase/activities'
 import CategoryChips from '@/components/suggestions/CategoryChips'
+import { Suspense } from 'react'
 
 interface DatabaseActivity extends Activity {}
 
-export default function SuggestionsPage() {
+function SuggestionsPageInner() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const [loading, setLoading] = useState(true)
@@ -353,5 +354,13 @@ export default function SuggestionsPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function SuggestionsPage() {
+  return (
+    <Suspense>
+      <SuggestionsPageInner />
+    </Suspense>
   )
 } 
