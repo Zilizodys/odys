@@ -473,15 +473,23 @@ export default function ProgramClient({ programId }: { programId: string }) {
     <div className="bg-gray-50 pb-24">
       {/* Cover full width, collée en haut */}
       <div className="relative w-full h-[390px] sm:h-[510px]">
-        <Image
-          src={coverImageUrl}
-          alt={program.title || getDestinationImage(program.destination).alt}
-          fill
-          sizes="100vw"
-          style={{ objectFit: 'cover' }}
-          priority
-          onError={handleImageError}
-        />
+        {coverImageUrl.includes('googleapis.com') ? (
+          <img
+            src={coverImageUrl}
+            alt={program.title || getDestinationImage(program.destination).alt}
+            style={{ objectFit: 'cover', width: '100%', height: '100%', position: 'absolute', inset: 0, borderRadius: '1rem' }}
+          />
+        ) : (
+          <Image
+            src={coverImageUrl}
+            alt={program.title || getDestinationImage(program.destination).alt}
+            fill
+            sizes="100vw"
+            style={{ objectFit: 'cover' }}
+            priority
+            onError={handleImageError}
+          />
+        )}
         {/* Overlay sombre pour lisibilité */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
         {/* Bouton retour en haut à gauche */}
