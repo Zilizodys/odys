@@ -179,6 +179,13 @@ const BUDGET_OPTIONS = [
   { value: 3, label: 'Luxe' },
 ]
 
+// Fonction utilitaire pour normaliser l'URL de la cover
+const normalizeCoverImageUrl = (url: string | null | undefined) => {
+  if (!url) return '/images/activities/Mascot.png';
+  if (url.startsWith('http') || url.startsWith('/')) return url;
+  return `/images/activities/${url}`;
+};
+
 export default function ProgramClient({ programId }: { programId: string }) {
   const router = useRouter()
   const [program, setProgram] = useState<Program | null>(null)
@@ -359,7 +366,7 @@ export default function ProgramClient({ programId }: { programId: string }) {
   // Optimiser le chargement des images
   const coverImageUrl = useMemo(() => {
     if (!program) return getDestinationImage('').url;
-    return program.coverImage || (program as any).cover_image || getDestinationImage(program.destination).url;
+    return normalizeCoverImageUrl(program.coverImage || (program as any).cover_image || getDestinationImage(program.destination).url);
   }, [program]);
 
   // Masquer le header global sur la page programme
