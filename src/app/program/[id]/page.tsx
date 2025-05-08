@@ -1,11 +1,11 @@
 'use client'
 
+import { useParams } from 'next/navigation'
 import ProgramClient from './ProgramClient'
 
-export default function ProgramPage({
-  params,
-}: {
-  params: { id: string }
-}) {
-  return <ProgramClient programId={params.id} />
+export default function ProgramPage() {
+  const params = useParams()
+  const id = params.id as string
+
+  return <ProgramClient programId={id} />
 } 
