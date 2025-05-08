@@ -789,23 +789,6 @@ export default function ProgramClient({ programId }: { programId: string }) {
           {isSaving ? 'Sauvegarde en cours...' : 'Sauvegarder les changements'}
         </button>
       </div>
-
-      {/* Section des activités */}
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold mb-4">Carte des activités</h2>
-          <div 
-            className="cursor-pointer"
-            onClick={() => setIsMapFullscreen(true)}
-          >
-            <ProgramMap 
-              activities={program?.activities || []} 
-              isFullscreen={isMapFullscreen}
-              onClose={() => setIsMapFullscreen(false)}
-            />
-          </div>
-        </div>
-      </div>
     </div>
   )
 } 
