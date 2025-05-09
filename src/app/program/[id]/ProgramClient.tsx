@@ -477,7 +477,8 @@ export default function ProgramClient({ programId }: { programId: string }) {
           <img
             src={coverImageUrl}
             alt={program.title || getDestinationImage(program.destination).alt}
-            style={{ objectFit: 'cover', width: '100%', height: '100%', position: 'absolute', inset: 0, borderRadius: '1rem' }}
+            style={{ objectFit: 'cover', width: '100%', height: '100%', position: 'absolute', inset: 0 }}
+            className={""}
           />
         ) : (
           <Image
