@@ -9,6 +9,7 @@ import ProgramCard, { ProgramCardProps } from '@/components/ProgramCard'
 import { Program } from '@/types/program'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Destination } from '@/types/destination'
+import GamificationStats from '@/components/gamification/GamificationStats'
 
 interface ProgramActivity {
   activity_id: string;
@@ -30,6 +31,7 @@ export default function DashboardPage() {
   const [programs, setPrograms] = useState<Program[]>([])
   const [destinations, setDestinations] = useState<Destination[]>([])
   const [error, setError] = useState<string | null>(null)
+  const [userAvatarUrl, setUserAvatarUrl] = useState<string | undefined>(undefined)
   const router = useRouter()
   const supabase = createClientComponentClient()
 
@@ -114,6 +116,17 @@ export default function DashboardPage() {
           router.replace('/login')
           return
         }
+
+        // Récupérer l'avatar utilisateur depuis la BDD (table profiles)
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('avatar_url')
+          .eq('id', session.user.id)
+          .single()
+        if (profileError) {
+          console.warn('Erreur récupération avatar profile:', profileError)
+        }
+        setUserAvatarUrl(profile?.avatar_url)
 
         // Charger les programmes de l'utilisateur
         const { data: programs, error: programsError } = await supabase
@@ -274,6 +287,9 @@ export default function DashboardPage() {
                 Créer un nouveau programme
               </button>
             </div>
+            {programs.length > 0 && (
+              <GamificationStats userId={programs[0].user_id} userAvatarUrl={userAvatarUrl} />
+            )}
           </>
         )}
       </main>
