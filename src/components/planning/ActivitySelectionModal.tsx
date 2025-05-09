@@ -77,7 +77,7 @@ export default function ActivitySelectionModal({
                           <div className="flex gap-4 p-4">
                             <div className="relative w-24 h-24 flex-shrink-0">
                               <ImageWithFallback
-                                src={getActivityImageUrl(activity.imageurl || '')}
+                                src={getActivityImageUrl(activity)}
                                 alt={activity.title}
                                 fill
                                 className="object-cover rounded-lg"
