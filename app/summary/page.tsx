@@ -115,7 +115,8 @@ export default function SummaryPage() {
           end_date: programToSave.formData.endDate,
           budget: programToSave.formData.budget,
           companion: programToSave.formData.companion,
-          moods: programToSave.formData.moods
+          moods: programToSave.formData.moods,
+          title: `Séjour à ${programToSave.formData.destination}`
         })
         .select()
         .single();
