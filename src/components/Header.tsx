@@ -29,11 +29,11 @@ export default function Header({ showBackButton = false }: HeaderProps) {
         <div className="relative w-[50px] h-[50px]">
           <Image
             src="/images/activities/Mascot.png"
-            alt="Mascotte Odys"
-            width={50}
-            height={50}
+            alt="Logo Odys"
+            width={127}
+            height={38}
             priority
-            className="object-contain w-auto h-auto"
+            className="mx-auto"
           />
         </div>
       </div>

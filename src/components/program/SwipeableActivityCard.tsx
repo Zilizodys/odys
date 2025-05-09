@@ -1,7 +1,7 @@
 import { motion, PanInfo, useAnimation, AnimatePresence } from 'framer-motion'
 import { Activity, getActivityImageUrl } from '@/types/activity'
 import { FiMapPin, FiClock, FiDollarSign, FiTrash2, FiLink } from 'react-icons/fi'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 
 export interface SwipeableActivityCardProps {
@@ -12,6 +12,9 @@ export interface SwipeableActivityCardProps {
   isUsedInProgram?: boolean
   programDay?: number
   programSlot?: number
+  isOpen?: boolean
+  onOpen?: () => void
+  onClose?: () => void
 }
 
 export default function SwipeableActivityCard({ 
@@ -21,25 +24,42 @@ export default function SwipeableActivityCard({
   programId,
   isUsedInProgram,
   programDay,
-  programSlot 
+  programSlot,
+  isOpen: isOpenProp,
+  onOpen,
+  onClose
 }: SwipeableActivityCardProps) {
   const controls = useAnimation()
   const [isOpen, setIsOpen] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const startXRef = useRef(0)
   const [offsetX, setOffsetX] = useState(0)
+  const pointerDownRef = useRef<number | null>(null)
+  const [pointerStartX, setPointerStartX] = useState<number | null>(null)
+
+  useEffect(() => {
+    if (typeof isOpenProp === 'boolean') {
+      setIsOpen(isOpenProp)
+      controls.start({ x: isOpenProp ? -100 : 0 })
+    }
+  }, [isOpenProp, controls])
+
+  useEffect(() => {
+    if (isOpen) {
+      controls.start({ x: -100 })
+    } else {
+      controls.start({ x: 0 })
+    }
+  }, [isOpen, controls])
 
   const handleDragEnd = async (event: any, info: PanInfo) => {
     setIsDragging(false)
     const offset = info.offset.x
-    const velocity = info.velocity.x
     setOffsetX(offset)
 
     if (offset < -50) {
-      await controls.start({ x: -100 }) // Révéler le bouton de suppression
       setIsOpen(true)
     } else {
-      controls.start({ x: 0 })
       setIsOpen(false)
     }
   }
@@ -49,7 +69,6 @@ export default function SwipeableActivityCard({
       await controls.start({ x: '-100%', opacity: 0 })
       onDelete(activity.id)
     } else {
-      controls.start({ x: 0 })
       setIsOpen(false)
     }
   }
@@ -76,11 +95,33 @@ export default function SwipeableActivityCard({
     }
   }
 
+  const handlePointerDown = (e: React.PointerEvent) => {
+    setPointerStartX(e.clientX)
+    pointerDownRef.current = e.pointerId
+  }
+
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (pointerStartX !== null) {
+      const diffX = e.clientX - pointerStartX
+      setOffsetX(diffX)
+      if (diffX < -50) {
+        setIsOpen(true)
+      } else {
+        setIsOpen(false)
+      }
+    }
+  }
+
+  const handlePointerUp = (e: React.PointerEvent) => {
+    setPointerStartX(null)
+    setOffsetX(0)
+  }
+
   return (
     <div className="relative">
       {/* Fond delete animé, sous la card */}
       <AnimatePresence>
-        {offsetX < -10 && (
+        {isOpen && (
           <motion.div
             key="delete-bg"
             initial={{ opacity: 0, y: 20 }}
@@ -103,28 +144,15 @@ export default function SwipeableActivityCard({
       <motion.div
         className="relative bg-white rounded-xl overflow-hidden z-10 border border-gray-100 cursor-pointer transition-transform hover:scale-[1.02]"
         animate={controls}
-        drag="x"
-        dragConstraints={{ left: -100, right: 0 }}
-        dragElastic={0.15}
-        dragListener={true}
-        dragDirectionLock={true}
         style={{
           touchAction: 'pan-y',
-          background: offsetX < -10 ? '#ffeaea' : 'white', // fond rouge clair si drag
-          transition: 'background 0.2s'
+          background: 'white',
+          transition: 'background 0.2s',
+          transform: offsetX !== 0 ? `translateX(${offsetX}px)` : undefined
         }}
-        onDrag={(e, info) => {
-          console.log('drag offsetX:', info.offset.x);
-          if (info.offset.x > 0) {
-            setOffsetX(0);
-          } else {
-            setOffsetX(info.offset.x);
-          }
-        }}
-        onDragEnd={handleDragEnd}
-        initial={{ x: 0 }}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
         onClick={handleClick}
       >
         {activity.imageurl && (
@@ -133,6 +161,10 @@ export default function SwipeableActivityCard({
               src={getActivityImageUrl(activity.imageurl)}
               alt={activity.title}
               className="object-cover w-full h-full rounded-t-xl"
+              onError={e => {
+                const target = e.target as HTMLImageElement;
+                target.src = '/images/activities/Mascot.png';
+              }}
             />
           </div>
         )}

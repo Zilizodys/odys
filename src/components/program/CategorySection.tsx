@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi'
 import { Activity } from '@/types/activity'
 import SwipeableActivityCard, { SwipeableActivityCardProps } from './SwipeableActivityCard'
@@ -31,7 +31,12 @@ export default function CategorySection({
   programActivities = []
 }: CategorySectionProps) {
   const [isExpanded, setIsExpanded] = useState(false)
-  const categoryLabel = CATEGORY_LABELS[category] || category
+
+  useEffect(() => {
+    if (category === activities[0]?.category) {
+      setIsExpanded(true)
+    }
+  }, [category, activities])
 
   const isActivityInProgram = (activityId: string) => {
     return programActivities.find(pa => pa.activityId === activityId)
@@ -45,7 +50,7 @@ export default function CategorySection({
       >
         <div className="flex items-center gap-3">
           <h2 className="text-lg font-semibold text-gray-900">
-            {categoryLabel}
+            {CATEGORY_LABELS[category] || category}
           </h2>
           <span className="px-2 py-1 bg-indigo-100 text-indigo-700 text-sm font-medium rounded-full">
             {activities.length}

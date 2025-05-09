@@ -17,19 +17,23 @@ const CATEGORIES: SuggestionCategory[] = [
 ]
 
 interface SuggestionsListProps {
+  categories: string[];
   onSave: (suggestion: Suggestion) => void
   onSkip: () => void
 }
 
-export default function SuggestionsList({ onSave, onSkip }: SuggestionsListProps) {
+export default function SuggestionsList({ categories, onSave, onSkip }: SuggestionsListProps) {
   const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0)
   const [direction, setDirection] = useState(0)
   const [currentSuggestionIndex, setCurrentSuggestionIndex] = useState(0)
   const [imageError, setImageError] = useState(false)
   const [swipeAnim, setSwipeAnim] = useState<'left' | 'right' | null>(null)
 
-  const currentCategory = CATEGORIES[currentCategoryIndex]
-  const currentSuggestions = MOCK_SUGGESTIONS.filter(s => s.category === currentCategory)
+  const currentCategory = categories[currentCategoryIndex]
+  const currentSuggestions = MOCK_SUGGESTIONS.filter(s =>
+    s.category === currentCategory ||
+    (s.keywords && s.keywords.map(k => k.toLowerCase()).includes(currentCategory.toLowerCase()))
+  )
   const currentSuggestion = currentSuggestions[currentSuggestionIndex]
 
   const handleImageError = () => {
@@ -37,7 +41,7 @@ export default function SuggestionsList({ onSave, onSkip }: SuggestionsListProps
   }
 
   const handleNext = () => {
-    if (currentCategoryIndex < CATEGORIES.length - 1) {
+    if (currentCategoryIndex < categories.length - 1) {
       setDirection(1)
       setCurrentCategoryIndex(prev => prev + 1)
       setCurrentSuggestionIndex(0)

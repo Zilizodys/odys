@@ -133,8 +133,9 @@ export default function SummaryPage() {
           budget: programToSave.formData.budget || 0,
           companion: programToSave.formData.companion || '',
           moods: programToSave.formData.moods || [],
+          title: `Séjour à ${programToSave.formData.destination || ''}`
         }])
-        .select('id')
+        .select('id, user_id')
         .single();
 
       if (programError) {
@@ -143,15 +144,41 @@ export default function SummaryPage() {
       }
 
       const programId = insertedPrograms.id;
+      const programUserId = insertedPrograms.user_id;
 
-      // 2. Insertion des activités likées dans la table de jointure
+      // Vérification automatique du user_id du programme dans la base
+      const { data: programRow, error: programRowError } = await client
+        .from('programs')
+        .select('id, user_id')
+        .eq('id', programId)
+        .single();
+
+      console.log('Vérification Supabase :', programRow, programRowError);
+
+      // *** Récupère la session juste avant l'insertion ***
+      const { data: { session: freshSession } } = await client.auth.getSession();
+      if (!freshSession) {
+        throw new Error('Session utilisateur perdue, veuillez vous reconnecter.');
+      }
+
       const activitiesToInsert = dedupedActivities.map((activity: Activity, idx: number) => ({
         program_id: programId,
         activity_id: activity.id,
         order_index: idx
       }));
 
+      console.clear();
+      console.log('freshSession.user.id', freshSession.user.id)
+      console.log('programUserId', programUserId)
+      console.log('programRow.user_id', programRow?.user_id)
+      console.log('programId', programId)
+      console.log('activitiesToInsert', activitiesToInsert)
+
       if (activitiesToInsert.length > 0) {
+        // Vérification supplémentaire côté client pour la RLS
+        if (programUserId !== freshSession.user.id || programRow?.user_id !== freshSession.user.id) {
+          throw new Error("L'utilisateur courant n'est pas le propriétaire du programme. Connexion requise.");
+        }
         const { error: activitiesError } = await client
           .from('program_activities')
           .insert(activitiesToInsert);

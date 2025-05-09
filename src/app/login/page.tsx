@@ -55,12 +55,11 @@ export default function LoginPage() {
         <div className="text-center">
           <Image
             src="/images/activities/Mascot.png"
-            alt="Logo"
-            width={100}
-            height={100}
+            alt="Logo Odys"
+            width={127}
+            height={38}
             priority
-            style={{ width: 'auto', height: 'auto' }}
-            className="mx-auto"
+            className="mx-auto mb-8"
           />
           <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
             Connectez-vous à votre compte
