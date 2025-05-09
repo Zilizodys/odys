@@ -207,35 +207,10 @@ export default function ProgramClient({ programId }: { programId: string }) {
       setError(null)
       try {
         const supabase = createClient()
+        // 1. Récupérer le programme
         const { data: program, error: programError } = await supabase
           .from('programs')
-          .select(`
-            id,
-            user_id,
-            title,
-            description,
-            destination,
-            start_date,
-            end_date,
-            budget,
-            companion,
-            created_at,
-            updated_at,
-            coverImage,
-            moods,
-            program_activities!inner (
-              activity:activities (
-                id,
-                title,
-                description,
-                price,
-                address,
-                imageurl,
-                category,
-                city
-              )
-            )
-          `)
+          .select('*')
           .eq('id', programId)
           .single()
         if (programError || !program) {
@@ -243,7 +218,29 @@ export default function ProgramClient({ programId }: { programId: string }) {
           setIsLoading(false)
           return
         }
-        const activities = (program.program_activities || []).map((pa: any) => pa.activity)
+        // 2. Récupérer les activités liées à ce programme
+        const { data: programActivities, error: activitiesError } = await supabase
+          .from('program_activities')
+          .select(`
+            activity_id,
+            activities (
+              id,
+              title,
+              description,
+              price,
+              address,
+              imageurl,
+              category,
+              city
+            )
+          `)
+          .eq('program_id', programId)
+        if (activitiesError) {
+          setError('Erreur lors du chargement des activités.')
+          setIsLoading(false)
+          return
+        }
+        const activities = (programActivities || []).map((pa: any) => pa.activities).filter(Boolean)
         let coverImage = program.coverImage
         if (!coverImage) {
           const { data: destData } = await supabase

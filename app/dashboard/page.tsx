@@ -100,27 +100,30 @@ export default function DashboardPage() {
           throw new Error('User not found')
         }
 
-        // Charger les programmes de l'utilisateur avec leurs activités
+        // Charger les programmes de l'utilisateur
         const { data: programs, error: programsError } = await supabase
           .from('programs')
-          .select(`
-            *,
-            destinations (
-              *
-            )
-          `)
+          .select('*')
           .eq('user_id', user.id)
           .order('created_at', { ascending: false })
 
         if (programsError) throw programsError
 
-        // Transformer les données pour avoir les activités directement dans le programme
-        const transformedPrograms = programs?.map(program => ({
-          ...program,
-          activities: program.program_activities?.map((pa: any) => pa.activities) || []
-        })) || []
+        // Pour chaque programme, récupérer les activités associées
+        const programsWithActivities = await Promise.all(
+          (programs || []).map(async (program) => {
+            const { data: programActivities } = await supabase
+              .from('program_activities')
+              .select('activities (id, title, description, price, address, imageurl, category, city)')
+              .eq('program_id', program.id)
+            return {
+              ...program,
+              activities: (programActivities || []).map(pa => pa.activities).filter(Boolean)
+            }
+          })
+        )
 
-        setPrograms(transformedPrograms)
+        setPrograms(programsWithActivities)
       } catch (error) {
         console.error('Error loading dashboard data:', error);
       } finally {

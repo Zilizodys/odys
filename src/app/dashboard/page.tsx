@@ -115,78 +115,22 @@ export default function DashboardPage() {
           return
         }
 
-        // Charger les programmes de l'utilisateur avec leurs activités
-        const { data: userPrograms, error: programsError } = await supabase
+        // Charger les programmes de l'utilisateur
+        const { data: programs, error: programsError } = await supabase
           .from('programs')
           .select('*')
           .eq('user_id', session.user.id)
           .order('created_at', { ascending: false })
 
-        if (programsError) {
-          setError('Erreur lors du chargement des programmes : ' + programsError.message)
-          throw programsError
-        }
+        if (programsError) throw programsError
 
-        if (!userPrograms || userPrograms.length === 0) {
-          setPrograms([])
-          setLoading(false)
-          return
-        }
+        // Transformer les données pour avoir les activités directement dans le programme
+        const transformedPrograms = programs?.map(program => ({
+          ...program,
+          activities: program.program_activities?.map((pa: any) => pa.activity) || []
+        })) || []
 
-        // Charger les activités pour chaque programme
-        const programsWithActivities = await Promise.all(
-          userPrograms.map(async (program) => {
-            try {
-              const { data: activities, error: activitiesError } = await supabase
-                .from('program_activities')
-                .select(`
-                  activity_id,
-                  order_index,
-                  activities (
-                    id,
-                    title,
-                    description,
-                    price,
-                    address,
-                    imageurl,
-                    category,
-                    city
-                  )
-                `)
-                .eq('program_id', program.id)
-                .order('order_index') as { data: ProgramActivity[] | null, error: any };
-
-              if (activitiesError) {
-                console.error('Erreur lors de la récupération des activités:', activitiesError);
-                setError('Erreur lors de la récupération des activités : ' + activitiesError.message)
-                return program;
-              }
-
-              return {
-                ...program,
-                activities: (activities || []).map(pa => ({
-                  id: pa.activity_id,
-                  title: pa.activities.title,
-                  description: pa.activities.description,
-                  price: pa.activities.price,
-                  address: pa.activities.address,
-                  imageurl: pa.activities.imageurl,
-                  category: pa.activities.category,
-                  city: pa.activities.city
-                }))
-              };
-            } catch (error) {
-              setError('Erreur lors du chargement des activités')
-              console.error('Erreur lors du chargement des activités:', error);
-              return {
-                ...program,
-                activities: []
-              };
-            }
-          })
-        );
-
-        setPrograms(programsWithActivities)
+        setPrograms(transformedPrograms)
       } catch (error) {
         setError('Erreur lors du chargement des programmes ou de la session')
         console.error('Erreur:', error)

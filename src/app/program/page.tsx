@@ -73,10 +73,17 @@ export default function ProgramPage() {
         throw new Error('Erreur de connexion à Supabase')
       }
 
+      // Récupérer l'utilisateur courant
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+      if (sessionError || !session) {
+        throw new Error('Utilisateur non connecté')
+      }
+
       // Créer un nouveau programme
       const { data: newProgram, error: programError } = await supabase
         .from('programs')
         .insert({
+          user_id: session.user.id,
           destination: formData.destination,
           start_date: formData.startDate,
           end_date: formData.endDate,
