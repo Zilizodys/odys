@@ -19,7 +19,13 @@ export interface Activity {
 // Fonction utilitaire pour s'assurer que l'URL de l'image est correcte
 export function getActivityImageUrl(imageUrl: string | Activity): string {
   if (typeof imageUrl === 'string') {
-    return imageUrl || '/images/activities/Mascot.png'
+    // Si l'URL existe et n'est pas vide, on l'utilise
+    if (imageUrl && imageUrl.trim() !== '') return imageUrl;
+    return '/images/activities/Mascot.png';
   }
-  return imageUrl.imageurl || '/images/activities/Mascot.png'
+  // Si c'est un objet Activity
+  if (imageUrl && imageUrl.imageurl && imageUrl.imageurl.trim() !== '') {
+    return imageUrl.imageurl;
+  }
+  return '/images/activities/Mascot.png';
 } 
