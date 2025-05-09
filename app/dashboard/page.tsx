@@ -96,22 +96,17 @@ export default function DashboardPage() {
         if (userError) throw userError;
         setUser(user);
 
+        if (!user) {
+          throw new Error('User not found')
+        }
+
         // Charger les programmes de l'utilisateur avec leurs activités
-        const { data: userPrograms, error: programsError } = await supabase
+        const { data: programs, error: programsError } = await supabase
           .from('programs')
           .select(`
             *,
-            program_activities (
-              activities (
-                id,
-                title,
-                description,
-                price,
-                address,
-                imageurl,
-                category,
-                city
-              )
+            destinations (
+              *
             )
           `)
           .eq('user_id', user.id)
@@ -120,7 +115,7 @@ export default function DashboardPage() {
         if (programsError) throw programsError
 
         // Transformer les données pour avoir les activités directement dans le programme
-        const transformedPrograms = userPrograms?.map(program => ({
+        const transformedPrograms = programs?.map(program => ({
           ...program,
           activities: program.program_activities?.map((pa: any) => pa.activities) || []
         })) || []
