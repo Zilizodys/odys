@@ -17,7 +17,7 @@ async function getPlacePhoto(city: string, country: string) {
   const query = `${city} ${country}`
   const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(query)}&key=${GOOGLE_API_KEY}`
   const res = await fetch(url)
-  const data = await res.json()
+  const data = await res.json() as { results?: { photos?: { photo_reference: string }[] }[] }
   if (data.results && data.results.length > 0 && data.results[0].photos && data.results[0].photos.length > 0) {
     return getPhotoUrl(data.results[0].photos[0].photo_reference)
   }
