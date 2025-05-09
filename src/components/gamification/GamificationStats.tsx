@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { GamificationStats } from '@/types/gamification';
+import type { GamificationStats as GamificationStatsType } from '@/types/gamification';
 import { GamificationService } from '@/lib/gamification/service';
 import { motion } from 'framer-motion';
 import { FiAward, FiStar, FiTrendingUp } from 'react-icons/fi';
@@ -10,7 +10,7 @@ interface GamificationStatsProps {
 }
 
 export default function GamificationStats({ userId }: GamificationStatsProps) {
-  const [stats, setStats] = useState<GamificationStats | null>(null);
+  const [stats, setStats] = useState<GamificationStatsType | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
