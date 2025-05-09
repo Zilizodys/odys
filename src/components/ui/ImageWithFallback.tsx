@@ -55,6 +55,8 @@ export default function ImageWithFallback({
     quality: 75,
   };
 
+  console.log('ImageWithFallback src:', imgProps.src, { width, height, alt, className, fill, imgSrc });
+
   if (fill) {
     if (imgProps.src.includes('googleapis.com')) {
       return (
