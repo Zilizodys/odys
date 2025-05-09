@@ -2,6 +2,7 @@ import { Activity } from './activity'
 
 export interface Program {
   id: string
+  user_id: string
   title: string
   description: string
   destination: string
