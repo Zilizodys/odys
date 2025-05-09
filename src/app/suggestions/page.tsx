@@ -14,6 +14,7 @@ import { FormData } from '@/types/form'
 import { getActivitiesByCriteria } from '@/lib/supabase/activities'
 import CategoryChips from '@/components/suggestions/CategoryChips'
 import { Suspense } from 'react'
+import { CATEGORY_LABELS, normalizeCategory } from '@/constants/categories'
 
 interface DatabaseActivity extends Activity {}
 
@@ -265,11 +266,15 @@ function SuggestionsPageInner() {
         {/* Pastilles de catégories centrées */}
         <div className="flex justify-center mb-2">
           <CategoryChips
-            categories={categories}
-            activeCategory={currentCategory}
-            onSelect={cat => {
-              setCurrentCategory(cat);
-              setCurrentIndex(0);
+            categories={categories.map(cat => CATEGORY_LABELS[normalizeCategory(cat)])}
+            activeCategory={CATEGORY_LABELS[normalizeCategory(currentCategory)]}
+            onSelect={catLabel => {
+              // Trouver la catégorie d'origine à partir du label
+              const found = Object.entries(CATEGORY_LABELS).find(([, label]) => label === catLabel)
+              if (found) {
+                setCurrentCategory(found[0])
+                setCurrentIndex(0)
+              }
             }}
           />
         </div>

@@ -1,0 +1,1585 @@
+Clé Google Places chargée : NON TROUVÉE
+Début du seed global sur villes européennes, catégories enrichies, 5 gammes de prix...
+
+Traitement de Paris...
+Déjà 45 activités pour Paris / gastronomie, on saute.
+
+[1/2000] Requête Google Places: museum in Paris (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=museum%20in%20Paris&type=museum&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[2/2000] Requête Google Places: museum in Paris (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=museum%20in%20Paris&type=museum&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[3/2000] Requête Google Places: museum in Paris (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=museum%20in%20Paris&type=museum&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[4/2000] Requête Google Places: museum in Paris (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=museum%20in%20Paris&type=museum&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[5/2000] Requête Google Places: museum in Paris (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=museum%20in%20Paris&type=museum&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[6/2000] Requête Google Places: art_gallery in Paris (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=art_gallery%20in%20Paris&type=art_gallery&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[7/2000] Requête Google Places: art_gallery in Paris (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=art_gallery%20in%20Paris&type=art_gallery&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[8/2000] Requête Google Places: art_gallery in Paris (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=art_gallery%20in%20Paris&type=art_gallery&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[9/2000] Requête Google Places: art_gallery in Paris (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=art_gallery%20in%20Paris&type=art_gallery&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[10/2000] Requête Google Places: art_gallery in Paris (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=art_gallery%20in%20Paris&type=art_gallery&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[11/2000] Requête Google Places: park in Paris (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=park%20in%20Paris&type=park&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[12/2000] Requête Google Places: park in Paris (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=park%20in%20Paris&type=park&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[13/2000] Requête Google Places: park in Paris (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=park%20in%20Paris&type=park&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[14/2000] Requête Google Places: park in Paris (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=park%20in%20Paris&type=park&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[15/2000] Requête Google Places: park in Paris (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=park%20in%20Paris&type=park&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[16/2000] Requête Google Places: night_club in Paris (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=night_club%20in%20Paris&type=night_club&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[17/2000] Requête Google Places: night_club in Paris (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=night_club%20in%20Paris&type=night_club&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: OK
+Nombre de résultats: 3
+Activité déjà existante: The Labo
+Activité déjà existante: Hide Pub Club in Paris
+Activité déjà existante: La Gare - Le Gore
+
+[18/2000] Requête Google Places: night_club in Paris (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=night_club%20in%20Paris&type=night_club&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: OK
+Nombre de résultats: 10
+Activité déjà existante: L'Important Club
+Activité déjà existante: The Rexy Paris
+Activité déjà existante: CLUB VENDOME
+Activité déjà existante: Gibus Club
+Activité déjà existante: Le Roméo
+Activité déjà existante: Djoon Club
+Activité déjà existante: Le Klub
+Activité déjà existante: Mix Club
+Activité déjà existante: Le Caveau de la Huchette
+Activité déjà existante: Le Balajo
+
+[19/2000] Requête Google Places: night_club in Paris (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=night_club%20in%20Paris&type=night_club&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: OK
+Nombre de résultats: 8
+Activité déjà existante: Whisper Club
+Activité déjà existante: Wanderlust
+Activité déjà existante: Hobo
+Activité déjà existante: Boum Boum
+Activité déjà existante: YOYO
+Activité déjà existante: Pachamama PARIS
+Activité déjà existante: Le Carmen
+Activité déjà existante: La Clairière
+
+[20/2000] Requête Google Places: night_club in Paris (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=night_club%20in%20Paris&type=night_club&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: OK
+Nombre de résultats: 2
+Activité déjà existante: Raspoutine
+Activité déjà existante: L'Arc
+Déjà 26 activités pour Paris / bar, on saute.
+
+[21/2000] Requête Google Places: stadium in Paris (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=stadium%20in%20Paris&type=stadium&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[22/2000] Requête Google Places: stadium in Paris (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=stadium%20in%20Paris&type=stadium&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[23/2000] Requête Google Places: stadium in Paris (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=stadium%20in%20Paris&type=stadium&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[24/2000] Requête Google Places: stadium in Paris (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=stadium%20in%20Paris&type=stadium&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[25/2000] Requête Google Places: stadium in Paris (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=stadium%20in%20Paris&type=stadium&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[26/2000] Requête Google Places: tourist_attraction in Paris (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=tourist_attraction%20in%20Paris&type=tourist_attraction&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[27/2000] Requête Google Places: tourist_attraction in Paris (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=tourist_attraction%20in%20Paris&type=tourist_attraction&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[28/2000] Requête Google Places: tourist_attraction in Paris (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=tourist_attraction%20in%20Paris&type=tourist_attraction&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[29/2000] Requête Google Places: tourist_attraction in Paris (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=tourist_attraction%20in%20Paris&type=tourist_attraction&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[30/2000] Requête Google Places: tourist_attraction in Paris (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=tourist_attraction%20in%20Paris&type=tourist_attraction&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[31/2000] Requête Google Places: spa in Paris (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=spa%20in%20Paris&type=spa&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[32/2000] Requête Google Places: spa in Paris (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=spa%20in%20Paris&type=spa&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[33/2000] Requête Google Places: spa in Paris (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=spa%20in%20Paris&type=spa&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: OK
+Nombre de résultats: 1
+Activité déjà existante: SPA MAMABALI PARIS 11
+
+[34/2000] Requête Google Places: spa in Paris (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=spa%20in%20Paris&type=spa&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[35/2000] Requête Google Places: spa in Paris (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=spa%20in%20Paris&type=spa&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[36/2000] Requête Google Places: shopping_mall in Paris (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=shopping_mall%20in%20Paris&type=shopping_mall&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[37/2000] Requête Google Places: shopping_mall in Paris (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=shopping_mall%20in%20Paris&type=shopping_mall&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[38/2000] Requête Google Places: shopping_mall in Paris (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=shopping_mall%20in%20Paris&type=shopping_mall&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[39/2000] Requête Google Places: shopping_mall in Paris (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=shopping_mall%20in%20Paris&type=shopping_mall&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[40/2000] Requête Google Places: shopping_mall in Paris (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=shopping_mall%20in%20Paris&type=shopping_mall&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[41/2000] Requête Google Places: zoo in Paris (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=zoo%20in%20Paris&type=zoo&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[42/2000] Requête Google Places: zoo in Paris (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=zoo%20in%20Paris&type=zoo&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[43/2000] Requête Google Places: zoo in Paris (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=zoo%20in%20Paris&type=zoo&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[44/2000] Requête Google Places: zoo in Paris (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=zoo%20in%20Paris&type=zoo&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[45/2000] Requête Google Places: zoo in Paris (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=zoo%20in%20Paris&type=zoo&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[46/2000] Requête Google Places: amusement_park in Paris (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=amusement_park%20in%20Paris&type=amusement_park&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[47/2000] Requête Google Places: amusement_park in Paris (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=amusement_park%20in%20Paris&type=amusement_park&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[48/2000] Requête Google Places: amusement_park in Paris (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=amusement_park%20in%20Paris&type=amusement_park&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[49/2000] Requête Google Places: amusement_park in Paris (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=amusement_park%20in%20Paris&type=amusement_park&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[50/2000] Requête Google Places: amusement_park in Paris (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=amusement_park%20in%20Paris&type=amusement_park&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+Déjà 17 activités pour Paris / café, on saute.
+
+[51/2000] Requête Google Places: library in Paris (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=library%20in%20Paris&type=library&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[52/2000] Requête Google Places: library in Paris (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=library%20in%20Paris&type=library&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[53/2000] Requête Google Places: library in Paris (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=library%20in%20Paris&type=library&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[54/2000] Requête Google Places: library in Paris (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=library%20in%20Paris&type=library&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[55/2000] Requête Google Places: library in Paris (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=library%20in%20Paris&type=library&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[56/2000] Requête Google Places: movie_theater in Paris (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=movie_theater%20in%20Paris&type=movie_theater&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[57/2000] Requête Google Places: movie_theater in Paris (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=movie_theater%20in%20Paris&type=movie_theater&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[58/2000] Requête Google Places: movie_theater in Paris (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=movie_theater%20in%20Paris&type=movie_theater&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[59/2000] Requête Google Places: movie_theater in Paris (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=movie_theater%20in%20Paris&type=movie_theater&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[60/2000] Requête Google Places: movie_theater in Paris (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=movie_theater%20in%20Paris&type=movie_theater&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+Déjà 22 activités pour Paris / insolite, on saute.
+
+Traitement de Marseille...
+Déjà 24 activités pour Marseille / gastronomie, on saute.
+
+[61/2000] Requête Google Places: museum in Marseille (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=museum%20in%20Marseille&type=museum&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[62/2000] Requête Google Places: museum in Marseille (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=museum%20in%20Marseille&type=museum&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[63/2000] Requête Google Places: museum in Marseille (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=museum%20in%20Marseille&type=museum&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[64/2000] Requête Google Places: museum in Marseille (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=museum%20in%20Marseille&type=museum&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[65/2000] Requête Google Places: museum in Marseille (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=museum%20in%20Marseille&type=museum&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[66/2000] Requête Google Places: art_gallery in Marseille (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=art_gallery%20in%20Marseille&type=art_gallery&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[67/2000] Requête Google Places: art_gallery in Marseille (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=art_gallery%20in%20Marseille&type=art_gallery&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[68/2000] Requête Google Places: art_gallery in Marseille (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=art_gallery%20in%20Marseille&type=art_gallery&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[69/2000] Requête Google Places: art_gallery in Marseille (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=art_gallery%20in%20Marseille&type=art_gallery&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[70/2000] Requête Google Places: art_gallery in Marseille (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=art_gallery%20in%20Marseille&type=art_gallery&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[71/2000] Requête Google Places: park in Marseille (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=park%20in%20Marseille&type=park&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[72/2000] Requête Google Places: park in Marseille (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=park%20in%20Marseille&type=park&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[73/2000] Requête Google Places: park in Marseille (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=park%20in%20Marseille&type=park&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[74/2000] Requête Google Places: park in Marseille (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=park%20in%20Marseille&type=park&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[75/2000] Requête Google Places: park in Marseille (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=park%20in%20Marseille&type=park&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[76/2000] Requête Google Places: night_club in Marseille (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=night_club%20in%20Marseille&type=night_club&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[77/2000] Requête Google Places: night_club in Marseille (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=night_club%20in%20Marseille&type=night_club&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: OK
+Nombre de résultats: 1
+Activité déjà existante: Le Vogue Club
+
+[78/2000] Requête Google Places: night_club in Marseille (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=night_club%20in%20Marseille&type=night_club&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: OK
+Nombre de résultats: 5
+Activité déjà existante: Baby Club - Marseille
+Activité déjà existante: R2 Le Rooftop des Terrasses
+Activité déjà existante: TROLLEYBUS
+Activité déjà existante: The Zanzibar Marseille
+Activité déjà existante: Karaoké Marseille (le Délirium)
+
+[79/2000] Requête Google Places: night_club in Marseille (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=night_club%20in%20Marseille&type=night_club&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[80/2000] Requête Google Places: night_club in Marseille (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=night_club%20in%20Marseille&type=night_club&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+Déjà 21 activités pour Marseille / bar, on saute.
+
+[81/2000] Requête Google Places: stadium in Marseille (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=stadium%20in%20Marseille&type=stadium&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[82/2000] Requête Google Places: stadium in Marseille (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=stadium%20in%20Marseille&type=stadium&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[83/2000] Requête Google Places: stadium in Marseille (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=stadium%20in%20Marseille&type=stadium&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[84/2000] Requête Google Places: stadium in Marseille (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=stadium%20in%20Marseille&type=stadium&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[85/2000] Requête Google Places: stadium in Marseille (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=stadium%20in%20Marseille&type=stadium&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[86/2000] Requête Google Places: tourist_attraction in Marseille (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=tourist_attraction%20in%20Marseille&type=tourist_attraction&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[87/2000] Requête Google Places: tourist_attraction in Marseille (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=tourist_attraction%20in%20Marseille&type=tourist_attraction&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[88/2000] Requête Google Places: tourist_attraction in Marseille (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=tourist_attraction%20in%20Marseille&type=tourist_attraction&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[89/2000] Requête Google Places: tourist_attraction in Marseille (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=tourist_attraction%20in%20Marseille&type=tourist_attraction&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[90/2000] Requête Google Places: tourist_attraction in Marseille (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=tourist_attraction%20in%20Marseille&type=tourist_attraction&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[91/2000] Requête Google Places: spa in Marseille (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=spa%20in%20Marseille&type=spa&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[92/2000] Requête Google Places: spa in Marseille (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=spa%20in%20Marseille&type=spa&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[93/2000] Requête Google Places: spa in Marseille (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=spa%20in%20Marseille&type=spa&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[94/2000] Requête Google Places: spa in Marseille (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=spa%20in%20Marseille&type=spa&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[95/2000] Requête Google Places: spa in Marseille (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=spa%20in%20Marseille&type=spa&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[96/2000] Requête Google Places: shopping_mall in Marseille (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=shopping_mall%20in%20Marseille&type=shopping_mall&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[97/2000] Requête Google Places: shopping_mall in Marseille (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=shopping_mall%20in%20Marseille&type=shopping_mall&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[98/2000] Requête Google Places: shopping_mall in Marseille (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=shopping_mall%20in%20Marseille&type=shopping_mall&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[99/2000] Requête Google Places: shopping_mall in Marseille (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=shopping_mall%20in%20Marseille&type=shopping_mall&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[100/2000] Requête Google Places: shopping_mall in Marseille (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=shopping_mall%20in%20Marseille&type=shopping_mall&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[101/2000] Requête Google Places: zoo in Marseille (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=zoo%20in%20Marseille&type=zoo&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[102/2000] Requête Google Places: zoo in Marseille (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=zoo%20in%20Marseille&type=zoo&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[103/2000] Requête Google Places: zoo in Marseille (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=zoo%20in%20Marseille&type=zoo&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[104/2000] Requête Google Places: zoo in Marseille (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=zoo%20in%20Marseille&type=zoo&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[105/2000] Requête Google Places: zoo in Marseille (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=zoo%20in%20Marseille&type=zoo&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[106/2000] Requête Google Places: amusement_park in Marseille (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=amusement_park%20in%20Marseille&type=amusement_park&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[107/2000] Requête Google Places: amusement_park in Marseille (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=amusement_park%20in%20Marseille&type=amusement_park&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[108/2000] Requête Google Places: amusement_park in Marseille (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=amusement_park%20in%20Marseille&type=amusement_park&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[109/2000] Requête Google Places: amusement_park in Marseille (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=amusement_park%20in%20Marseille&type=amusement_park&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[110/2000] Requête Google Places: amusement_park in Marseille (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=amusement_park%20in%20Marseille&type=amusement_park&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+Déjà 14 activités pour Marseille / café, on saute.
+
+[111/2000] Requête Google Places: library in Marseille (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=library%20in%20Marseille&type=library&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[112/2000] Requête Google Places: library in Marseille (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=library%20in%20Marseille&type=library&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[113/2000] Requête Google Places: library in Marseille (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=library%20in%20Marseille&type=library&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[114/2000] Requête Google Places: library in Marseille (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=library%20in%20Marseille&type=library&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[115/2000] Requête Google Places: library in Marseille (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=library%20in%20Marseille&type=library&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[116/2000] Requête Google Places: movie_theater in Marseille (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=movie_theater%20in%20Marseille&type=movie_theater&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[117/2000] Requête Google Places: movie_theater in Marseille (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=movie_theater%20in%20Marseille&type=movie_theater&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[118/2000] Requête Google Places: movie_theater in Marseille (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=movie_theater%20in%20Marseille&type=movie_theater&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[119/2000] Requête Google Places: movie_theater in Marseille (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=movie_theater%20in%20Marseille&type=movie_theater&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[120/2000] Requête Google Places: movie_theater in Marseille (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=movie_theater%20in%20Marseille&type=movie_theater&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+Déjà 18 activités pour Marseille / insolite, on saute.
+
+Traitement de Lyon...
+Déjà 29 activités pour Lyon / gastronomie, on saute.
+
+[121/2000] Requête Google Places: museum in Lyon (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=museum%20in%20Lyon&type=museum&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[122/2000] Requête Google Places: museum in Lyon (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=museum%20in%20Lyon&type=museum&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[123/2000] Requête Google Places: museum in Lyon (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=museum%20in%20Lyon&type=museum&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[124/2000] Requête Google Places: museum in Lyon (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=museum%20in%20Lyon&type=museum&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[125/2000] Requête Google Places: museum in Lyon (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=museum%20in%20Lyon&type=museum&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[126/2000] Requête Google Places: art_gallery in Lyon (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=art_gallery%20in%20Lyon&type=art_gallery&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[127/2000] Requête Google Places: art_gallery in Lyon (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=art_gallery%20in%20Lyon&type=art_gallery&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[128/2000] Requête Google Places: art_gallery in Lyon (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=art_gallery%20in%20Lyon&type=art_gallery&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[129/2000] Requête Google Places: art_gallery in Lyon (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=art_gallery%20in%20Lyon&type=art_gallery&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[130/2000] Requête Google Places: art_gallery in Lyon (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=art_gallery%20in%20Lyon&type=art_gallery&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[131/2000] Requête Google Places: park in Lyon (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=park%20in%20Lyon&type=park&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[132/2000] Requête Google Places: park in Lyon (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=park%20in%20Lyon&type=park&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[133/2000] Requête Google Places: park in Lyon (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=park%20in%20Lyon&type=park&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[134/2000] Requête Google Places: park in Lyon (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=park%20in%20Lyon&type=park&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[135/2000] Requête Google Places: park in Lyon (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=park%20in%20Lyon&type=park&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[136/2000] Requête Google Places: night_club in Lyon (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=night_club%20in%20Lyon&type=night_club&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[137/2000] Requête Google Places: night_club in Lyon (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=night_club%20in%20Lyon&type=night_club&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: OK
+Nombre de résultats: 1
+Activité déjà existante: La Clef de Voûte
+
+[138/2000] Requête Google Places: night_club in Lyon (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=night_club%20in%20Lyon&type=night_club&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: OK
+Nombre de résultats: 10
+Activité déjà existante: Loft Club Lyon
+Activité déjà existante: Terminal Club
+Activité déjà existante: Barrio Club
+Activité déjà existante: La Maison M.
+Activité déjà existante: Hot Club Lyon
+Activité déjà existante: The New Hollywood
+Activité déjà existante: Ayers Rock
+Activité déjà existante: Barge, La Marquise
+Activité déjà existante: Douala City Bar
+Activité déjà existante: La Fiesta Loca Karaoké Lyon
+
+[139/2000] Requête Google Places: night_club in Lyon (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=night_club%20in%20Lyon&type=night_club&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: OK
+Nombre de résultats: 1
+Activité déjà existante: F&K Bistroclub
+
+[140/2000] Requête Google Places: night_club in Lyon (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=night_club%20in%20Lyon&type=night_club&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: OK
+Nombre de résultats: 1
+Activité déjà existante: Queen club
+Déjà 18 activités pour Lyon / bar, on saute.
+
+[141/2000] Requête Google Places: stadium in Lyon (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=stadium%20in%20Lyon&type=stadium&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[142/2000] Requête Google Places: stadium in Lyon (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=stadium%20in%20Lyon&type=stadium&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[143/2000] Requête Google Places: stadium in Lyon (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=stadium%20in%20Lyon&type=stadium&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[144/2000] Requête Google Places: stadium in Lyon (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=stadium%20in%20Lyon&type=stadium&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[145/2000] Requête Google Places: stadium in Lyon (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=stadium%20in%20Lyon&type=stadium&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[146/2000] Requête Google Places: tourist_attraction in Lyon (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=tourist_attraction%20in%20Lyon&type=tourist_attraction&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[147/2000] Requête Google Places: tourist_attraction in Lyon (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=tourist_attraction%20in%20Lyon&type=tourist_attraction&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[148/2000] Requête Google Places: tourist_attraction in Lyon (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=tourist_attraction%20in%20Lyon&type=tourist_attraction&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[149/2000] Requête Google Places: tourist_attraction in Lyon (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=tourist_attraction%20in%20Lyon&type=tourist_attraction&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[150/2000] Requête Google Places: tourist_attraction in Lyon (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=tourist_attraction%20in%20Lyon&type=tourist_attraction&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[151/2000] Requête Google Places: spa in Lyon (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=spa%20in%20Lyon&type=spa&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[152/2000] Requête Google Places: spa in Lyon (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=spa%20in%20Lyon&type=spa&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[153/2000] Requête Google Places: spa in Lyon (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=spa%20in%20Lyon&type=spa&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[154/2000] Requête Google Places: spa in Lyon (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=spa%20in%20Lyon&type=spa&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[155/2000] Requête Google Places: spa in Lyon (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=spa%20in%20Lyon&type=spa&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[156/2000] Requête Google Places: shopping_mall in Lyon (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=shopping_mall%20in%20Lyon&type=shopping_mall&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[157/2000] Requête Google Places: shopping_mall in Lyon (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=shopping_mall%20in%20Lyon&type=shopping_mall&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[158/2000] Requête Google Places: shopping_mall in Lyon (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=shopping_mall%20in%20Lyon&type=shopping_mall&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[159/2000] Requête Google Places: shopping_mall in Lyon (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=shopping_mall%20in%20Lyon&type=shopping_mall&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[160/2000] Requête Google Places: shopping_mall in Lyon (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=shopping_mall%20in%20Lyon&type=shopping_mall&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[161/2000] Requête Google Places: zoo in Lyon (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=zoo%20in%20Lyon&type=zoo&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[162/2000] Requête Google Places: zoo in Lyon (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=zoo%20in%20Lyon&type=zoo&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[163/2000] Requête Google Places: zoo in Lyon (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=zoo%20in%20Lyon&type=zoo&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[164/2000] Requête Google Places: zoo in Lyon (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=zoo%20in%20Lyon&type=zoo&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[165/2000] Requête Google Places: zoo in Lyon (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=zoo%20in%20Lyon&type=zoo&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[166/2000] Requête Google Places: amusement_park in Lyon (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=amusement_park%20in%20Lyon&type=amusement_park&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[167/2000] Requête Google Places: amusement_park in Lyon (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=amusement_park%20in%20Lyon&type=amusement_park&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[168/2000] Requête Google Places: amusement_park in Lyon (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=amusement_park%20in%20Lyon&type=amusement_park&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[169/2000] Requête Google Places: amusement_park in Lyon (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=amusement_park%20in%20Lyon&type=amusement_park&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[170/2000] Requête Google Places: amusement_park in Lyon (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=amusement_park%20in%20Lyon&type=amusement_park&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[171/2000] Requête Google Places: cafe in Lyon (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=cafe%20in%20Lyon&type=cafe&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[172/2000] Requête Google Places: cafe in Lyon (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=cafe%20in%20Lyon&type=cafe&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: OK
+Nombre de résultats: 4
+Ajouté: Nuage café
+Ajouté: Anticafé Lyon
+Ajouté: Le Grand Café Neuf
+Ajouté: Ô Passage
+
+[173/2000] Requête Google Places: cafe in Lyon (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=cafe%20in%20Lyon&type=cafe&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: OK
+Nombre de résultats: 10
+Ajouté: Café Joyeux
+Ajouté: Slake Coffee House
+Ajouté: Fika Lyon
+Ajouté: La Boîte à Café
+Ajouté: Le Luminarium
+Ajouté: MOMENTO
+Ajouté: Le Perko Café
+Ajouté: Mill Factory
+Ajouté: À Chacun Sa Tasse
+Ajouté: COMME A LA MAISON Coffee Shop Chevreul
+
+[174/2000] Requête Google Places: cafe in Lyon (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=cafe%20in%20Lyon&type=cafe&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: OK
+Nombre de résultats: 1
+Ajouté: Le Grand Café des Négociants
+
+[175/2000] Requête Google Places: cafe in Lyon (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=cafe%20in%20Lyon&type=cafe&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[176/2000] Requête Google Places: library in Lyon (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=library%20in%20Lyon&type=library&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[177/2000] Requête Google Places: library in Lyon (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=library%20in%20Lyon&type=library&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[178/2000] Requête Google Places: library in Lyon (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=library%20in%20Lyon&type=library&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[179/2000] Requête Google Places: library in Lyon (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=library%20in%20Lyon&type=library&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[180/2000] Requête Google Places: library in Lyon (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=library%20in%20Lyon&type=library&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[181/2000] Requête Google Places: movie_theater in Lyon (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=movie_theater%20in%20Lyon&type=movie_theater&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[182/2000] Requête Google Places: movie_theater in Lyon (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=movie_theater%20in%20Lyon&type=movie_theater&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[183/2000] Requête Google Places: movie_theater in Lyon (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=movie_theater%20in%20Lyon&type=movie_theater&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[184/2000] Requête Google Places: movie_theater in Lyon (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=movie_theater%20in%20Lyon&type=movie_theater&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[185/2000] Requête Google Places: movie_theater in Lyon (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=movie_theater%20in%20Lyon&type=movie_theater&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[186/2000] Requête Google Places: point_of_interest in Lyon (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=point_of_interest%20in%20Lyon&type=point_of_interest&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[187/2000] Requête Google Places: point_of_interest in Lyon (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=point_of_interest%20in%20Lyon&type=point_of_interest&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: OK
+Nombre de résultats: 1
+Activité déjà existante: Anticafé Lyon
+
+[188/2000] Requête Google Places: point_of_interest in Lyon (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=point_of_interest%20in%20Lyon&type=point_of_interest&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: OK
+Nombre de résultats: 10
+Activité déjà existante: Les Fils À Maman Lyon
+Ajouté: Le Paradis du Fruit - Lyon République
+Ajouté: Nespresso Boutique
+Ajouté: Matsuri Lyon Presqu'ile
+Ajouté: Berthom Old Lyon
+Ajouté: Kusmi Tea | Les Jacobins | Lyon 2ème
+Ajouté: My Little Warung Lyon Mercière
+Ajouté: Léon - Lyon Mercière
+Ajouté: JD Sports Lyon Rue de la République
+Ajouté: BREIZH Café Lyon Albon | La Crêpe Autrement
+
+[189/2000] Requête Google Places: point_of_interest in Lyon (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=point_of_interest%20in%20Lyon&type=point_of_interest&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: OK
+Nombre de résultats: 4
+Ajouté: SEPHORA LYON REPUBLIQUE
+Ajouté: FOSSIL Store Lyon Edouard Herriot
+Activité déjà existante: L'Institution
+Ajouté: Polo Ralph Lauren Lyon
+
+[190/2000] Requête Google Places: point_of_interest in Lyon (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=point_of_interest%20in%20Lyon&type=point_of_interest&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: OK
+Nombre de résultats: 1
+Ajouté: Louis Vuitton Lyon
+
+Traitement de Toulouse...
+Déjà 30 activités pour Toulouse / gastronomie, on saute.
+
+[191/2000] Requête Google Places: museum in Toulouse (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=museum%20in%20Toulouse&type=museum&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[192/2000] Requête Google Places: museum in Toulouse (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=museum%20in%20Toulouse&type=museum&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[193/2000] Requête Google Places: museum in Toulouse (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=museum%20in%20Toulouse&type=museum&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[194/2000] Requête Google Places: museum in Toulouse (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=museum%20in%20Toulouse&type=museum&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[195/2000] Requête Google Places: museum in Toulouse (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=museum%20in%20Toulouse&type=museum&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[196/2000] Requête Google Places: art_gallery in Toulouse (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=art_gallery%20in%20Toulouse&type=art_gallery&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[197/2000] Requête Google Places: art_gallery in Toulouse (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=art_gallery%20in%20Toulouse&type=art_gallery&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[198/2000] Requête Google Places: art_gallery in Toulouse (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=art_gallery%20in%20Toulouse&type=art_gallery&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[199/2000] Requête Google Places: art_gallery in Toulouse (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=art_gallery%20in%20Toulouse&type=art_gallery&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[200/2000] Requête Google Places: art_gallery in Toulouse (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=art_gallery%20in%20Toulouse&type=art_gallery&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[201/2000] Requête Google Places: park in Toulouse (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=park%20in%20Toulouse&type=park&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[202/2000] Requête Google Places: park in Toulouse (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=park%20in%20Toulouse&type=park&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[203/2000] Requête Google Places: park in Toulouse (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=park%20in%20Toulouse&type=park&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[204/2000] Requête Google Places: park in Toulouse (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=park%20in%20Toulouse&type=park&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[205/2000] Requête Google Places: park in Toulouse (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=park%20in%20Toulouse&type=park&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[206/2000] Requête Google Places: night_club in Toulouse (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=night_club%20in%20Toulouse&type=night_club&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[207/2000] Requête Google Places: night_club in Toulouse (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=night_club%20in%20Toulouse&type=night_club&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: OK
+Nombre de résultats: 1
+Activité déjà existante: 1862 ARTYBAR
+
+[208/2000] Requête Google Places: night_club in Toulouse (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=night_club%20in%20Toulouse&type=night_club&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: OK
+Nombre de résultats: 10
+Activité déjà existante: O Club By Charleston
+Activité déjà existante: Californication Club
+Activité déjà existante: Le Purple
+Activité déjà existante: Le Bazar
+Activité déjà existante: DOWNTOWN FACTORY
+Activité déjà existante: Planète Rock
+Activité déjà existante: The Coup d'Etat
+Activité déjà existante: Limelight
+Activité déjà existante: Discothèque Esméralda
+Activité déjà existante: L'ÉTOILE Club
+
+[209/2000] Requête Google Places: night_club in Toulouse (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=night_club%20in%20Toulouse&type=night_club&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: OK
+Nombre de résultats: 1
+Activité déjà existante: ICE CLUB
+
+[210/2000] Requête Google Places: night_club in Toulouse (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=night_club%20in%20Toulouse&type=night_club&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[211/2000] Requête Google Places: bar in Toulouse (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=bar%20in%20Toulouse&type=bar&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[212/2000] Requête Google Places: bar in Toulouse (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=bar%20in%20Toulouse&type=bar&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: OK
+Nombre de résultats: 10
+Ajouté: Le Petit Voisin
+Ajouté: Café Populaire
+Ajouté: The Dry Dock
+Ajouté: The Petit London
+Ajouté: Breughel l'ancien
+Ajouté: Chez Tonton
+Ajouté: Tito Mojito - Jeanne d'Arc
+Ajouté: ÔBohem
+Ajouté: Le Bar ( Belfort )
+Ajouté: BlastoDice
+
+[213/2000] Requête Google Places: bar in Toulouse (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=bar%20in%20Toulouse&type=bar&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: OK
+Nombre de résultats: 10
+Ajouté: The Hopscotch Pub & Brewery
+Ajouté: Le Bar Basque Toulouse
+Ajouté: The London Town English Pub Toulouse
+Ajouté: Moloko
+Ajouté: The Nasdrovia Bar
+Ajouté: Les Tricheurs
+Ajouté: Thirsty Monk
+Ajouté: L'Heure du Singe
+Ajouté: La Couleur de la Culotte
+Ajouté: Pub Saint Pierre
+
+[214/2000] Requête Google Places: bar in Toulouse (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=bar%20in%20Toulouse&type=bar&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: OK
+Nombre de résultats: 1
+Ajouté: Fat Cat
+
+[215/2000] Requête Google Places: bar in Toulouse (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=bar%20in%20Toulouse&type=bar&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[216/2000] Requête Google Places: stadium in Toulouse (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=stadium%20in%20Toulouse&type=stadium&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[217/2000] Requête Google Places: stadium in Toulouse (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=stadium%20in%20Toulouse&type=stadium&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[218/2000] Requête Google Places: stadium in Toulouse (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=stadium%20in%20Toulouse&type=stadium&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[219/2000] Requête Google Places: stadium in Toulouse (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=stadium%20in%20Toulouse&type=stadium&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[220/2000] Requête Google Places: stadium in Toulouse (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=stadium%20in%20Toulouse&type=stadium&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[221/2000] Requête Google Places: tourist_attraction in Toulouse (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=tourist_attraction%20in%20Toulouse&type=tourist_attraction&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[222/2000] Requête Google Places: tourist_attraction in Toulouse (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=tourist_attraction%20in%20Toulouse&type=tourist_attraction&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[223/2000] Requête Google Places: tourist_attraction in Toulouse (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=tourist_attraction%20in%20Toulouse&type=tourist_attraction&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[224/2000] Requête Google Places: tourist_attraction in Toulouse (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=tourist_attraction%20in%20Toulouse&type=tourist_attraction&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[225/2000] Requête Google Places: tourist_attraction in Toulouse (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=tourist_attraction%20in%20Toulouse&type=tourist_attraction&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[226/2000] Requête Google Places: spa in Toulouse (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=spa%20in%20Toulouse&type=spa&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[227/2000] Requête Google Places: spa in Toulouse (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=spa%20in%20Toulouse&type=spa&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[228/2000] Requête Google Places: spa in Toulouse (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=spa%20in%20Toulouse&type=spa&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[229/2000] Requête Google Places: spa in Toulouse (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=spa%20in%20Toulouse&type=spa&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[230/2000] Requête Google Places: spa in Toulouse (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=spa%20in%20Toulouse&type=spa&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[231/2000] Requête Google Places: shopping_mall in Toulouse (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=shopping_mall%20in%20Toulouse&type=shopping_mall&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[232/2000] Requête Google Places: shopping_mall in Toulouse (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=shopping_mall%20in%20Toulouse&type=shopping_mall&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[233/2000] Requête Google Places: shopping_mall in Toulouse (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=shopping_mall%20in%20Toulouse&type=shopping_mall&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[234/2000] Requête Google Places: shopping_mall in Toulouse (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=shopping_mall%20in%20Toulouse&type=shopping_mall&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: OK
+Nombre de résultats: 1
+Ajouté: Dubai Mall
+
+[235/2000] Requête Google Places: shopping_mall in Toulouse (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=shopping_mall%20in%20Toulouse&type=shopping_mall&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[236/2000] Requête Google Places: zoo in Toulouse (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=zoo%20in%20Toulouse&type=zoo&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[237/2000] Requête Google Places: zoo in Toulouse (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=zoo%20in%20Toulouse&type=zoo&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[238/2000] Requête Google Places: zoo in Toulouse (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=zoo%20in%20Toulouse&type=zoo&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[239/2000] Requête Google Places: zoo in Toulouse (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=zoo%20in%20Toulouse&type=zoo&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[240/2000] Requête Google Places: zoo in Toulouse (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=zoo%20in%20Toulouse&type=zoo&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[241/2000] Requête Google Places: amusement_park in Toulouse (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=amusement_park%20in%20Toulouse&type=amusement_park&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[242/2000] Requête Google Places: amusement_park in Toulouse (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=amusement_park%20in%20Toulouse&type=amusement_park&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[243/2000] Requête Google Places: amusement_park in Toulouse (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=amusement_park%20in%20Toulouse&type=amusement_park&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[244/2000] Requête Google Places: amusement_park in Toulouse (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=amusement_park%20in%20Toulouse&type=amusement_park&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[245/2000] Requête Google Places: amusement_park in Toulouse (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=amusement_park%20in%20Toulouse&type=amusement_park&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[246/2000] Requête Google Places: cafe in Toulouse (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=cafe%20in%20Toulouse&type=cafe&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[247/2000] Requête Google Places: cafe in Toulouse (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=cafe%20in%20Toulouse&type=cafe&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: OK
+Nombre de résultats: 4
+Ajouté: Eurêkafé
+Ajouté: Le Café de Toulouse
+Ajouté: El Deseo Café
+Ajouté: Tôt ou Tarte - Coffee Shop / Snack
+
+[248/2000] Requête Google Places: cafe in Toulouse (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=cafe%20in%20Toulouse&type=cafe&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: OK
+Nombre de résultats: 10
+Activité déjà existante: CERISE - Le Café
+Activité déjà existante: Flower's Café
+Activité déjà existante: Ras la Tasse
+Activité déjà existante: Allegory Coffee Bar
+Activité déjà existante: Café La Fiancée | Brunch Toulouse Capitole
+Activité déjà existante: BROLENDA COFFEE SHOP
+Ajouté: Café Bống
+Ajouté: Café Brûlé
+Ajouté: Café des Artistes
+Ajouté: Café DEN
+
+[249/2000] Requête Google Places: cafe in Toulouse (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=cafe%20in%20Toulouse&type=cafe&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[250/2000] Requête Google Places: cafe in Toulouse (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=cafe%20in%20Toulouse&type=cafe&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[251/2000] Requête Google Places: library in Toulouse (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=library%20in%20Toulouse&type=library&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[252/2000] Requête Google Places: library in Toulouse (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=library%20in%20Toulouse&type=library&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[253/2000] Requête Google Places: library in Toulouse (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=library%20in%20Toulouse&type=library&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[254/2000] Requête Google Places: library in Toulouse (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=library%20in%20Toulouse&type=library&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[255/2000] Requête Google Places: library in Toulouse (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=library%20in%20Toulouse&type=library&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[256/2000] Requête Google Places: movie_theater in Toulouse (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=movie_theater%20in%20Toulouse&type=movie_theater&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[257/2000] Requête Google Places: movie_theater in Toulouse (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=movie_theater%20in%20Toulouse&type=movie_theater&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[258/2000] Requête Google Places: movie_theater in Toulouse (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=movie_theater%20in%20Toulouse&type=movie_theater&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[259/2000] Requête Google Places: movie_theater in Toulouse (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=movie_theater%20in%20Toulouse&type=movie_theater&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[260/2000] Requête Google Places: movie_theater in Toulouse (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=movie_theater%20in%20Toulouse&type=movie_theater&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[261/2000] Requête Google Places: point_of_interest in Toulouse (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=point_of_interest%20in%20Toulouse&type=point_of_interest&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[262/2000] Requête Google Places: point_of_interest in Toulouse (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=point_of_interest%20in%20Toulouse&type=point_of_interest&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: OK
+Nombre de résultats: 2
+Activité déjà existante: Primark
+Activité déjà existante: Wok to Walk Capitole
+
+[263/2000] Requête Google Places: point_of_interest in Toulouse (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=point_of_interest%20in%20Toulouse&type=point_of_interest&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: OK
+Nombre de résultats: 10
+Activité déjà existante: VANS Store Toulouse
+Activité déjà existante: Amorino
+Activité déjà existante: JD Sports Toulouse Rue Saint-Rome
+Activité déjà existante: Kusmi Tea | Toulouse
+Activité déjà existante: Nespresso Store Toulouse-Mercié
+Activité déjà existante: KFC Toulouse Wilson
+Activité déjà existante: PAUL
+Activité déjà existante: Nicolas Toulouse Victor Hugo
+Activité déjà existante: Big Fernand
+Activité déjà existante: Five Guys
+
+[264/2000] Requête Google Places: point_of_interest in Toulouse (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=point_of_interest%20in%20Toulouse&type=point_of_interest&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: OK
+Nombre de résultats: 3
+Activité déjà existante: SEPHORA TOULOUSE CAPITOLE
+Activité déjà existante: Quiksilver Roxy
+Activité déjà existante: SEPHORA TOULOUSE WILSON
+
+[265/2000] Requête Google Places: point_of_interest in Toulouse (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=point_of_interest%20in%20Toulouse&type=point_of_interest&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: OK
+Nombre de résultats: 1
+Ajouté: Galeries Lafayette Swarovski Toulouse
+
+Traitement de Nice...
+Déjà 22 activités pour Nice / gastronomie, on saute.
+
+[266/2000] Requête Google Places: museum in Nice (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=museum%20in%20Nice&type=museum&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[267/2000] Requête Google Places: museum in Nice (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=museum%20in%20Nice&type=museum&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[268/2000] Requête Google Places: museum in Nice (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=museum%20in%20Nice&type=museum&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[269/2000] Requête Google Places: museum in Nice (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=museum%20in%20Nice&type=museum&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[270/2000] Requête Google Places: museum in Nice (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=museum%20in%20Nice&type=museum&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[271/2000] Requête Google Places: art_gallery in Nice (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=art_gallery%20in%20Nice&type=art_gallery&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[272/2000] Requête Google Places: art_gallery in Nice (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=art_gallery%20in%20Nice&type=art_gallery&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[273/2000] Requête Google Places: art_gallery in Nice (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=art_gallery%20in%20Nice&type=art_gallery&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[274/2000] Requête Google Places: art_gallery in Nice (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=art_gallery%20in%20Nice&type=art_gallery&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[275/2000] Requête Google Places: art_gallery in Nice (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=art_gallery%20in%20Nice&type=art_gallery&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[276/2000] Requête Google Places: park in Nice (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=park%20in%20Nice&type=park&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[277/2000] Requête Google Places: park in Nice (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=park%20in%20Nice&type=park&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[278/2000] Requête Google Places: park in Nice (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=park%20in%20Nice&type=park&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[279/2000] Requête Google Places: park in Nice (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=park%20in%20Nice&type=park&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[280/2000] Requête Google Places: park in Nice (prix: 4)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=park%20in%20Nice&type=park&minprice=4&maxprice=4&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[281/2000] Requête Google Places: night_club in Nice (prix: 0)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=night_club%20in%20Nice&type=night_club&minprice=0&maxprice=0&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[282/2000] Requête Google Places: night_club in Nice (prix: 1)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=night_club%20in%20Nice&type=night_club&minprice=1&maxprice=1&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: ZERO_RESULTS
+Erreur API: ZERO_RESULTS
+
+[283/2000] Requête Google Places: night_club in Nice (prix: 2)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=night_club%20in%20Nice&type=night_club&minprice=2&maxprice=2&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8
+Status: OK
+Nombre de résultats: 5
+Activité déjà existante: Tapas WILD CLUB
+Activité déjà existante: Le Six
+Activité déjà existante: Le Bulldog Pub Pompeï
+Activité déjà existante: KOSMA - Live Club
+Activité déjà existante: Le Klub
+
+[284/2000] Requête Google Places: night_club in Nice (prix: 3)
+URL: https://maps.googleapis.com/maps/api/place/textsearch/json?query=night_club%20in%20Nice&type=night_club&minprice=3&maxprice=3&key=AIzaSyDS0Cfpl71h57CkfJvVJki6JQCZ-wUN4p8

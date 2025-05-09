@@ -10,10 +10,26 @@ import { Program } from '@/types/program'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Destination } from '@/types/destination'
 
+interface ProgramActivity {
+  activity_id: string;
+  order_index: number;
+  activities: {
+    id: string;
+    title: string;
+    description: string;
+    price: number;
+    address: string;
+    imageurl: string;
+    category: string;
+    city: string;
+  };
+}
+
 export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
   const [programs, setPrograms] = useState<Program[]>([])
   const [destinations, setDestinations] = useState<Destination[]>([])
+  const [error, setError] = useState<string | null>(null)
   const router = useRouter()
   const supabase = createClientComponentClient()
 
@@ -64,6 +80,7 @@ export default function DashboardPage() {
           .order('city')
         
         if (error) {
+          setError('Erreur lors du chargement des destinations : ' + error.message)
           throw error
         }
         
@@ -77,6 +94,7 @@ export default function DashboardPage() {
           setDestinations(destinationsWithImages)
         }
       } catch (error) {
+        setError('Erreur lors du chargement des destinations')
         console.error('Erreur lors du chargement des destinations:', error)
       } finally {
         setLoading(false)
@@ -92,6 +110,7 @@ export default function DashboardPage() {
         const { data: { session }, error } = await supabase.auth.getSession()
         
         if (error || !session) {
+          setError('Utilisateur non connecté ou session expirée')
           router.replace('/login')
           return
         }
@@ -99,34 +118,77 @@ export default function DashboardPage() {
         // Charger les programmes de l'utilisateur avec leurs activités
         const { data: userPrograms, error: programsError } = await supabase
           .from('programs')
-          .select(`
-            *,
-            program_activities (
-              activities (
-                id,
-                title,
-                description,
-                price,
-                address,
-                imageurl,
-                category,
-                city
-              )
-            )
-          `)
+          .select('*')
           .eq('user_id', session.user.id)
           .order('created_at', { ascending: false })
 
-        if (programsError) throw programsError
+        if (programsError) {
+          setError('Erreur lors du chargement des programmes : ' + programsError.message)
+          throw programsError
+        }
 
-        // Transformer les données pour avoir les activités directement dans le programme
-        const transformedPrograms = userPrograms?.map(program => ({
-          ...program,
-          activities: program.program_activities?.map((pa: any) => pa.activities) || []
-        })) || []
+        if (!userPrograms || userPrograms.length === 0) {
+          setPrograms([])
+          setLoading(false)
+          return
+        }
 
-        setPrograms(transformedPrograms)
+        // Charger les activités pour chaque programme
+        const programsWithActivities = await Promise.all(
+          userPrograms.map(async (program) => {
+            try {
+              const { data: activities, error: activitiesError } = await supabase
+                .from('program_activities')
+                .select(`
+                  activity_id,
+                  order_index,
+                  activities (
+                    id,
+                    title,
+                    description,
+                    price,
+                    address,
+                    imageurl,
+                    category,
+                    city
+                  )
+                `)
+                .eq('program_id', program.id)
+                .order('order_index') as { data: ProgramActivity[] | null, error: any };
+
+              if (activitiesError) {
+                console.error('Erreur lors de la récupération des activités:', activitiesError);
+                setError('Erreur lors de la récupération des activités : ' + activitiesError.message)
+                return program;
+              }
+
+              return {
+                ...program,
+                activities: (activities || []).map(pa => ({
+                  id: pa.activity_id,
+                  title: pa.activities.title,
+                  description: pa.activities.description,
+                  price: pa.activities.price,
+                  address: pa.activities.address,
+                  imageurl: pa.activities.imageurl,
+                  category: pa.activities.category,
+                  city: pa.activities.city
+                }))
+              };
+            } catch (error) {
+              setError('Erreur lors du chargement des activités')
+              console.error('Erreur lors du chargement des activités:', error);
+              return {
+                ...program,
+                activities: []
+              };
+            }
+          })
+        );
+
+        setPrograms(programsWithActivities)
       } catch (error) {
+        setError('Erreur lors du chargement des programmes ou de la session')
         console.error('Erreur:', error)
       } finally {
         setLoading(false)
@@ -179,6 +241,18 @@ export default function DashboardPage() {
     return () => document.body.removeAttribute('data-dashboard-page');
   }, []);
 
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-xl font-bold text-red-600 mb-4">Erreur</h2>
+          <p className="text-gray-700 mb-4">{error}</p>
+          <button onClick={() => window.location.reload()} className="px-4 py-2 bg-indigo-600 text-white rounded-lg">Recharger la page</button>
+        </div>
+      </div>
+    )
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -207,7 +281,8 @@ export default function DashboardPage() {
               alt="Mascotte"
               width={150}
               height={150}
-              className="mx-auto mb-6"
+              priority
+              className="mx-auto mb-6 object-contain w-auto h-auto"
             />
             <p className="text-gray-600 mb-4">Vous n'avez pas encore de programme enregistré.</p>
             <button

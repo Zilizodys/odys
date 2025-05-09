@@ -17,6 +17,7 @@ export interface Suggestion {
   location?: string
   price_estimate?: number
   link?: string
+  keywords?: string[]
 }
 
 export const CATEGORY_LABELS: Record<SuggestionCategory, string> = {
@@ -42,7 +43,8 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     image: '/images/restaurants/chateaubriand.jpg',
     location: '129 Avenue Parmentier, 75011 Paris',
     price_estimate: 150,
-    link: 'https://lechateaubriand.com'
+    link: 'https://lechateaubriand.com',
+    keywords: ['romantique', 'moderne', 'gastronomique']
   },
   {
     id: 'p-rest-2',
@@ -104,7 +106,8 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     image: '',
     location: '',
     price_estimate: 0,
-    link: ''
+    link: '',
+    keywords: ['exotique', 'branché', 'romantique']
   },
   {
     id: 'p-bar-2',
@@ -166,7 +169,8 @@ export const MOCK_SUGGESTIONS: Suggestion[] = [
     image: '',
     location: '',
     price_estimate: 0,
-    link: ''
+    link: '',
+    keywords: ['culturel', 'incontournable', 'familial']
   },
   {
     id: 'p-cult-2',

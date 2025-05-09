@@ -88,13 +88,23 @@ export function autoAssignActivities(
   for (let day of days) {
     for (let slotIdx = 0; slotIdx < TIME_SLOTS.length; slotIdx++) {
       const slotKey = TIME_SLOTS[slotIdx].key
-      // Repas : restaurant/gastronomie uniquement
+      // Repas : uniquement restaurant/gastronomie
       if (slotKey === 'midi' || slotKey === 'dîner') {
-        if (restoIdx < restaurantActivities.length) {
-          day.activities[slotIdx].activities = [restaurantActivities[restoIdx]]
-          placedIds.add(restaurantActivities[restoIdx].id)
-          restoIdx++
+        const slotActivities: Activity[] = []
+        let count = 0
+        let localRestoIdx = restoIdx
+        // Ajouter jusqu'à 2 restaurants si disponibles
+        while (localRestoIdx < restaurantActivities.length && count < 2) {
+          if (!placedIds.has(restaurantActivities[localRestoIdx].id)) {
+            slotActivities.push(restaurantActivities[localRestoIdx])
+            placedIds.add(restaurantActivities[localRestoIdx].id)
+            count++
+          }
+          localRestoIdx++
         }
+        restoIdx = localRestoIdx
+        // NE PAS compléter avec d'autres activités : on laisse vide si pas assez de restos
+        day.activities[slotIdx].activities = slotActivities
       } else {
         // Autres slots : on cherche les activités adaptées à ce créneau
         const activitiesForSlot = otherActivities.filter(a => {
@@ -104,7 +114,12 @@ export function autoAssignActivities(
           return slots.includes(slotKey as TimeSlot)
         })
         // On place max 2 activités par slot
-        const toAdd = activitiesForSlot.slice(0, 2)
+        let toAdd = activitiesForSlot.slice(0, 2)
+        // Fallback : si moins de 2, compléter avec n'importe quelle activité non placée
+        if (toAdd.length < 2) {
+          const fallback = otherActivities.filter(a => !placedIds.has(a.id) && !toAdd.includes(a)).slice(0, 2 - toAdd.length)
+          toAdd = [...toAdd, ...fallback]
+        }
         day.activities[slotIdx].activities = toAdd
         toAdd.forEach(a => placedIds.add(a.id))
       }

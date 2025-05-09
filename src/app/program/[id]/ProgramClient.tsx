@@ -17,7 +17,7 @@ import { Pencil } from 'lucide-react'
 import { Dialog } from '@headlessui/react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useMotionValue, useAnimation } from 'framer-motion'
-import ProgramMap from '@/components/program/ProgramMap'
+import { useState as useAccordionState } from 'react'
 
 interface Program {
   id: string
@@ -200,6 +200,13 @@ export default function ProgramClient({ programId }: { programId: string }) {
   const [error, setError] = useState<string | null>(null)
   const [isMapFullscreen, setIsMapFullscreen] = useState(false)
 
+  // État pour gérer l'ouverture des accordéons par catégorie
+  const [openCategories, setOpenCategories] = useAccordionState<{ [key: string]: boolean }>({});
+
+  const handleToggleCategory = (category: string) => {
+    setOpenCategories(prev => ({ ...prev, [category]: !prev[category] }));
+  };
+
   // Fetch du programme côté client
   useEffect(() => {
     async function fetchProgram() {
@@ -207,43 +214,52 @@ export default function ProgramClient({ programId }: { programId: string }) {
       setError(null)
       try {
         const supabase = createClient()
+        
+        // Première requête : récupérer le programme
         const { data: program, error: programError } = await supabase
           .from('programs')
-          .select(`
-            id,
-            user_id,
-            title,
-            description,
-            destination,
-            start_date,
-            end_date,
-            budget,
-            companion,
-            created_at,
-            updated_at,
-            coverImage,
-            moods,
-            program_activities!inner (
-              activity:activities (
-                id,
-                title,
-                description,
-                price,
-                address,
-                imageurl,
-                category,
-                city
-              )
-            )
-          `)
+          .select('*')
           .eq('id', programId)
           .single()
+
         if (programError || !program) {
+          console.error('Erreur programme:', programError)
           setError('Programme introuvable ou erreur de chargement.')
           setIsLoading(false)
           return
         }
-        const activities = (program.program_activities || []).map((pa: any) => pa.activity)
+
+        // Deuxième requête : récupérer les activités
+        const { data: programActivities, error: activitiesError } = await supabase
+          .from('program_activities')
+          .select(`
+            activity_id,
+            order_index,
+            activities (
+              id,
+              title,
+              description,
+              price,
+              address,
+              imageurl,
+              category,
+              city
+            )
+          `)
+          .eq('program_id', programId)
+          .order('order_index')
+
+        if (activitiesError) {
+          console.error('Erreur activités:', activitiesError)
+          setError('Erreur lors du chargement des activités.')
+          setIsLoading(false)
+          return
+        }
+
+        const activities = (programActivities || [])
+          .map((pa: any) => pa.activities)
+          .filter(Boolean)
+
         let coverImage = program.coverImage
         if (!coverImage) {
           const { data: destData } = await supabase
@@ -253,6 +269,7 @@ export default function ProgramClient({ programId }: { programId: string }) {
             .single()
           coverImage = (destData && 'imageurl' in destData) ? destData.imageurl : '/images/activities/Mascot.png'
         }
+
         setProgram({
           id: program.id,
           title: program.title,
@@ -272,6 +289,7 @@ export default function ProgramClient({ programId }: { programId: string }) {
         })
         setIsLoading(false)
       } catch (e) {
+        console.error('Erreur complète:', e)
         setError('Erreur lors du chargement du programme.')
         setIsLoading(false)
       }
@@ -313,6 +331,7 @@ export default function ProgramClient({ programId }: { programId: string }) {
         throw new Error('Client Supabase non initialisé')
       }
 
+      // Supprimer l'activité de la table program_activities
       const { error: deleteError } = await supabase
         .from('program_activities')
         .delete()
@@ -323,10 +342,28 @@ export default function ProgramClient({ programId }: { programId: string }) {
         throw deleteError
       }
 
-      setProgram(prev => ({
-        ...prev!,
-        activities: prev!.activities.filter(a => a.id !== activityId)
-      }))
+      // Mettre à jour l'état local
+      setProgram(prev => {
+        if (!prev) return null
+        return {
+          ...prev,
+          activities: prev.activities.filter(a => a.id !== activityId)
+        }
+      })
+
+      // Mettre à jour le planning si nécessaire
+      setPlanning(prev => {
+        const newPlanning = { ...prev }
+        newPlanning.days = newPlanning.days.map(day => ({
+          ...day,
+          activities: day.activities.map(slot => ({
+            ...slot,
+            activities: slot.activities.filter(a => a.id !== activityId)
+          }))
+        }))
+        return newPlanning
+      })
+
     } catch (error) {
       console.error('Erreur lors de la suppression de l\'activité:', error)
       alert('Une erreur est survenue lors de la suppression de l\'activité.')
@@ -548,33 +585,33 @@ export default function ProgramClient({ programId }: { programId: string }) {
           </div>
         </div>
       </div>
+      {/* Switch entre planning et liste des activités sauvegardées */}
+      <div className="flex justify-center items-center my-6 px-4 sm:px-8">
+        <div className="relative flex bg-indigo-50 rounded-full p-1 shadow-sm border border-indigo-100 w-fit">
+          <button
+            onClick={() => setView('planning')}
+            className={`px-6 py-2 rounded-full font-semibold focus:outline-none transition-all duration-200
+              ${view === 'planning'
+                ? 'bg-indigo-600 text-white shadow'
+                : 'bg-transparent text-indigo-700 hover:bg-indigo-100'}`}
+            aria-current={view === 'planning'}
+          >
+            Planning
+          </button>
+          <button
+            onClick={() => setView('activities')}
+            className={`px-6 py-2 rounded-full font-semibold focus:outline-none transition-all duration-200
+              ${view === 'activities'
+                ? 'bg-indigo-600 text-white shadow'
+                : 'bg-transparent text-indigo-700 hover:bg-indigo-100'}`}
+            aria-current={view === 'activities'}
+          >
+            Activités
+          </button>
+        </div>
+      </div>
       {/* Contenu principal avec padding latéral */}
       <div className="w-full px-4 py-8 -mt-8">
-        <div className="mb-8">
-          <div className="grid grid-cols-2 rounded-lg border border-gray-200 bg-white overflow-hidden">
-            <button
-              onClick={() => setView('planning')}
-              className={`px-4 py-3 text-sm font-medium transition-colors ${
-                view === 'planning'
-                  ? 'bg-indigo-600 text-white'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-              }`}
-            >
-              Planning
-            </button>
-            <button
-              onClick={() => setView('activities')}
-              className={`px-4 py-3 text-sm font-medium transition-colors ${
-                view === 'activities'
-                  ? 'bg-indigo-600 text-white'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-              }`}
-            >
-              Liste des activités
-            </button>
-          </div>
-        </div>
-
         {view === 'planning' ? (
           <ProgramPlanningEditor 
             planning={planning} 
@@ -593,18 +630,15 @@ export default function ProgramClient({ programId }: { programId: string }) {
                 onActivityClick={setSelectedActivity}
                 onActivityDelete={handleDeleteActivity}
                 programId={program.id}
-                programActivities={programActivities}
               />
             ))}
+            {selectedActivity && (
+              <ActivityModal
+                activity={selectedActivity}
+                onClose={() => setSelectedActivity(null)}
+              />
+            )}
           </div>
-        )}
-
-        {selectedActivity && (
-          <ActivityModal
-            activity={selectedActivity}
-            onClose={() => setSelectedActivity(null)}
-            activities={program.activities}
-          />
         )}
       </div>
       {/* Modale d'édition (à implémenter) */}

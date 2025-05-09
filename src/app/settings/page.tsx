@@ -417,7 +417,7 @@ export default function SettingsPage() {
                       <label key={style} className="flex items-center space-x-2">
                         <input
                           type="checkbox"
-                          checked={travelPreferences.travelStyle.includes(style.toLowerCase())}
+                          checked={Array.isArray(travelPreferences.travelStyle) && travelPreferences.travelStyle.includes(style.toLowerCase())}
                           onChange={(e) => {
                             const newStyle = style.toLowerCase()
                             setTravelPreferences(prev => ({
