@@ -90,7 +90,12 @@ const withPWA = require('next-pwa')({
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['localhost'],
+    domains: [
+      'localhost',
+      'images.unsplash.com',
+      'images.pexels.com',
+      'maps.googleapis.com'
+    ],
     unoptimized: process.env.NODE_ENV === 'development'
   },
   webpack: (config, { dev, isServer }) => {
