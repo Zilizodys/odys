@@ -156,7 +156,7 @@ async function geocodeAddress(address) {
     
     if (!res.ok) {
       console.error(`Erreur HTTP: ${res.status} ${res.statusText}`);
-      return null;
+  return null;
     }
     
     const data = await res.json();
@@ -323,21 +323,21 @@ async function main() {
   try {
     console.log('Démarrage du script de géocodage...');
     
-    const { data: activities, error } = await supabase
-      .from('activities')
-      .select('id, address, city')
-      .is('lat', null);
+  const { data: activities, error } = await supabase
+    .from('activities')
+    .select('id, address, city')
+    .is('lat', null);
 
-    if (error) {
-      console.error('Erreur récupération activités:', error);
-      return;
-    }
+  if (error) {
+    console.error('Erreur récupération activités:', error);
+    return;
+  }
 
     console.log(`Nombre d'activités à traiter: ${activities.length}`);
 
     const failedAddresses = [];
 
-    for (const activity of activities) {
+  for (const activity of activities) {
       try {
         console.log(`\n--- Traitement de l'activité ${activity.id} ---`);
         console.log(`Adresse originale: ${activity.address}`);
@@ -347,13 +347,13 @@ async function main() {
         const fullAddress = formatAddressForCountry(activity.address, activity.city, country);
         console.log(`Adresse formatée: ${fullAddress}`);
         
-        const location = await geocodeAddress(fullAddress);
+    const location = await geocodeAddress(fullAddress);
         
-        if (location) {
+    if (location) {
           const { error: updateError } = await supabase
-            .from('activities')
-            .update({ lat: location.lat, lng: location.lng })
-            .eq('id', activity.id);
+        .from('activities')
+        .update({ lat: location.lat, lng: location.lng })
+        .eq('id', activity.id);
             
           if (updateError) {
             console.error(`Erreur mise à jour Supabase: ${updateError.message}`);
@@ -387,7 +387,7 @@ async function main() {
             } else {
               console.log(`✅ (Enrichie) Activité ${activity.id} géocodée : ${enrichedLocation.lat}, ${enrichedLocation.lng}`);
             }
-          } else {
+    } else {
             console.warn(`❌ Géocodage échoué (après enrichissement) pour l'activité ${activity.id}`);
             failedAddresses.push({
               id: activity.id,
@@ -405,7 +405,7 @@ async function main() {
           originalCity: activity.city,
           error: error.message
         });
-      }
+    }
       
       // Pause plus longue entre les requêtes
       await new Promise(r => setTimeout(r, 1000));

@@ -17,7 +17,6 @@ export default function GoogleSignInButton({ redirectTo }: GoogleSignInButtonPro
         throw new Error('Impossible de créer le client Supabase')
       }
 
-      alert('GOOGLE CLICK')
       console.log('REDIRECT TO:', `${window.location.origin}/auth/callback?redirectTo=${encodeURIComponent(redirectTo)}`)
       const { error } = await client.auth.signInWithOAuth({
         provider: 'google',

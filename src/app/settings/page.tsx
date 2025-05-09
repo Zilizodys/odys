@@ -247,10 +247,11 @@ export default function SettingsPage() {
               >
                 {user.user_metadata?.avatar_url ? (
                   <Image
-                    src={user.user_metadata.avatar_url}
+                    src={user.user_metadata.avatar_url || '/images/default-avatar.png'}
                     alt="Photo de profil"
                     fill
                     className="object-cover group-hover:opacity-75 transition-opacity"
+                    onError={(e) => { e.currentTarget.src = '/images/default-avatar.png' }}
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center group-hover:bg-gray-200 transition-colors">
@@ -326,57 +327,46 @@ export default function SettingsPage() {
             {/* Panel Profil */}
             <Tab.Panel>
               <div className="bg-white rounded-xl shadow-sm p-6 space-y-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Nom complet
-                  </label>
+                <div className="material-field">
                   <input
                     type="text"
                     name="fullName"
                     value={formData.fullName}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                    placeholder="Votre nom"
+                    className="material-input"
+                    placeholder=" "
                   />
+                  <label className="material-label">Nom complet</label>
                 </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Bio
-                  </label>
+                <div className="material-field">
                   <textarea
                     name="bio"
                     value={formData.bio}
                     onChange={handleInputChange}
                     rows={3}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                    placeholder="Parlez-nous de vous..."
+                    className="material-input"
+                    placeholder=" "
                   />
+                  <label className="material-label">Bio</label>
                 </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Email
-                  </label>
+                <div className="material-field">
                   <input
                     type="email"
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-gray-50"
+                    className="material-input bg-gray-50"
+                    placeholder=" "
                     disabled
                   />
+                  <label className="material-label">Email</label>
                 </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Pays
-                  </label>
+                <div className="material-field">
                   <select
                     name="country"
                     value={formData.country}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="material-input"
                   >
                     <option value="FR">France</option>
                     <option value="BE">Belgique</option>
@@ -384,20 +374,18 @@ export default function SettingsPage() {
                     <option value="CA">Canada</option>
                     <option value="LU">Luxembourg</option>
                   </select>
+                  <label className="material-label">Pays</label>
                 </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Téléphone
-                  </label>
+                <div className="material-field">
                   <input
                     type="tel"
                     name="phoneNumber"
                     value={formData.phoneNumber}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                    placeholder="+33 6 12 34 56 78"
+                    className="material-input"
+                    placeholder=" "
                   />
+                  <label className="material-label">Téléphone</label>
                 </div>
               </div>
             </Tab.Panel>
@@ -405,10 +393,7 @@ export default function SettingsPage() {
             {/* Panel Préférences */}
             <Tab.Panel>
               <div className="bg-white rounded-xl shadow-sm p-6 space-y-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Budget moyen par voyage
-                  </label>
+                <div className="material-field">
                   <input
                     type="range"
                     min="500"
@@ -419,17 +404,14 @@ export default function SettingsPage() {
                       ...prev,
                       averageBudget: parseInt(e.target.value)
                     }))}
-                    className="w-full"
+                    className="material-input"
+                    id="averageBudget"
                   />
-                  <div className="text-right text-sm text-gray-500">
-                    {travelPreferences.averageBudget}€
-                  </div>
+                  <label className="material-label" htmlFor="averageBudget">Budget moyen par voyage</label>
+                  <div className="text-right text-sm text-gray-500 mt-1">{travelPreferences.averageBudget}€</div>
                 </div>
-
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Style de voyage
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Style de voyage</label>
                   <div className="grid grid-cols-2 gap-4">
                     {['Culture', 'Gastronomie', 'Nature', 'Sport', 'Shopping', 'Détente'].map((style) => (
                       <label key={style} className="flex items-center space-x-2">
@@ -516,32 +498,32 @@ export default function SettingsPage() {
                 <div>
                   <h3 className="text-lg font-medium text-gray-900 mb-4">Changer le mot de passe</h3>
                   <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Mot de passe actuel
-                      </label>
+                    <div className="material-field">
                       <input
                         type="password"
-                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        className="material-input"
+                        placeholder=" "
+                        name="currentPassword"
                       />
+                      <label className="material-label">Mot de passe actuel</label>
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Nouveau mot de passe
-                      </label>
+                    <div className="material-field">
                       <input
                         type="password"
-                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        className="material-input"
+                        placeholder=" "
+                        name="newPassword"
                       />
+                      <label className="material-label">Nouveau mot de passe</label>
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Confirmer le nouveau mot de passe
-                      </label>
+                    <div className="material-field">
                       <input
                         type="password"
-                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        className="material-input"
+                        placeholder=" "
+                        name="confirmPassword"
                       />
+                      <label className="material-label">Confirmer le nouveau mot de passe</label>
                     </div>
                   </div>
                 </div>
@@ -580,4 +562,48 @@ export default function SettingsPage() {
       </div>
     </div>
   )
-} 
+}
+
+<style jsx>{`
+.material-field {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+.material-input {
+  width: 100%;
+  border: none;
+  border-bottom: 2px solid #cbd5e1;
+  outline: none;
+  font-size: 1rem;
+  padding: 1.1rem 0 0.5rem 0;
+  background: transparent;
+  transition: border-color 0.2s;
+  box-shadow: none;
+}
+.material-input:focus {
+  border: none;
+  border-bottom: 2px solid #6366f1;
+  box-shadow: none;
+}
+.material-label {
+  position: absolute;
+  left: 0;
+  top: 1.1rem;
+  color: #64748b;
+  font-size: 1rem;
+  pointer-events: none;
+  transition: 0.2s cubic-bezier(0.4,0,0.2,1);
+}
+.material-input:focus + .material-label,
+.material-input:not(:placeholder-shown) + .material-label {
+  top: -0.7rem;
+  left: 0;
+  font-size: 0.85rem;
+  color: #6366f1;
+  background: white;
+  padding: 0 0.2rem;
+}
+select.material-input {
+  padding-right: 2rem;
+}
+`}</style> 

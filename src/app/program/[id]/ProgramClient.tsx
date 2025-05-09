@@ -342,6 +342,7 @@ export default function ProgramClient({ programId }: { programId: string }) {
       const { error: programError } = await supabase
         .from('programs')
         .update({
+          title: program?.title,
           start_date: program?.start_date,
           end_date: program?.end_date,
           budget: program?.budget,
@@ -481,15 +482,15 @@ export default function ProgramClient({ programId }: { programId: string }) {
             className={""}
           />
         ) : (
-          <Image
-            src={coverImageUrl}
-            alt={program.title || getDestinationImage(program.destination).alt}
-            fill
-            sizes="100vw"
-            style={{ objectFit: 'cover' }}
-            priority
-            onError={handleImageError}
-          />
+        <Image
+          src={coverImageUrl}
+          alt={program.title || getDestinationImage(program.destination).alt}
+          fill
+          sizes="100vw"
+          style={{ objectFit: 'cover' }}
+          priority
+          onError={handleImageError}
+        />
         )}
         {/* Overlay sombre pour lisibilité */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />

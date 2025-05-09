@@ -94,7 +94,8 @@ const nextConfig = {
       'localhost',
       'images.unsplash.com',
       'images.pexels.com',
-      'maps.googleapis.com'
+      'maps.googleapis.com',
+      'awpplalldxideqwzgzjgf.supabase.co'
     ],
     unoptimized: process.env.NODE_ENV === 'development'
   },

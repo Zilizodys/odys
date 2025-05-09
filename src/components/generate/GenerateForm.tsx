@@ -866,63 +866,63 @@ export default function GenerateForm() {
   return (
     <>
       <div className="max-w-md mx-auto flex flex-col flex-1 bg-white pb-24 mt-[120px]">
-        <FormHeader
-          currentStep={currentStep}
-          totalSteps={5}
-          onPrevious={handlePrevious}
-        />
-        {/* Loading overlay */}
-        {isLoading && (
-          <div className="absolute inset-0 bg-white/80 flex items-center justify-center z-50">
-            <div className="flex flex-col items-center gap-4">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
-              <p className="text-gray-600">Génération des suggestions en cours...</p>
-            </div>
+      <FormHeader
+        currentStep={currentStep}
+        totalSteps={5}
+        onPrevious={handlePrevious}
+      />
+      {/* Loading overlay */}
+      {isLoading && (
+        <div className="absolute inset-0 bg-white/80 flex items-center justify-center z-50">
+          <div className="flex flex-col items-center gap-4">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
+            <p className="text-gray-600">Génération des suggestions en cours...</p>
           </div>
-        )}
-        {/* Error message */}
-        {error && (
-          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-            <div className="flex items-start">
-              <div className="flex-shrink-0">
-                <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                </svg>
-              </div>
-              <div className="ml-3">
-                <h3 className="text-sm font-medium text-red-800">
-                  Erreur lors de la génération des suggestions
-                </h3>
-                <div className="mt-2 text-sm text-red-700">
-                  <p>{error}</p>
-                  {error.includes('Token') && (
-                    <p className="mt-2">
-                      Le service de suggestions n'est pas correctement configuré. Veuillez contacter le support technique.
-                    </p>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-        {/* Form steps */}
-        <div className="px-4">
-          <AnimatePresence initial={false} mode="wait">
-            {currentStep === 1 && Step1}
-            {currentStep === 2 && Step2}
-            {currentStep === 3 && Step3}
-            {currentStep === 4 && Step4}
-            {currentStep === 5 && Step5}
-          </AnimatePresence>
-          <FormFooter
-            currentStep={currentStep}
-            totalSteps={5}
-            onPrevious={handlePrevious}
-            onNext={currentStep === 1 ? handleDestinationSubmit : handleNext}
-            isNextDisabled={isNextDisabled}
-            isLoading={isLoading}
-          />
         </div>
+      )}
+      {/* Error message */}
+      {error && (
+        <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <div className="flex items-start">
+            <div className="flex-shrink-0">
+              <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <h3 className="text-sm font-medium text-red-800">
+                Erreur lors de la génération des suggestions
+              </h3>
+              <div className="mt-2 text-sm text-red-700">
+                <p>{error}</p>
+                {error.includes('Token') && (
+                  <p className="mt-2">
+                    Le service de suggestions n'est pas correctement configuré. Veuillez contacter le support technique.
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Form steps */}
+        <div className="px-4">
+        <AnimatePresence initial={false} mode="wait">
+          {currentStep === 1 && Step1}
+          {currentStep === 2 && Step2}
+          {currentStep === 3 && Step3}
+          {currentStep === 4 && Step4}
+          {currentStep === 5 && Step5}
+        </AnimatePresence>
+      <FormFooter
+        currentStep={currentStep}
+        totalSteps={5}
+        onPrevious={handlePrevious}
+        onNext={currentStep === 1 ? handleDestinationSubmit : handleNext}
+        isNextDisabled={isNextDisabled}
+        isLoading={isLoading}
+      />
+    </div>
       </div>
     </>
   )

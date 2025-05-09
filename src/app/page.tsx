@@ -186,7 +186,7 @@ export default function Home() {
       <main className="flex-1 flex flex-col items-center justify-start pt-10 px-0">
         <h1 className="sr-only">Odys - Crée ton voyage sur-mesure</h1>
         <div className="w-full px-4 flex flex-col items-center">
-          <img src="/images/Mascot.png" alt="Mascotte Odys" className="w-24 h-24 mb-4" />
+        <img src="/images/Mascot.png" alt="Mascotte Odys" className="w-24 h-24 mb-4" />
           <p className="text-2xl font-bold text-indigo-700 text-center mb-6 w-full">Réponds à quelques questions pour ton voyage idéal.</p>
         </div>
         <PopularDestinations />
@@ -245,7 +245,7 @@ export default function Home() {
               <p className="italic mb-2">“Super simple, rapide, et des idées auxquelles je n'aurais jamais pensé.”</p>
               <span className="text-sm text-gray-500">— Karim, Lyon</span>
             </blockquote>
-          </div>
+      </div>
         </section>
       </main>
       {loginOpen && <LoginModal open={loginOpen} onClose={() => setLoginOpen(false)} />}

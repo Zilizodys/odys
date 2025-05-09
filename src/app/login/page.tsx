@@ -79,7 +79,7 @@ export default function LoginPage() {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <Suspense>
-          <LoginForm />
+        <LoginForm />
         </Suspense>
       </div>
     </div>
